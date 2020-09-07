@@ -1,0 +1,18 @@
+<resources>
+    <!--    General-->
+    <string name="app_name">Attendance Manager</string>
+    <string name="time_table">Time Table</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+
+    <!--    Home Fragment-->
+    <string name="welcome_message">Hey there, %1$s.</string>
+    <string name="attendance">Attendance</string>
+    <string name="extra_class">"Extra Class"</string>
+    <string name="attended_class">Attended class</string>
+    <string name="bunked_class">Bunked class</string>
+    <string name="class_cancelled">Class cancelled</string>
+
+    <!--    Subject Row Item-->
+    <string name="attended_info_template">Attended: %1$s/%2$s</string>
+</resources>

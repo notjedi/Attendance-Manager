@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FEEAE6"
+    tools:context=".HomeFragment">
+
+    <!--    https://stackoverflow.com/questions/43116655/recyclerview-last-item-not-shown-inside-coordinator-layout-->
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:minHeight="?attr/actionBarSize"
+        android:stateListAnimator="@null"
+        app:layout_anchor="@id/app_bar_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_scrollFlags="scroll|snap|enterAlways">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/date_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_semibold"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        tools:text="24th August" />
+
+                    <TextView
+                        android:id="@+id/day_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/raleway_semibold"
+                        android:textSize="24sp"
+                        tools:text="Monday" />
+
+                    <TextView
+                        android:id="@+id/greet_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/raleway_semibold"
+                        android:textSize="18sp"
+                        tools:text="Hey there, Krithic" />
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1">
+
+                    <ProgressBar
+                        android:id="@+id/overall_attendance_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:indeterminateOnly="false"
+                        android:padding="16dp"
+                        android:progressDrawable="@drawable/circular_progress_bar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:progress="75" />
+
+                    <TextView
+                        android:id="@+id/progressbar_percentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_semibold"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/overall_attendance_percentage"
+                        app:layout_constraintEnd_toEndOf="@+id/overall_attendance_percentage"
+                        app:layout_constraintStart_toStartOf="@+id/overall_attendance_percentage"
+                        app:layout_constraintTop_toTopOf="@+id/overall_attendance_percentage"
+                        tools:text="75%" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/title_text_view_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/raleway_semibold"
+                android:padding="16dp"
+                android:text="@string/attendance"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/subject_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FEDBD0"
+        app:layout_anchor="@+id/app_bar_layout"
+        app:layout_anchorGravity="bottom|center"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <!--<Button-->
+    <!--android:id="@+id/extra_class_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center|end"-->
+    <!--android:layout_marginStart="32dp"-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--android:background="@drawable/button_bg"-->
+    <!--android:drawableStart="@drawable/ic_add"-->
+    <!--android:drawablePadding="4dp"-->
+    <!--android:paddingTop="4dp"-->
+    <!--android:paddingBottom="4dp"-->
+    <!--android:paddingStart="8dp"-->
+    <!--android:paddingEnd="16dp"-->
+    <!--android:text="@string/extra_class" />-->
