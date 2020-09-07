@@ -1,2 +1,2 @@
 # Attendance-Manager
-An android app to manage your uni attendance
+An android app to manage your college attendance.
