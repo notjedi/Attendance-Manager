@@ -1,22 +1,35 @@
 package com.attendancemanager;
 
+import android.animation.ValueAnimator;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
+import github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior;
 
 public class HomeFragment extends Fragment {
 
@@ -26,6 +39,7 @@ public class HomeFragment extends Fragment {
     private TextView mProgressPercentage;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private CoordinatorLayout mCoordinatorLayout;
 
     private ArrayList<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
@@ -58,6 +72,8 @@ public class HomeFragment extends Fragment {
         mProgressBar = view.findViewById(R.id.overall_attendance_percentage);
         mProgressPercentage = view.findViewById(R.id.progressbar_percentage);
         mRecyclerView = view.findViewById(R.id.subject_recycler_view);
+        mCoordinatorLayout = view.findViewById(R.id.nested_coordinator_layout);
+        AppBarLayout appBarLayout;
 
     }
 
@@ -116,6 +132,90 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setAdapter(mSubjectListAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mRecyclerView.getLayoutParams();
+        int bottomMargin = lp.bottomMargin;
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            private int totalDyPos = 0;
+            private int totalDyNeg = 0;
+            private boolean flagPos = false;
+            private boolean flagNeg = false;
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+                    totalDyNeg = 0;
+                    flagNeg = false;
+
+                    totalDyPos += dy;
+                    if (totalDyPos > 100) {
+                        if (!flagPos) {
+                            totalDyPos = 0;
+                            flagPos = true;
+                        }
+                        Log.i(TAG, "onScrolled: " + totalDyPos);
+                        hideBottomNavigationView(getActivity().findViewById(R.id.bottom_bar), totalDyPos, bottomMargin);
+                    }
+                } else {
+                    totalDyPos = 0;
+                    flagPos = false;
+
+                    totalDyNeg += dy;
+                    Log.i(TAG, "onScrolled: " + totalDyNeg);
+                    if (Math.abs(totalDyNeg) > 100) {
+                        if (!flagNeg) {
+                            totalDyNeg = 0;
+                            flagNeg = true;
+                        }
+                        showBottomNavigationView(getActivity().findViewById(R.id.bottom_bar), Math.abs(totalDyNeg), bottomMargin);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void hideBottomNavigationView(ExpandableBottomBar view, int dy, int bottomMargin) {
+        if (dy > view.getMeasuredHeight()) {
+            dy = view.getMeasuredHeight() + 16 + 8;
+        }
+        view.clearAnimation();
+        Log.i(TAG, "hideBottomNavigationView: inside hide " + dy);
+        view.animate().translationY(dy).setDuration(300).start();
+    }
+
+    public void showBottomNavigationView(ExpandableBottomBar view, int dy, int bottomMargin) {
+//        Log.i(TAG, "showBottomNavigationView: " + view.getTranslationY());
+
+        Log.i(TAG, "showBottomNavigationView: inside show1 " + dy);
+        dy = view.getMeasuredHeight() - dy;
+        if (dy < 0)
+            dy = 0;
+        Log.i(TAG, "showBottomNavigationView: inside show2 " + dy);
+        view.clearAnimation();
+        view.animate().translationY(dy).setDuration(300).start();
+
+//        final ValueAnimator animator = ValueAnimator.ofFloat(view.getTranslationY(), 0);
+//        animator.setInterpolator(new DecelerateInterpolator());
+//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+//                float animatedValue = (Float) animator.getAnimatedValue();
+//                Log.i(TAG, "onAnimationUpdate: " + animatedValue);
+//                if (animatedValue)
+//                view.setTranslationY(animatedValue);
+//            }
+//        });
+//        animator.start();
+//        view.clearAnimation();
+//        view.animate().translationY(0).setDuration(300);
     }
 }

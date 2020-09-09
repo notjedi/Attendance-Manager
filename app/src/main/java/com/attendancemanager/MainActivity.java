@@ -3,6 +3,7 @@ package com.attendancemanager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentContainerView fragmentContainer;
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
+//    public static CoordinatorLayout coordinatorLayout;
 
     private TimeTableFragment timeTableFragment;
     private HomeFragment homeFragment;
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomBar = findViewById(R.id.bottom_bar);
         viewPager = findViewById(R.id.view_pager);
+//        coordinatorLayout = findViewById(R.id.coordinator_layout);
         fragmentContainer = findViewById(R.id.fragment_container);
 
         timeTableFragment = new TimeTableFragment();
