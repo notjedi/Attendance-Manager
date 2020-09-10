@@ -12,6 +12,10 @@ public class Subject {
         this.attendedClasses = attendedClasses;
     }
 
+    public Subject(String subjectName) {
+        this(subjectName, 0, 0);
+    }
+
     public String getSubjectName() {
         return subjectName;
     }
@@ -36,11 +40,19 @@ public class Subject {
         this.attendedClasses = attendedClasses;
     }
 
-    public void incrementTotalClasses() { this.totalClasses++; }
+    public void incrementTotalClasses() {
+        this.totalClasses++;
+    }
 
-    public void decrementTotalClasses() { this.totalClasses--; }
+    public void decrementTotalClasses() {
+        this.totalClasses--;
+    }
 
-    public void incrementAttendedClasses() { this.attendedClasses++; }
+    public void incrementAttendedClasses() {
+        this.attendedClasses++;
+    }
 
-    public void decrementAttendedClasses() { this.attendedClasses--; }
+    public void decrementAttendedClasses() {
+        this.attendedClasses--;
+    }
 }
