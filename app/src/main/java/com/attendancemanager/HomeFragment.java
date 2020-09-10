@@ -1,35 +1,26 @@
 package com.attendancemanager;
 
-import android.animation.ValueAnimator;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.AppBarLayout;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
-import github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior;
 
 public class HomeFragment extends Fragment {
 
@@ -39,9 +30,9 @@ public class HomeFragment extends Fragment {
     private TextView mProgressPercentage;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private CoordinatorLayout mCoordinatorLayout;
+    private DBHelper dbHelper;
 
-    private ArrayList<Subject> mTodaySubjectList;
+    private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
 
     private static final String TAG = "HomeFragment";
@@ -72,8 +63,6 @@ public class HomeFragment extends Fragment {
         mProgressBar = view.findViewById(R.id.overall_attendance_percentage);
         mProgressPercentage = view.findViewById(R.id.progressbar_percentage);
         mRecyclerView = view.findViewById(R.id.subject_recycler_view);
-        mCoordinatorLayout = view.findViewById(R.id.nested_coordinator_layout);
-        AppBarLayout appBarLayout;
 
     }
 
@@ -81,16 +70,22 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initializeDayAndDate();
+        setDayAndDate();
+        getTodayTimeTable();
         buildRecyclerView();
 
     }
 
-    private void initializeDayAndDate() {
+    private void setDayAndDate() {
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM");
-        mDate.setText(simpleDateFormat.format(calendar.getTime()).toString());
+        StringBuilder date = new StringBuilder();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd");
+        date.append(simpleDateFormat.format(calendar.getTime()).toString());
+        date.append("th ");
+        simpleDateFormat = new SimpleDateFormat("MMMM");
+        date.append(simpleDateFormat.format(calendar.getTime()).toString());
+        mDate.setText(date.toString());
 
         simpleDateFormat.applyPattern("EEEE");
         mDay.setText(simpleDateFormat.format(calendar.getTime()).toString());
@@ -100,17 +95,21 @@ public class HomeFragment extends Fragment {
         mProgressPercentage.setText("60%");
     }
 
+    private void getTodayTimeTable() {
+
+        dbHelper = new DBHelper(getContext());
+//        mTodaySubjectList = new ArrayList<>();
+//        dbHelper.addSubject(new Subject("English", 3, 2));
+//        dbHelper.addSubject(new Subject("Maths", 3, 2));
+//        dbHelper.addSubject(new Subject("Indian Constitution", 3, 2));
+//        dbHelper.addSubject(new Subject("Physics", 3, 2));
+//        dbHelper.addSubject(new Subject("Chemistry", 3, 2));
+//        dbHelper.addSubject(new Subject("Computer Science", 3, 2));
+//        dbHelper.addSubject(new Subject("Environmental Valued Science HELLO THIS IS BYE", 3, 2));
+        mTodaySubjectList = dbHelper.getAllSubjects();
+    }
+
     private void buildRecyclerView() {
-
-        mTodaySubjectList = new ArrayList<>();
-        mTodaySubjectList.add(new Subject("English", 3, 2));
-        mTodaySubjectList.add(new Subject("Math", 3, 2));
-        mTodaySubjectList.add(new Subject("EVS", 3, 2));
-        mTodaySubjectList.add(new Subject("Chemistry", 3, 2));
-        mTodaySubjectList.add(new Subject("Physics", 3, 2));
-        mTodaySubjectList.add(new Subject("Computer Science", 3, 2));
-        mTodaySubjectList.add(new Subject("Indian Constitution", 3, 2));
-
 
         mSubjectListAdapter = new SubjectListAdapter(mTodaySubjectList, getContext());
         mSubjectListAdapter.setItemClickListener(new SubjectListAdapter.OnItemClickListener() {
@@ -132,15 +131,10 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setAdapter(mSubjectListAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mRecyclerView.getLayoutParams();
-        int bottomMargin = lp.bottomMargin;
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            private int totalDyPos = 0;
-            private int totalDyNeg = 0;
-            private boolean flagPos = false;
-            private boolean flagNeg = false;
+            ExpandableBottomBar bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
 
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -151,71 +145,22 @@ public class HomeFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy > 0) {
-                    totalDyNeg = 0;
-                    flagNeg = false;
-
-                    totalDyPos += dy;
-                    if (totalDyPos > 100) {
-                        if (!flagPos) {
-                            totalDyPos = 0;
-                            flagPos = true;
-                        }
-                        Log.i(TAG, "onScrolled: " + totalDyPos);
-                        hideBottomNavigationView(getActivity().findViewById(R.id.bottom_bar), totalDyPos, bottomMargin);
-                    }
-                } else {
-                    totalDyPos = 0;
-                    flagPos = false;
-
-                    totalDyNeg += dy;
-                    Log.i(TAG, "onScrolled: " + totalDyNeg);
-                    if (Math.abs(totalDyNeg) > 100) {
-                        if (!flagNeg) {
-                            totalDyNeg = 0;
-                            flagNeg = true;
-                        }
-                        showBottomNavigationView(getActivity().findViewById(R.id.bottom_bar), Math.abs(totalDyNeg), bottomMargin);
-                    }
-                }
+                if (dy > 0)
+                    hideBottomNavigationView(bottomNavBar);
+                else
+                    showBottomNavigationView(bottomNavBar);
             }
         });
 
     }
 
-    private void hideBottomNavigationView(ExpandableBottomBar view, int dy, int bottomMargin) {
-        if (dy > view.getMeasuredHeight()) {
-            dy = view.getMeasuredHeight() + 16 + 8;
-        }
+    private void hideBottomNavigationView(ExpandableBottomBar view) {
         view.clearAnimation();
-        Log.i(TAG, "hideBottomNavigationView: inside hide " + dy);
-        view.animate().translationY(dy).setDuration(300).start();
+        view.animate().translationY(view.getHeight() + 24).setDuration(200).start();
     }
 
-    public void showBottomNavigationView(ExpandableBottomBar view, int dy, int bottomMargin) {
-//        Log.i(TAG, "showBottomNavigationView: " + view.getTranslationY());
-
-        Log.i(TAG, "showBottomNavigationView: inside show1 " + dy);
-        dy = view.getMeasuredHeight() - dy;
-        if (dy < 0)
-            dy = 0;
-        Log.i(TAG, "showBottomNavigationView: inside show2 " + dy);
+    public void showBottomNavigationView(ExpandableBottomBar view) {
         view.clearAnimation();
-        view.animate().translationY(dy).setDuration(300).start();
-
-//        final ValueAnimator animator = ValueAnimator.ofFloat(view.getTranslationY(), 0);
-//        animator.setInterpolator(new DecelerateInterpolator());
-//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-//                float animatedValue = (Float) animator.getAnimatedValue();
-//                Log.i(TAG, "onAnimationUpdate: " + animatedValue);
-//                if (animatedValue)
-//                view.setTranslationY(animatedValue);
-//            }
-//        });
-//        animator.start();
-//        view.clearAnimation();
-//        view.animate().translationY(0).setDuration(300);
+        view.animate().translationY(0).setDuration(200).start();
     }
 }

@@ -11,16 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.SubjectListViewHolder> {
 
-    private ArrayList<Subject> mTodaySubjectList;
+    private List<Subject> mTodaySubjectList;
     private OnItemClickListener mItemClickListener;
     private Context mContext;
     private static final String TAG = "SubjectListAdapter";
 
-    public SubjectListAdapter(ArrayList<Subject> mTodaySubjectList, Context mContext) {
+    public SubjectListAdapter(List<Subject> mTodaySubjectList, Context mContext) {
         this.mTodaySubjectList = mTodaySubjectList;
         this.mContext = mContext;
     }
@@ -31,7 +31,9 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
 
     public interface OnItemClickListener {
         void onAttendButtonClick();
+
         void onBunkButtonClick();
+
         void onCancelledButtonClick();
     }
 
