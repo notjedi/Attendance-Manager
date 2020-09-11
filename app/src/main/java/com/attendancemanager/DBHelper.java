@@ -69,8 +69,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-//    https://developer.android.com/training/data-storage/sqlite#PersistingDbConnection
-
     public List<Subject> getAllSubjects() {
         SQLiteDatabase database = getReadableDatabase();
         String queryString = "SELECT * FROM " + SUBJECT_DETAILS_TABLE_NAME;

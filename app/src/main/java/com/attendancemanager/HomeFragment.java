@@ -31,6 +31,7 @@ public class HomeFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
+    private int counter;
 
     private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
@@ -70,6 +71,11 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+                StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        for (StackTraceElement i : stackTraceElements) {
+            Log.i(TAG, "getTodayTimeTable: " + i.getMethodName());
+        }
+
         setDayAndDate();
         getTodayTimeTable();
         buildRecyclerView();
@@ -78,6 +84,7 @@ public class HomeFragment extends Fragment {
 
     private void setDayAndDate() {
 
+        Log.i(TAG, "setDayAndDate: " + counter++);
         Calendar calendar = Calendar.getInstance();
         StringBuilder date = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd");
@@ -98,14 +105,14 @@ public class HomeFragment extends Fragment {
     private void getTodayTimeTable() {
 
         dbHelper = new DBHelper(getContext());
-//        mTodaySubjectList = new ArrayList<>();
-//        dbHelper.addSubject(new Subject("English", 3, 2));
-//        dbHelper.addSubject(new Subject("Maths", 3, 2));
-//        dbHelper.addSubject(new Subject("Indian Constitution", 3, 2));
-//        dbHelper.addSubject(new Subject("Physics", 3, 2));
-//        dbHelper.addSubject(new Subject("Chemistry", 3, 2));
-//        dbHelper.addSubject(new Subject("Computer Science", 3, 2));
-//        dbHelper.addSubject(new Subject("Environmental Valued Science HELLO THIS IS BYE", 3, 2));
+        mTodaySubjectList = new ArrayList<>();
+//        dbHelper.addSubject(new Subject("English", 10, 20));
+//        dbHelper.addSubject(new Subject("Maths"));
+//        dbHelper.addSubject(new Subject("Indian Constitution", 15, 20));
+//        dbHelper.addSubject(new Subject("Physics", 5, 20));
+//        dbHelper.addSubject(new Subject("Chemistry", 18, 20));
+//        dbHelper.addSubject(new Subject("Computer Science", 8, 20));
+//        dbHelper.addSubject(new Subject("Environmental Valued Science HELLO THIS IS BYE", 2, 3));
         mTodaySubjectList = dbHelper.getAllSubjects();
     }
 

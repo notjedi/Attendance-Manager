@@ -6,10 +6,10 @@ public class Subject {
     private int totalClasses;
     private int attendedClasses;
 
-    public Subject(String subjectName, int totalClasses, int attendedClasses) {
+    public Subject(String subjectName, int attendedClasses, int totalClasses) {
         this.subjectName = subjectName;
-        this.totalClasses = totalClasses;
         this.attendedClasses = attendedClasses;
+        this.totalClasses = totalClasses;
     }
 
     public Subject(String subjectName) {
