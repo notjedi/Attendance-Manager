@@ -11,10 +11,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,47 +24,53 @@ import github.com.st235.lib_expandablebottombar.navigation.ExpandableBottomBarNa
 
 public class MainActivity extends AppCompatActivity {
 
-    private FragmentContainerView fragmentContainer;
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
 
-    private TimeTableFragment timeTableFragment;
-    private HomeFragment homeFragment;
-    private SettingsFragment settingsFragment;
-
     private static final String TAG = "MainActivity";
 
+//    TODO: close db connection in onDestroy
+//    https://developer.android.com/training/data-storage/sqlite#PersistingDbConnection
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        private List<Fragment> fragmentList = new ArrayList<>();
-        private List<String> fragmentTitle = new ArrayList<>();
 
         public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);
         }
 
-        public void addFragment(Fragment fragment, String title) {
-
-            fragmentList.add(fragment);
-            fragmentTitle.add(title);
-        }
-
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            return fragmentList.get(position);
+            Log.i(TAG, "getItem: " + position);
+            switch (position) {
+                case 0:
+                    return new TimeTableFragment();
+                case 1:
+                    return new HomeFragment();
+                case 2:
+                    return new SettingsFragment();
+            }
+            throw new IllegalStateException("Unexpected Position" + position);
         }
 
         @Override
         public int getCount() {
-            return fragmentList.size();
+            return 3;
         }
 
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            return fragmentTitle.get(position);
+            Context context = MainActivity.this;
+            switch (position) {
+                case 0:
+                    return context.getString(R.string.time_table);
+                case 1:
+                    return context.getString(R.string.home);
+                case 2:
+                    return context.getString(R.string.settings);
+            }
+            return null;
         }
     }
 
@@ -74,23 +81,18 @@ public class MainActivity extends AppCompatActivity {
 
         bottomBar = findViewById(R.id.bottom_bar);
         viewPager = findViewById(R.id.view_pager);
-        fragmentContainer = findViewById(R.id.fragment_container);
-
-        timeTableFragment = new TimeTableFragment();
-        homeFragment = new HomeFragment();
-        settingsFragment = new SettingsFragment();
 
 //        https://stackoverflow.com/questions/59275009/fragmentcontainerview-using-findnavcontroller
 //        https://stackoverflow.com/questions/58703451/fragmentcontainerview-as-navhostfragment
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         NavController navController = navHostFragment.getNavController();
         ExpandableBottomBarNavigationUI.setupWithNavController(bottomBar, navController);
 
+//        https://proandroiddev.com/the-seven-actually-10-cardinal-sins-of-android-development-491d2f64c8e0
+//        3rd point
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        viewPagerAdapter.addFragment(timeTableFragment, "Time Table");
-        viewPagerAdapter.addFragment(homeFragment, "Home");
-        viewPagerAdapter.addFragment(settingsFragment, "Settings");
         viewPager.setAdapter(viewPagerAdapter);
         bottomBar.select(R.id.homeFragment);
         viewPager.setCurrentItem(1);

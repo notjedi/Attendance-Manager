@@ -1,6 +1,7 @@
 package com.attendancemanager;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,11 +101,15 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
     @Override
     public void onBindViewHolder(@NonNull SubjectListViewHolder holder, int position) {
 
+//        TODO: set progress bar color based on attendance
+//        TODO: set status
         Subject subject = mTodaySubjectList.get(position);
+        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
+
         holder.mSubjectName.setText(subject.getSubjectName());
         holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), Integer.toString(subject.getAttendedClasses()), Integer.toString(subject.getTotalClasses())));
-        holder.mSubjectAttendanceProgressBar.setProgress(30);
-        holder.mSubjectProgressBarPercentage.setText("30%");
+        holder.mSubjectAttendanceProgressBar.setProgress(percentage);
+        holder.mSubjectProgressBarPercentage.setText(String.format("%d%%", percentage));
 
     }
 
