@@ -1,23 +1,21 @@
 package com.attendancemanager;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.view.Window;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager.widget.ViewPager;
-
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 import github.com.st235.lib_expandablebottombar.navigation.ExpandableBottomBarNavigationUI;
@@ -41,14 +39,13 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            Log.i(TAG, "getItem: " + position);
             switch (position) {
                 case 0:
-                    return new TimeTableFragment();
+                    return TimeTableFragment.newInstance("TimeTable Fragment", "Instance");
                 case 1:
-                    return new HomeFragment();
+                    return HomeFragment.newInstance("Home Fragment", "Instance");
                 case 2:
-                    return new SettingsFragment();
+                    return SettingsFragment.newInstance("Settings Fragment", "Instance");
             }
             throw new IllegalStateException("Unexpected Position" + position);
         }
@@ -82,12 +79,15 @@ public class MainActivity extends AppCompatActivity {
         bottomBar = findViewById(R.id.bottom_bar);
         viewPager = findViewById(R.id.view_pager);
 
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
 //        https://stackoverflow.com/questions/59275009/fragmentcontainerview-using-findnavcontroller
 //        https://stackoverflow.com/questions/58703451/fragmentcontainerview-as-navhostfragment
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        NavController navController = navHostFragment.getNavController();
-        ExpandableBottomBarNavigationUI.setupWithNavController(bottomBar, navController);
+//        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        NavController navController = navHostFragment.getNavController();
+//        ExpandableBottomBarNavigationUI.setupWithNavController(bottomBar, navController);
 
 //        https://proandroiddev.com/the-seven-actually-10-cardinal-sins-of-android-development-491d2f64c8e0
 //        3rd point

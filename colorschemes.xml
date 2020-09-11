@@ -1,0 +1,30 @@
+    Grey
+            android:background="#CECAC3"
+            android:color="#E8E6E3"/>
+            android:background="#E3E0DE"
+
+        Purple
+            android:background="#DFBAF6"
+            CCDFBAF6
+            android:color="#D4ACEC"/>
+            B3D4ACEC
+            android:background="#E1B4FF"
+            B3E1B4FF
+
+        Blue
+            android:background="#81C5F8"
+            android:color="#8062B7F6"/>
+            android:background="#9BCFF6"
+
+        Seapunk
+            android:background="#74FFDE"
+            android:color="#F7F5C4"/>
+            android:background="#BEFACF"
+
+        Basil colors as google calls it
+            android:background="#FFFBE6" for main coordinator layout
+            android:textColor="#FD5523"for date and day text
+            android:textColor="#F8997C" for greeting text
+            android:color="#B9E4C9"/> for title drawable
+            android:textColor="#37966F" for title drawable text
+            android:background="#B9E4C9" for recycler view background

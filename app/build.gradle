@@ -37,7 +37,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.github.st235:expandablebottombar:1.2.3'
+    implementation 'com.github.st235:expandablebottombar:1.2.4'
 
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.0'

@@ -17,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 
@@ -31,7 +33,6 @@ public class HomeFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
-    private int counter;
 
     private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
@@ -40,6 +41,11 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment homeFragment = new HomeFragment();
+        return homeFragment;
     }
 
     @Override
@@ -51,6 +57,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -71,12 +78,8 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-                StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        for (StackTraceElement i : stackTraceElements) {
-            Log.i(TAG, "getTodayTimeTable: " + i.getMethodName());
-        }
-
         setDayAndDate();
+        setProgressBar();
         getTodayTimeTable();
         buildRecyclerView();
 
@@ -84,19 +87,21 @@ public class HomeFragment extends Fragment {
 
     private void setDayAndDate() {
 
-        Log.i(TAG, "setDayAndDate: " + counter++);
         Calendar calendar = Calendar.getInstance();
         StringBuilder date = new StringBuilder();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd");
-        date.append(simpleDateFormat.format(calendar.getTime()).toString());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd", Locale.US);
+        date.append(simpleDateFormat.format(calendar.getTime()));
         date.append("th ");
-        simpleDateFormat = new SimpleDateFormat("MMMM");
-        date.append(simpleDateFormat.format(calendar.getTime()).toString());
+        simpleDateFormat.applyPattern("MMMM");
+        date.append(simpleDateFormat.format(calendar.getTime()));
         mDate.setText(date.toString());
 
         simpleDateFormat.applyPattern("EEEE");
-        mDay.setText(simpleDateFormat.format(calendar.getTime()).toString());
+        mDay.setText(simpleDateFormat.format(calendar.getTime()));
         mGreet.setText("Hey there, Krithic");
+    }
+
+    private void setProgressBar() {
 
         mProgressBar.setProgress(60);
         mProgressPercentage.setText("60%");
@@ -113,7 +118,11 @@ public class HomeFragment extends Fragment {
 //        dbHelper.addSubject(new Subject("Chemistry", 18, 20));
 //        dbHelper.addSubject(new Subject("Computer Science", 8, 20));
 //        dbHelper.addSubject(new Subject("Environmental Valued Science HELLO THIS IS BYE", 2, 3));
-        mTodaySubjectList = dbHelper.getAllSubjects();
+//        String[] names = new String[]{"English", "Maths", "Physics"};
+//        dbHelper.insertSubjectToDayTable("monday", names);
+
+        String day = new SimpleDateFormat("EEEE", Locale.US).format(Calendar.getInstance().getTime()).toLowerCase();
+        mTodaySubjectList = dbHelper.getSubjectsOfDay("monday");
     }
 
     private void buildRecyclerView() {
@@ -153,21 +162,11 @@ public class HomeFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (dy > 0)
-                    hideBottomNavigationView(bottomNavBar);
+                    bottomNavBar.hide();
                 else
-                    showBottomNavigationView(bottomNavBar);
+                    bottomNavBar.show();
             }
         });
 
-    }
-
-    private void hideBottomNavigationView(ExpandableBottomBar view) {
-        view.clearAnimation();
-        view.animate().translationY(view.getHeight() + 24).setDuration(200).start();
-    }
-
-    public void showBottomNavigationView(ExpandableBottomBar view) {
-        view.clearAnimation();
-        view.animate().translationY(0).setDuration(200).start();
     }
 }
