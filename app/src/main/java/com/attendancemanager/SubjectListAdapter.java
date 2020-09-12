@@ -52,6 +52,11 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         private ImageButton mBunked;
         private ImageButton mCancelled;
 
+        private static final float attendedAlpha = 0.4f;
+        private static final float bunkedAlpha = 0.3f;
+        private static final float cancelledAlpha = 0.5f;
+        private static final float visibleAlpha = 1.0f;
+
         public SubjectListViewHolder(@NonNull final View itemView, final OnItemClickListener itemClickListener) {
             super(itemView);
 
@@ -67,23 +72,23 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
             mBunked = itemView.findViewById(R.id.bunked_button);
             mCancelled = itemView.findViewById(R.id.cancelled_button);
 
-            mAttended.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemClickListener.onAttendButtonClick();
-                }
+            mAttended.setOnClickListener(view -> {
+                mAttended.setAlpha(visibleAlpha);
+                mBunked.setAlpha(bunkedAlpha);
+                mCancelled.setAlpha(cancelledAlpha);
+                itemClickListener.onAttendButtonClick();
             });
-            mBunked.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemClickListener.onBunkButtonClick();
-                }
+            mBunked.setOnClickListener(view -> {
+                mAttended.setAlpha(attendedAlpha);
+                mBunked.setAlpha(visibleAlpha);
+                mCancelled.setAlpha(cancelledAlpha);
+                itemClickListener.onBunkButtonClick();
             });
-            mCancelled.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemClickListener.onCancelledButtonClick();
-                }
+            mCancelled.setOnClickListener(view -> {
+                mAttended.setAlpha(attendedAlpha);
+                mBunked.setAlpha(bunkedAlpha);
+                mCancelled.setAlpha(visibleAlpha);
+                itemClickListener.onCancelledButtonClick();
             });
         }
 

@@ -1,6 +1,7 @@
 <resources>
     <!--    General-->
     <string name="app_name">Attendance Manager</string>
+    <string name="developer_name">Krithic Kumar</string>
     <string name="time_table">Time Table</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -15,18 +16,28 @@
 
     <!--    Subject Row Item-->
     <string name="attended_info_template">Attended: %1$s/%2$s</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- Preference Titles -->
+    <string name="header_general">General</string>
+    <string name="header_subjects">Subjects</string>
+    <string name="header_database">Database</string>
+    <string name="header_about">About</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="key_name">key_name</string>
+    <string name="key_attendance_criterion">key_attendance_criterion</string>
+    <string name="key_edit_subjects">key_edit_subjects</string>
+    <string name="key_vibration">key_vibration</string>
+    <string name="key_reset_attendance">key_reset_attendance</string>
+    <string name="key_clear_database">key_clear_database</string>
+    <string name="key_backup">key_backup</string>
+    <string name="key_recover">key_recover</string>
+    <string name="key_rate_app">key_rate_app</string>
+    <string name="key_bug_report">key_bug_report</string>
+    <string name="key_share_app">key_share_app</string>
+    <string name="key_about">key_about</string>
+    <string name="key_notification">key_notification</string>
+    <string name="key_notification_time">key_notification_time</string>
+    <string name="key_developed_by">key_developed_by</string>
+
 </resources>
