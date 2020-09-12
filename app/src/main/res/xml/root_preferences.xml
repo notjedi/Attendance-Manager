@@ -24,6 +24,7 @@
         <Preference
             app:icon="@drawable/ic_edit"
             app:key="@string/key_edit_subjects"
+            app:summary="Edit all kinds of subject data and add subjects"
             app:title="Edit subjects" />
 
         <SwitchPreference
@@ -41,11 +42,14 @@
         <SwitchPreference
             app:icon="@drawable/ic_notification"
             app:key="@string/key_notification"
+            app:summary="Get notifications to fill in your attendance"
             app:title="Notifications" />
 
         <Preference
+            app:dependency="@string/key_notification"
             app:icon="@drawable/ic_time"
             app:key="@string/key_notification_time"
+            app:summary="Set when you would like to get your daily notifications"
             app:title="Edit notification time" />
 
     </PreferenceCategory>
@@ -71,12 +75,14 @@
         <Preference
             app:icon="@drawable/ic_backup"
             app:key="@string/key_backup"
+            app:summary="Create a local backup of the database. You can later restore the data on another device"
             app:title="Backup" />
 
         <Preference
             app:icon="@drawable/ic_recover"
             app:key="@string/key_recover"
-            app:title="Recover" />
+            app:summary="Restore data from a local backup file"
+            app:title="Restore" />
 
     </PreferenceCategory>
 
@@ -87,6 +93,7 @@
         <Preference
             app:icon="@drawable/ic_rate_review"
             app:key="@string/key_rate_app"
+            app:summary="★★★★★"
             app:title="Rate App" />
 
         <Preference
@@ -102,6 +109,7 @@
         <Preference
             app:icon="@drawable/ic_info"
             app:key="@string/key_about"
+            app:summary="@string/app_version_number"
             app:title="About Attendance Manager" />
 
         <Preference
