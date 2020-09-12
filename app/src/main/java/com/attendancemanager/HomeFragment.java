@@ -57,7 +57,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -168,5 +167,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        /* Close the connection to the database although this method is not guaranteed to be called */
+        /* https://stackoverflow.com/questions/17195641/fragment-lifecycle-when-ondestroy-and-ondestroyview-are-not-called */
+
+        super.onDestroy();
+        dbHelper.close();
     }
 }

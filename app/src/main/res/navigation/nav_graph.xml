@@ -9,24 +9,23 @@
         android:id="@+id/homeFragment"
         android:name="com.attendancemanager.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.attendancemanager.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
-    <fragment
         android:id="@+id/timeTableFragment"
         android:name="com.attendancemanager.TimeTableFragment"
         android:label="fragment_time_table"
-        tools:layout="@layout/fragment_time_table" >
+        tools:layout="@layout/fragment_time_table">
         <action
             android:id="@+id/action_timeTableFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.attendancemanager.SettingsFragment"
+        android:label="SettingsFragment" />
 
 </navigation>

@@ -2,6 +2,7 @@ package com.attendancemanager;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,10 +26,15 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
 
-    private static final String TAG = "MainActivity";
+    private Handler handler;
+    private Runnable hideBottomBar = new Runnable() {
+        @Override
+        public void run() {
+            bottomBar.hide();
+        }
+    };
 
-//    TODO: close db connection in onDestroy
-//    https://developer.android.com/training/data-storage/sqlite#PersistingDbConnection
+    private static final String TAG = "MainActivity";
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -41,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return TimeTableFragment.newInstance("TimeTable Fragment", "Instance");
+                    return new TimeTableFragment();
                 case 1:
-                    return HomeFragment.newInstance("Home Fragment", "Instance");
+                    return new HomeFragment();
                 case 2:
-                    return SettingsFragment.newInstance("Settings Fragment", "Instance");
+                    return new SettingsFragment();
             }
             throw new IllegalStateException("Unexpected Position" + position);
         }
@@ -76,27 +82,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* Find views */
         bottomBar = findViewById(R.id.bottom_bar);
         viewPager = findViewById(R.id.view_pager);
 
+        initialSetup();
+        setupViewPager();
+    }
+
+    private void initialSetup() {
+        /* All initializing stuff */
+
+        handler = new Handler();
+        handler.postDelayed(hideBottomBar, 3000);
+
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+    }
 
-//        https://stackoverflow.com/questions/59275009/fragmentcontainerview-using-findnavcontroller
-//        https://stackoverflow.com/questions/58703451/fragmentcontainerview-as-navhostfragment
+    private void setupViewPager() {
+        /* Initializes the view pager */
 
-//        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//        NavController navController = navHostFragment.getNavController();
-//        ExpandableBottomBarNavigationUI.setupWithNavController(bottomBar, navController);
-
-//        https://proandroiddev.com/the-seven-actually-10-cardinal-sins-of-android-development-491d2f64c8e0
-//        3rd point
-
+        /* https://proandroiddev.com/the-seven-actually-10-cardinal-sins-of-android-development-491d2f64c8e0
+        3rd point */
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
         viewPager.setAdapter(viewPagerAdapter);
         bottomBar.select(R.id.homeFragment);
         viewPager.setCurrentItem(1);
 
+        /* Listen for page changes and select change the bottom bar accordingly */
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -126,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /* Listen for item selections and change the view pager accordingly */
         bottomBar.setOnItemSelectedListener((view, item) -> {
             Log.d(TAG, "onCreate: " + item.getItemId());
             switch (item.getItemId()) {
@@ -141,6 +156,15 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         });
+    }
 
+    @Override
+    public void onUserInteraction() {
+        /* Hide the bottom bar after 5 seconds of inactivity */
+
+        super.onUserInteraction();
+        handler.removeCallbacks(hideBottomBar);
+        bottomBar.show();
+        handler.postDelayed(hideBottomBar, 3000);
     }
 }
