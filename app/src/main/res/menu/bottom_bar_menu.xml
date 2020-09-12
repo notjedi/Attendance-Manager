@@ -5,19 +5,19 @@
     <item
         android:id="@+id/timeTableFragment"
         android:icon="@drawable/ic_time_table"
-        app:exb_color="#FFBE9C91"
-        android:title="@string/time_table"/>
+        android:title="@string/time_table"
+        app:exb_color="#FFBE9C91" />
 
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        app:exb_color="#FF58A5F0"
-        android:title="@string/home"/>
+        android:title="@string/home"
+        app:exb_color="#FF58A5F0" />
 
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        app:exb_color="#FFFF77A9"
-        android:title="@string/settings"/>
+        android:title="@string/settings"
+        app:exb_color="#FFFF77A9" />
 
 </menu>

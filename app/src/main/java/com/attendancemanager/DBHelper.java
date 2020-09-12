@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_SATURDAY_NAME = "saturday";
     public static final String TABLE_SUNDAY_NAME = "sunday";
 
-    private static final String[] TABLE_DAY_NAMES = { TABLE_MONDAY_NAME, TABLE_TUESDAY_NAME, TABLE_WEDNESDAY_NAME, TABLE_THURSDAY_NAME, TABLE_FRIDAY_NAME, TABLE_SATURDAY_NAME, TABLE_SUNDAY_NAME };
+    private static final String[] TABLE_DAY_NAMES = {TABLE_MONDAY_NAME, TABLE_TUESDAY_NAME, TABLE_WEDNESDAY_NAME, TABLE_THURSDAY_NAME, TABLE_FRIDAY_NAME, TABLE_SATURDAY_NAME, TABLE_SUNDAY_NAME};
 
 
     public DBHelper(@Nullable Context context) {
@@ -38,14 +38,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        /* Create tables when the app is started for the first time */
 
-        String createSubjectDetailsTable = "CREATE TABLE " + TABLE_SUBJECT_DETAILS_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_SUBJECT_NAME + " TEXT, "
+        String createSubjectDetailsTable = "CREATE TABLE " + TABLE_SUBJECT_DETAILS_NAME
+                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_SUBJECT_NAME + " TEXT, "
                 + COLUMN_ATTENDED_CLASSES + " INT, " + COLUMN_TOTAL_CLASSES + " INT)";
 
         sqLiteDatabase.execSQL(createSubjectDetailsTable);
-        for (String day: TABLE_DAY_NAMES) {
+        for (String day : TABLE_DAY_NAMES) {
             /* Create table for each day */
-            String createDayTable = "CREATE TABLE " + day + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_SUBJECT_NAME + " TEXT)";
+            String createDayTable = "CREATE TABLE " + day + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COLUMN_SUBJECT_NAME + " TEXT)";
             sqLiteDatabase.execSQL(createDayTable);
         }
     }
@@ -73,7 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase database = getWritableDatabase();
 
-        for (String subjectName: subjectNames) {
+        for (String subjectName : subjectNames) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_SUBJECT_NAME, subjectName);
             database.insert(day, null, contentValues);
@@ -85,12 +88,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase database = getWritableDatabase();
 
-        for (Subject subject: subjects) {
+        for (Subject subject : subjects) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_SUBJECT_NAME, subject.getSubjectName());
             contentValues.put(COLUMN_ATTENDED_CLASSES, subject.getAttendedClasses());
             contentValues.put(COLUMN_TOTAL_CLASSES, subject.getTotalClasses());
-            database.update(TABLE_SUBJECT_DETAILS_NAME, contentValues, COLUMN_SUBJECT_NAME + " = ?", new String[] {subject.getSubjectName()});
+            database.update(TABLE_SUBJECT_DETAILS_NAME, contentValues,
+                    COLUMN_SUBJECT_NAME + " = ?", new String[]{subject.getSubjectName()});
         }
     }
 
@@ -102,7 +106,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
 
         Cursor cursor = database.rawQuery(queryString, null);
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             String name = cursor.getString(1);
             subjectList.add(getSubject(name));
         }
@@ -115,7 +119,8 @@ public class DBHelper extends SQLiteOpenHelper {
         /* Gets the details of the subjectName from the TABLE_SUBJECT_DETAILS_NAME table */
 
         SQLiteDatabase database = getReadableDatabase();
-        String queryString = "SELECT * FROM " + TABLE_SUBJECT_DETAILS_NAME + " WHERE " + COLUMN_SUBJECT_NAME + " = ?";
+        String queryString = "SELECT * FROM " + TABLE_SUBJECT_DETAILS_NAME + " WHERE "
+                + COLUMN_SUBJECT_NAME + " = ?";
         Subject subject;
 
         Cursor cursor = database.rawQuery(queryString, new String[]{subjectName});
@@ -160,7 +165,8 @@ public class DBHelper extends SQLiteOpenHelper {
         /* Deletes the data of subjectName from the TABLE_SUBJECT_DETAILS_NAME table */
 
         SQLiteDatabase database = getWritableDatabase();
-        return database.delete(TABLE_SUBJECT_DETAILS_NAME, COLUMN_SUBJECT_NAME + " = ?", new String[]{subjectName}) > 0;
+        return database.delete(TABLE_SUBJECT_DETAILS_NAME, COLUMN_SUBJECT_NAME + " = ?"
+                , new String[]{subjectName}) > 0;
     }
 
     public boolean deleteAllSubject() {
