@@ -152,18 +152,16 @@ public class HomeFragment extends Fragment {
             ExpandableBottomBar bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
 
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy > 0)
+                if (dy > 0) {
+                    /* Scrolled down */
                     bottomNavBar.hide();
-                else
+                } else {
+                    /* Scrolled up */
                     bottomNavBar.show();
+                }
             }
         });
 
