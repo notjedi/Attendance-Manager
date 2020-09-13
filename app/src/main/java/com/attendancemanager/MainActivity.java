@@ -100,8 +100,9 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(hideBottomBar, 3000);
 
         Window window = getWindow();
+//        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
     }
 
     private void setupViewPager() {
