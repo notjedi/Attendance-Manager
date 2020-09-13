@@ -1,6 +1,7 @@
 package com.attendancemanager;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,11 +12,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -65,7 +71,48 @@ public class EditSubjectActivity extends AppCompatActivity {
         extendedFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this, R.style.AlertDialog_App_Theme);
+                dialogBuilder.setTitle("Add Subject");
+                View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+                EditText editText = subjectInputView.findViewById(R.id.subject_name_input);
+                dialogBuilder.setView(subjectInputView);
 
+                dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newSubjectName = editText.getText().toString().trim();
+                        Subject subject = new Subject(newSubjectName);
+                        int position = subjectList.size();
+
+                        if (subjectList.contains(subject)) {
+                            extendedFab.animate().alpha(0).setDuration(50);
+                            Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
+                            snackbar.addCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    super.onDismissed(transientBottomBar, event);
+                                    extendedFab.animate().alpha(1).setDuration(300);
+                                }
+                            });
+                            snackbar.show();
+                            return;
+                        }
+
+                        dbHelper.addSubject(subject);
+                        subjectList.add(subject);
+                        editSubjectAdapter.notifyItemInserted(position);
+
+                        dialog.dismiss();
+                    }
+                });
+
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialogBuilder.show();
             }
         });
     }
@@ -117,6 +164,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
+                        dbHelper.deleteSubject(deletedSubject.getSubjectName());
                         extendedFab.animate().alpha(1).setDuration(300);
                     }
                 });
