@@ -8,4 +8,13 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="AlertDialog.App.Theme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:textColor">@color/light_brown</item>
+        <item name="fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="MaterialInputTextLayout.App.Theme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextColor">@color/light_brown</item>
+    </style>
+
 </resources>

@@ -15,6 +15,12 @@
             app:key="@string/key_attendance_criterion"
             app:title="Edit attendance criterion" />
 
+        <SwitchPreference
+            app:icon="@drawable/ic_vibration"
+            app:key="@string/key_vibration"
+            app:summary="Haptic feedback on marking attendance"
+            app:title="Vibration" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -26,12 +32,6 @@
             app:key="@string/key_edit_subjects"
             app:summary="Edit all kinds of subject data and add subjects"
             app:title="Edit subjects" />
-
-        <SwitchPreference
-            app:icon="@drawable/ic_vibration"
-            app:key="@string/key_vibration"
-            app:summary="Haptic feedback on marking attendance"
-            app:title="Vibration" />
 
     </PreferenceCategory>
 

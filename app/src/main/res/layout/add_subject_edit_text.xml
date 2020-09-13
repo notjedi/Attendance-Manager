@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="30"
+        style="@style/MaterialInputTextLayout.App.Theme">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/subject_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Subject Name"
+            android:imeOptions="actionDone"
+            android:fontFamily="@font/rubik"
+            android:maxLength="30"
+            android:inputType="text"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/light_black"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+    
+</FrameLayout>
