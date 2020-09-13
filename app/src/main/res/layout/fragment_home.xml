@@ -5,7 +5,7 @@
     android:id="@+id/nested_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FEEAE6"
+    android:background="@color/colorPrimary"
     tools:context=".HomeFragment">
 
     <!--    https://stackoverflow.com/questions/43116655/recyclerview-last-item-not-shown-inside-coordinator-layout-->
@@ -121,10 +121,10 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/subject_recycler_view"
+        android:id="@+id/today_subject_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FEDBD0"
+        android:background="@color/colorPrimaryDark"
         android:paddingBottom="16dp"
         app:layout_anchor="@+id/app_bar_layout"
         app:layout_anchorGravity="bottom|center"

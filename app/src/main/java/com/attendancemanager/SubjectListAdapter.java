@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.SubjectListViewHolder> {
 
@@ -108,18 +109,14 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
 
 //        TODO: set progress bar color based on attendance
 //        TODO: set status
-        if (mTodaySubjectList.size() != 0) {
 
             Subject subject = mTodaySubjectList.get(position);
-
             int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
             holder.mSubjectName.setText(subject.getSubjectName());
             holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), Integer.toString(subject.getAttendedClasses()), Integer.toString(subject.getTotalClasses())));
             holder.mSubjectAttendanceProgressBar.setProgress(percentage);
-            holder.mSubjectProgressBarPercentage.setText(String.format("%d%%", percentage));
-        }
-
+            holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
 
     @Override

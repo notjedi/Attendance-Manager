@@ -7,7 +7,7 @@
         <EditTextPreference
             app:icon="@drawable/ic_person"
             app:key="@string/key_name"
-            app:title="Edit name"
+            app:title="Name"
             app:useSimpleSummaryProvider="true" />
 
         <Preference

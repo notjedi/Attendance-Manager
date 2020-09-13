@@ -1,7 +1,6 @@
 package com.attendancemanager;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -69,7 +67,7 @@ public class HomeFragment extends Fragment {
         mGreet = view.findViewById(R.id.greet_text_view);
         mProgressBar = view.findViewById(R.id.overall_attendance_percentage);
         mProgressPercentage = view.findViewById(R.id.progressbar_percentage);
-        mRecyclerView = view.findViewById(R.id.subject_recycler_view);
+        mRecyclerView = view.findViewById(R.id.today_subject_recycler_view);
 
     }
 
