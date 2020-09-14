@@ -83,19 +83,17 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateSubjectsTable(List<Subject> subjects) {
+    public void updateSubjectsTable(Subject subject, String oldSubjectName) {
         /* Updates the TABLE_SUBJECT_DETAILS_NAME table with the List<Subject> provided */
 
         SQLiteDatabase database = getWritableDatabase();
 
-        for (Subject subject : subjects) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_SUBJECT_NAME, subject.getSubjectName());
-            contentValues.put(COLUMN_ATTENDED_CLASSES, subject.getAttendedClasses());
-            contentValues.put(COLUMN_TOTAL_CLASSES, subject.getTotalClasses());
-            database.update(TABLE_SUBJECT_DETAILS_NAME, contentValues,
-                    COLUMN_SUBJECT_NAME + " = ?", new String[]{subject.getSubjectName()});
-        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_SUBJECT_NAME, subject.getSubjectName());
+        contentValues.put(COLUMN_ATTENDED_CLASSES, subject.getAttendedClasses());
+        contentValues.put(COLUMN_TOTAL_CLASSES, subject.getTotalClasses());
+        database.update(TABLE_SUBJECT_DETAILS_NAME, contentValues,
+                COLUMN_SUBJECT_NAME + " = ?", new String[]{oldSubjectName});
     }
 
     public List<Subject> getSubjectsOfDay(String day) {
@@ -164,7 +162,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteSubjectFormDay(String subjectName, String[] days) {
 
         SQLiteDatabase database = getWritableDatabase();
-        for (String day: days) {
+        for (String day : days) {
             database.delete(day, COLUMN_SUBJECT_NAME + " = ?", new String[]{subjectName});
         }
     }
@@ -175,7 +173,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         database.delete(TABLE_SUBJECT_DETAILS_NAME, COLUMN_SUBJECT_NAME + " = ?"
                 , new String[]{subjectName});
-        for (String day: TABLE_DAY_NAMES) {
+        for (String day : TABLE_DAY_NAMES) {
             database.delete(day, COLUMN_SUBJECT_NAME + " = ?", new String[]{subjectName});
         }
     }
@@ -185,7 +183,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase database = getWritableDatabase();
         database.delete(TABLE_SUBJECT_DETAILS_NAME, null, null);
-        for (String day: TABLE_DAY_NAMES) {
+        for (String day : TABLE_DAY_NAMES) {
             database.delete(day, null, null);
         }
     }
