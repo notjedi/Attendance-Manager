@@ -161,18 +161,24 @@ public class DBHelper extends SQLiteOpenHelper {
         return subjectList;
     }
 
-    public boolean deleteSubject(String subjectName) {
+    public void deleteSubject(String subjectName) {
         /* Deletes the data of subjectName from the TABLE_SUBJECT_DETAILS_NAME table */
 
         SQLiteDatabase database = getWritableDatabase();
-        return database.delete(TABLE_SUBJECT_DETAILS_NAME, COLUMN_SUBJECT_NAME + " = ?"
-                , new String[]{subjectName}) > 0;
+        database.delete(TABLE_SUBJECT_DETAILS_NAME, COLUMN_SUBJECT_NAME + " = ?"
+                , new String[]{subjectName});
+        for (String day: TABLE_DAY_NAMES) {
+            database.delete(day, COLUMN_SUBJECT_NAME + " = ?", new String[]{subjectName});
+        }
     }
 
-    public boolean deleteAllSubject() {
+    public void deleteAllSubject() {
         /* Deletes all data from the TABLE_SUBJECT_DETAILS_NAME table */
 
         SQLiteDatabase database = getWritableDatabase();
-        return database.delete(TABLE_SUBJECT_DETAILS_NAME, null, null) > 0;
+        database.delete(TABLE_SUBJECT_DETAILS_NAME, null, null);
+        for (String day: TABLE_DAY_NAMES) {
+            database.delete(day, null, null);
+        }
     }
 }

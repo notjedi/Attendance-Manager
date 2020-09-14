@@ -1,5 +1,6 @@
 package com.attendancemanager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class Subject {
@@ -24,6 +25,14 @@ public class Subject {
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.getSubjectName() +
+                " " + this.getAttendedClasses() +
+                " " + this.getTotalClasses();
     }
 
     @Override
