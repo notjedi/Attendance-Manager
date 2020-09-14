@@ -16,10 +16,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
     private static final String TAG = "DBHelper";
-    public static final String TABLE_SUBJECT_DETAILS_NAME = "subjectDetails";
-    public static final String COLUMN_SUBJECT_NAME = "subjectName";
-    public static final String COLUMN_ATTENDED_CLASSES = "attendedClasses";
-    public static final String COLUMN_TOTAL_CLASSES = "totalClasses";
+    private static final String TABLE_SUBJECT_DETAILS_NAME = "subjectDetails";
+    private static final String COLUMN_SUBJECT_NAME = "subjectName";
+    private static final String COLUMN_ATTENDED_CLASSES = "attendedClasses";
+    private static final String COLUMN_TOTAL_CLASSES = "totalClasses";
 
     public static final String TABLE_MONDAY_NAME = "monday";
     public static final String TABLE_TUESDAY_NAME = "tuesday";
@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_SATURDAY_NAME = "saturday";
     public static final String TABLE_SUNDAY_NAME = "sunday";
 
-    private static final String[] TABLE_DAY_NAMES = {TABLE_MONDAY_NAME, TABLE_TUESDAY_NAME, TABLE_WEDNESDAY_NAME, TABLE_THURSDAY_NAME, TABLE_FRIDAY_NAME, TABLE_SATURDAY_NAME, TABLE_SUNDAY_NAME};
+    public static final String[] TABLE_DAY_NAMES = {TABLE_MONDAY_NAME, TABLE_TUESDAY_NAME, TABLE_WEDNESDAY_NAME, TABLE_THURSDAY_NAME, TABLE_FRIDAY_NAME, TABLE_SATURDAY_NAME, TABLE_SUNDAY_NAME};
 
 
     public DBHelper(@Nullable Context context) {
@@ -159,6 +159,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return subjectList;
+    }
+
+    public void deleteSubjectFormDay(String subjectName, String[] days) {
+
+        SQLiteDatabase database = getWritableDatabase();
+        for (String day: days) {
+            database.delete(day, COLUMN_SUBJECT_NAME + " = ?", new String[]{subjectName});
+        }
     }
 
     public void deleteSubject(String subjectName) {
