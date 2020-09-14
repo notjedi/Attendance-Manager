@@ -32,12 +32,12 @@ public class EditSubjectActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private ExtendedFloatingActionButton extendedFab;
-    private CoordinatorLayout coordinatorLayout;
 
     private DBHelper dbHelper;
     private List<Subject> subjectList;
     private Subject deletedSubject;
     private EditSubjectAdapter editSubjectAdapter;
+    public static boolean changed;
 
     private static final String TAG = "EditSubjectActivity";
 
@@ -46,13 +46,21 @@ public class EditSubjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_subject);
 
-        coordinatorLayout = findViewById(R.id.coordinator_layout);
+        initialSetup();
+        buildRecyclerView();
+        setExtendedFabListener();
+
+    }
+
+    private void initialSetup() {
+
         toolbar = findViewById(R.id.edit_subject_toolbar);
         recyclerView = findViewById(R.id.edit_subject_recycler_view);
         extendedFab = findViewById(R.id.extended_fab);
 
         dbHelper = new DBHelper(this);
         deletedSubject = null;
+        changed = false;
         subjectList = dbHelper.getAllSubjects();
 
         toolbar.setTitle("Subjects");
@@ -64,57 +72,8 @@ public class EditSubjectActivity extends AppCompatActivity {
             }
         });
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.light_black));
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        buildRecyclerView();
-
-        extendedFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this, R.style.AlertDialog_App_Theme);
-                dialogBuilder.setTitle("Add Subject");
-                View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
-                EditText editText = subjectInputView.findViewById(R.id.subject_name_input);
-                dialogBuilder.setView(subjectInputView);
-
-                dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newSubjectName = editText.getText().toString().trim();
-                        Subject subject = new Subject(newSubjectName);
-                        int position = subjectList.size();
-
-                        if (subjectList.contains(subject)) {
-                            extendedFab.animate().alpha(0).setDuration(50);
-                            Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
-                            snackbar.addCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar transientBottomBar, int event) {
-                                    super.onDismissed(transientBottomBar, event);
-                                    extendedFab.animate().alpha(1).setDuration(300);
-                                }
-                            });
-                            snackbar.show();
-                            return;
-                        }
-
-                        dbHelper.addSubject(subject);
-                        subjectList.add(subject);
-                        editSubjectAdapter.notifyItemInserted(position);
-
-                        dialog.dismiss();
-                    }
-                });
-
-                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                dialogBuilder.show();
-            }
-        });
     }
 
     private void buildRecyclerView() {
@@ -147,15 +106,16 @@ public class EditSubjectActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
                 int position = viewHolder.getAdapterPosition();
+                final boolean[] flag = {false};
                 deletedSubject = subjectList.get(position);
 
                 subjectList.remove(position);
                 editSubjectAdapter.notifyItemRemoved(position);
-                extendedFab.animate().alpha(0).setDuration(50);
                 Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " + deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
                 snackbar.setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        flag[0] = true;
                         subjectList.add(position, deletedSubject);
                         editSubjectAdapter.notifyItemInserted(position);
                     }
@@ -164,8 +124,11 @@ public class EditSubjectActivity extends AppCompatActivity {
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
-                        dbHelper.deleteSubject(deletedSubject.getSubjectName());
-                        extendedFab.animate().alpha(1).setDuration(300);
+                        Log.i(TAG, "onDismissed: " + flag[0] + " " + position);
+                        if (!flag[0]) {
+                            changed = true;
+                            dbHelper.deleteSubject(deletedSubject.getSubjectName());
+                        }
                     }
                 });
                 snackbar.show();
@@ -173,5 +136,48 @@ public class EditSubjectActivity extends AppCompatActivity {
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void setExtendedFabListener() {
+
+        extendedFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this, R.style.AlertDialog_App_Theme);
+                dialogBuilder.setTitle("Add Subject");
+                View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+                EditText editText = subjectInputView.findViewById(R.id.subject_name_input);
+                dialogBuilder.setView(subjectInputView);
+
+                dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newSubjectName = editText.getText().toString().trim();
+                        Subject subject = new Subject(newSubjectName);
+                        int position = subjectList.size();
+
+                        if (subjectList.contains(subject)) {
+                            Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                            return;
+                        }
+
+                        dbHelper.addSubject(subject);
+                        subjectList.add(subject);
+                        editSubjectAdapter.notifyItemInserted(position);
+
+                        dialog.dismiss();
+                    }
+                });
+
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialogBuilder.show();
+            }
+        });
     }
 }

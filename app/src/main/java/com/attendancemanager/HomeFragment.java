@@ -1,6 +1,7 @@
 package com.attendancemanager;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
 
+    private String day;
     private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
 
@@ -107,7 +109,7 @@ public class HomeFragment extends Fragment {
     private void getTodayTimeTable() {
 
         dbHelper = new DBHelper(getContext());
-        mTodaySubjectList = new ArrayList<>();
+
 //        dbHelper.addSubject(new Subject("English", 10, 20));
 //        dbHelper.addSubject(new Subject("Maths"));
 //        dbHelper.addSubject(new Subject("Indian Constitution", 15, 20));
@@ -118,7 +120,7 @@ public class HomeFragment extends Fragment {
 //        String[] names = new String[]{"English", "Maths", "Physics"};
 //        dbHelper.insertSubjectToDayTable("monday", names);
 
-        String day = new SimpleDateFormat("EEEE", Locale.US).format(Calendar.getInstance().getTime()).toLowerCase();
+        day = new SimpleDateFormat("EEEE", Locale.US).format(Calendar.getInstance().getTime()).toLowerCase();
         mTodaySubjectList = dbHelper.getSubjectsOfDay("monday");
     }
 
@@ -163,6 +165,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (EditSubjectActivity.changed) {
+            mTodaySubjectList.clear();
+            mTodaySubjectList.addAll(dbHelper.getSubjectsOfDay("monday"));
+            mSubjectListAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
