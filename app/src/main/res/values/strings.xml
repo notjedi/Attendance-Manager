@@ -2,7 +2,7 @@
     <!--    General-->
     <string name="app_name">Attendance Manager</string>
     <string name="developer_name">Krithic Kumar</string>
-    <string name="app_version_number">0.1.0-alpha-01</string>
+    <string name="app_version_number">0.5.0-alpha04</string>
     <string name="time_table">Time Table</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
