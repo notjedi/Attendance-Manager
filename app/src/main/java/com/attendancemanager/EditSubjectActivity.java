@@ -15,15 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
@@ -143,17 +147,32 @@ public class EditSubjectActivity extends AppCompatActivity {
         extendedFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this, R.style.AlertDialog_App_Theme);
                 dialogBuilder.setTitle("Add Subject");
+
                 View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
-                EditText editText = subjectInputView.findViewById(R.id.subject_name_input);
+                TextInputEditText subjectNameEditText = subjectInputView.findViewById(R.id.subject_name_input);
+                TextInputEditText attendedClassesEditText = subjectInputView.findViewById(R.id.subject_attended_input);
+                TextInputEditText totalClassesEditText = subjectInputView.findViewById(R.id.subject_total_input);
                 dialogBuilder.setView(subjectInputView);
 
                 dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String newSubjectName = editText.getText().toString().trim();
-                        Subject subject = new Subject(newSubjectName);
+
+                        String newSubjectName = subjectNameEditText.getText().toString().trim();
+                        int attendClass;
+                        int totalClass;
+                        try {
+                            attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
+                            totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
+                        }
+                        catch (NumberFormatException e) {
+                            attendClass = totalClass = 0;
+                        }
+
+                        Subject subject = new Subject(newSubjectName, attendClass, totalClass);
                         int position = subjectList.size();
 
                         if (subjectList.contains(subject)) {
@@ -173,10 +192,135 @@ public class EditSubjectActivity extends AppCompatActivity {
                 dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         dialog.cancel();
                     }
                 });
-                dialogBuilder.show();
+
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+                Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setEnabled(false);
+
+                attendedClassesEditText.addTextChangedListener(new TextWatcher() {
+
+                    String subjectName;
+                    int totalClass;
+                    int attendClass;
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        try {
+                            totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
+                            attendClass = Integer.parseInt(s.toString());
+                        } catch (NumberFormatException e) {
+                            totalClass = attendClass = -1;
+                        }
+
+                        if (totalClass < attendClass || totalClass == -1 || attendClass == -1) {
+                            attendedClassesEditText.setError("Total classes less than attended classes");
+                            positiveButton.setEnabled(false);
+                        }
+                        else {
+                            positiveButton.setEnabled(true);
+                            attendedClassesEditText.setError(null);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        subjectName = subjectNameEditText.getText().toString().trim();
+
+                        if (subjectName.isEmpty() || subjectList.contains(new Subject(subjectName))) {
+                            positiveButton.setEnabled(false);
+                        }
+                        else {
+                            positiveButton.setEnabled(true);
+                            attendedClassesEditText.setError(null);
+                        }
+
+                    }
+                });
+
+                totalClassesEditText.addTextChangedListener(new TextWatcher() {
+
+                    String subjectName;
+                    int totalClass;
+                    int attendClass;
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        try {
+                            totalClass = Integer.parseInt(s.toString());
+                            attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
+                        } catch (NumberFormatException e) {
+                            totalClass = attendClass = -1;
+                        }
+
+                        if (totalClass < attendClass || totalClass == -1 || attendClass == -1) {
+                            attendedClassesEditText.setError("Total classes less than attended classes");
+                            positiveButton.setEnabled(false);
+                        }
+                        else {
+                            attendedClassesEditText.setError(null);
+                            positiveButton.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        subjectName = subjectNameEditText.getText().toString().trim();
+
+                        if (subjectName.isEmpty() || subjectList.contains(new Subject(subjectName))) {
+                            positiveButton.setEnabled(false);
+                        }
+                        else {
+                            positiveButton.setEnabled(true);
+                            attendedClassesEditText.setError(null);
+                        }
+                    }
+                });
+
+                subjectNameEditText.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (subjectList.contains(new Subject(s.toString().trim()))) {
+                            positiveButton.setEnabled(false);
+                            subjectNameEditText.setError("Subject already exists");
+                        }
+                        else if (s.toString().isEmpty()) {
+                            positiveButton.setEnabled(false);
+                            subjectNameEditText.setError("Subject name cannot be empty");
+                        }
+                        else {
+                            positiveButton.setEnabled(true);
+                            subjectNameEditText.setError(null);
+                        }
+                    }
+                });
             }
         });
     }

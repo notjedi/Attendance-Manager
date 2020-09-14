@@ -1,30 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        style="@style/MaterialInputTextLayout.App.Theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         app:counterEnabled="true"
         app:counterMaxLength="30"
-        style="@style/MaterialInputTextLayout.App.Theme">
+        app:errorEnabled="true"
+        app:errorIconDrawable="@drawable/ic_error">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/subject_name_input"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="Subject Name"
-            android:imeOptions="actionDone"
-            android:fontFamily="@font/rubik"
-            android:maxLength="30"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/raleway_semibold"
+            android:hint="@string/subject_name"
+            android:imeOptions="actionNext"
             android:inputType="text"
+            android:maxLength="30"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textColor="@color/light_black"/>
+            android:textColor="@color/light_black" />
 
     </com.google.android.material.textfield.TextInputLayout>
-    
-</FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout2"
+            style="@style/MaterialInputTextLayout.App.Theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@drawable/ic_error">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/subject_attended_input"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:fontFamily="@font/raleway_semibold"
+                android:hint="@string/attended_classes"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="@color/light_black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/MaterialInputTextLayout.App.Theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/subject_total_input"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:fontFamily="@font/raleway_semibold"
+                android:hint="@string/total_classes"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="@color/light_black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

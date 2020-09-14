@@ -2,7 +2,7 @@
     <!--    General-->
     <string name="app_name">Attendance Manager</string>
     <string name="developer_name">Krithic Kumar</string>
-    <string name="app_version_number">0.1.0-beta-01</string>
+    <string name="app_version_number">0.1.0-alpha-01</string>
     <string name="time_table">Time Table</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -40,6 +40,11 @@
     <string name="key_notification">key_notification</string>
     <string name="key_notification_time">key_notification_time</string>
     <string name="key_developed_by">key_developed_by</string>
+
+    <!--    Edit Subject Activity-->
     <string name="add_subject">Add subject</string>
+    <string name="subject_name">Subject Name</string>
+    <string name="attended_classes">Attended Classes</string>
+    <string name="total_classes">Total Classes</string>
 
 </resources>
