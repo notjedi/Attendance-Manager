@@ -15,12 +15,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
-    private static final String TAG = "DBHelper";
-    private static final String TABLE_SUBJECT_DETAILS_NAME = "subjectDetails";
-    private static final String COLUMN_SUBJECT_NAME = "subjectName";
-    private static final String COLUMN_ATTENDED_CLASSES = "attendedClasses";
-    private static final String COLUMN_TOTAL_CLASSES = "totalClasses";
-
     public static final String TABLE_MONDAY_NAME = "monday";
     public static final String TABLE_TUESDAY_NAME = "tuesday";
     public static final String TABLE_WEDNESDAY_NAME = "wednesday";
@@ -28,8 +22,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_FRIDAY_NAME = "friday";
     public static final String TABLE_SATURDAY_NAME = "saturday";
     public static final String TABLE_SUNDAY_NAME = "sunday";
-
     public static final String[] TABLE_DAY_NAMES = {TABLE_MONDAY_NAME, TABLE_TUESDAY_NAME, TABLE_WEDNESDAY_NAME, TABLE_THURSDAY_NAME, TABLE_FRIDAY_NAME, TABLE_SATURDAY_NAME, TABLE_SUNDAY_NAME};
+    private static final String TAG = "DBHelper";
+    private static final String TABLE_SUBJECT_DETAILS_NAME = "subjectDetails";
+    private static final String COLUMN_SUBJECT_NAME = "subjectName";
+    private static final String COLUMN_ATTENDED_CLASSES = "attendedClasses";
+    private static final String COLUMN_TOTAL_CLASSES = "totalClasses";
 
 
     public DBHelper(@Nullable Context context) {

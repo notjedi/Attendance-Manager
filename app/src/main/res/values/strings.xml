@@ -17,6 +17,9 @@
 
     <!--    Subject Row Item-->
     <string name="attended_info_template">Attended: %1$s/%2$s</string>
+    <string name="cancelled_text">Cancelled</string>
+    <string name="attended_text">Attended</string>
+    <string name="bunked_text">Bunked</string>
 
     <!-- Preference Titles -->
     <string name="header_general">General</string>
@@ -44,7 +47,9 @@
     <!--    Edit Subject Activity-->
     <string name="add_subject">Add subject</string>
     <string name="subject_name">Subject Name</string>
-    <string name="attended_classes">Attended Classes</string>
     <string name="total_classes">Total Classes</string>
+    <string name="total">Total</string>
+    <string name="attended">Attended</string>
+    <string name="can_bunk">Can Bunk</string>
 
 </resources>

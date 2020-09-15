@@ -5,7 +5,7 @@
     android:id="@+id/nested_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPinkPrimary"
     tools:context=".HomeFragment">
 
     <!--    https://stackoverflow.com/questions/43116655/recyclerview-last-item-not-shown-inside-coordinator-layout-->
@@ -59,7 +59,7 @@
                         android:id="@+id/greet_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/raleway_semibold"
                         android:textSize="18sp"
                         tools:text="Hey there, Krithic" />
@@ -124,7 +124,7 @@
         android:id="@+id/today_subject_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPinkPrimaryDark"
         android:paddingBottom="16dp"
         app:layout_anchor="@+id/app_bar_layout"
         app:layout_anchorGravity="bottom|center"

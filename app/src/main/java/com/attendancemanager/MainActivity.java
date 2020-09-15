@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -13,23 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager.widget.ViewPager;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
-import github.com.st235.lib_expandablebottombar.navigation.ExpandableBottomBarNavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
-
     private Handler handler;
     private Runnable hideBottomBar = new Runnable() {
         @Override
@@ -37,49 +31,6 @@ public class MainActivity extends AppCompatActivity {
             bottomBar.hide();
         }
     };
-
-    private static final String TAG = "MainActivity";
-
-    public class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new TimeTableFragment();
-                case 1:
-                    return new HomeFragment();
-                case 2:
-                    return new SettingsFragment();
-            }
-            throw new IllegalStateException("Unexpected Position" + position);
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Context context = MainActivity.this;
-            switch (position) {
-                case 0:
-                    return context.getString(R.string.time_table);
-                case 1:
-                    return context.getString(R.string.home);
-                case 2:
-                    return context.getString(R.string.settings);
-            }
-            return null;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
 //        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPinkPrimaryDark));
         /* Set to light mode by preventing the app to follow system wide default */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
@@ -174,5 +125,46 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacks(hideBottomBar);
         bottomBar.show();
         handler.postDelayed(hideBottomBar, 3000);
+    }
+
+    public class ViewPagerAdapter extends FragmentPagerAdapter {
+
+        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new TimeTableFragment();
+                case 1:
+                    return new HomeFragment();
+                case 2:
+                    return new SettingsFragment();
+            }
+            throw new IllegalStateException("Unexpected Position" + position);
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Context context = MainActivity.this;
+            switch (position) {
+                case 0:
+                    return context.getString(R.string.time_table);
+                case 1:
+                    return context.getString(R.string.home);
+                case 2:
+                    return context.getString(R.string.settings);
+            }
+            return null;
+        }
     }
 }

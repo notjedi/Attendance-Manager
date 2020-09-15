@@ -1,20 +1,34 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
+        <!-- https://stackoverflow.com/a/19826738 -->
+        <!-- https://cyrilmottier.com/2013/01/23/android-app-launching-made-gorgeous/ -->
+        <!-- <item name="android:windowDisablePreview">true</item> -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="AlertDialog.App.Theme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:textColor">@color/light_brown</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="fontFamily">@font/raleway_semibold</item>
     </style>
 
     <style name="MaterialInputTextLayout.App.Theme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextColor">@color/light_brown</item>
+    </style>
+    
+    <style name="MaterialTimePicker.Display.App.Theme" parent="Widget.MaterialComponents.TimePicker.Display">
+        <item name="backgroundTint">#6200EE</item>
+        <item name="android:textColor">#3700B3</item>
+        <item name="rippleColor">#6200EE</item>
+    </style>
+
+    <style name="MaterialSlider.App.Theme" parent="Widget.MaterialComponents.Slider">
+        <item name="tickMark">@null</item>
     </style>
 
 </resources>
