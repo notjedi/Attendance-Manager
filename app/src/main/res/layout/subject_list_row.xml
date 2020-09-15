@@ -30,48 +30,87 @@
                 android:maxLines="2"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/subject_attendance_progressbar"
+                app:layout_constraintEnd_toStartOf="@id/subject_attendance_progressbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Maths" />
 
             <TextView
-                android:id="@+id/total_classes_attended"
+                android:id="@+id/total_classes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/rubik"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subject_name"
-                tools:text="Attended: 1000/1000" />
+                app:layout_constraintBottom_toTopOf="@id/total_text"
+                app:layout_constraintEnd_toEndOf="@id/total_text"
+                app:layout_constraintStart_toStartOf="@id/total_text"
+                app:layout_constraintTop_toBottomOf="@id/subject_name"
+                tools:text="50" />
 
             <TextView
-                android:id="@+id/status_info"
-                android:layout_width="0dp"
+                android:id="@+id/attended_classes"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/roboto"
-                app:layout_constraintEnd_toStartOf="@+id/cancelled_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/total_classes_attended"
-                tools:text="Status: On track, you can skip the next 10 classes" />
+                android:fontFamily="@font/rubik"
+                app:layout_constraintBottom_toTopOf="@id/attended_text"
+                app:layout_constraintEnd_toEndOf="@id/attended_text"
+                app:layout_constraintStart_toStartOf="@id/attended_text"
+                app:layout_constraintTop_toBottomOf="@id/subject_name"
+                tools:text="30" />
 
             <TextView
-                android:id="@+id/attendance_status"
+                android:id="@+id/can_bunk_classes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/rubik"
+                app:layout_constraintBottom_toTopOf="@id/can_bunk_text"
+                app:layout_constraintEnd_toEndOf="@id/can_bunk_text"
+                app:layout_constraintStart_toStartOf="@id/can_bunk_text"
+                app:layout_constraintTop_toBottomOf="@id/subject_name"
+                tools:text="5" />
+
+            <TextView
+                android:id="@+id/total_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/roboto"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/rubik"
+                android:text="@string/total"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/status_info"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/attended_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/rubik"
+                android:text="@string/attended"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/total_text"
                 tools:text="Attended" />
+
+            <TextView
+                android:id="@+id/can_bunk_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/rubik"
+                android:text="@string/can_bunk"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/attended_text"
+                tools:text="Can Bunk" />
 
             <ProgressBar
                 android:id="@+id/subject_attendance_progressbar"
@@ -90,10 +129,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_semibold"
-                app:layout_constraintBottom_toBottomOf="@+id/subject_attendance_progressbar"
+                app:layout_constraintBottom_toBottomOf="@id/subject_attendance_progressbar"
                 app:layout_constraintEnd_toEndOf="@id/subject_attendance_progressbar"
-                app:layout_constraintStart_toStartOf="@+id/subject_attendance_progressbar"
-                app:layout_constraintTop_toTopOf="@+id/subject_attendance_progressbar"
+                app:layout_constraintStart_toStartOf="@id/subject_attendance_progressbar"
+                app:layout_constraintTop_toTopOf="@id/subject_attendance_progressbar"
                 tools:text="75%" />
 
             <ImageButton
@@ -108,8 +147,8 @@
                 android:src="@drawable/ic_minus"
                 android:tint="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/bunked_button"
-                app:layout_constraintTop_toBottomOf="@+id/subject_attendance_progressbar" />
+                app:layout_constraintEnd_toStartOf="@id/bunked_button"
+                app:layout_constraintTop_toBottomOf="@id/subject_attendance_progressbar" />
 
             <ImageButton
                 android:id="@+id/bunked_button"
@@ -122,8 +161,8 @@
                 android:src="@drawable/ic_cancel"
                 android:tint="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/attended_button"
-                app:layout_constraintTop_toBottomOf="@+id/subject_attendance_progressbar" />
+                app:layout_constraintEnd_toStartOf="@id/attended_button"
+                app:layout_constraintTop_toBottomOf="@id/subject_attendance_progressbar" />
 
             <ImageButton
                 android:id="@+id/attended_button"
@@ -137,7 +176,7 @@
                 android:tint="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subject_attendance_progressbar" />
+                app:layout_constraintTop_toBottomOf="@id/subject_attendance_progressbar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

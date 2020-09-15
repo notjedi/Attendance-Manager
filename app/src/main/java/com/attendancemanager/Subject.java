@@ -79,8 +79,7 @@ public class Subject {
         if (obj instanceof Subject) {
             Subject subject = (Subject) obj;
             return (this.subjectName.equals(subject.getSubjectName()));
-        }
-        else
+        } else
             return false;
     }
 }

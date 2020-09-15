@@ -1,7 +1,6 @@
 package com.attendancemanager;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +23,7 @@ import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = "HomeFragment";
     private TextView mDate;
     private TextView mDay;
     private TextView mGreet;
@@ -32,20 +31,12 @@ public class HomeFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
-
     private String day;
     private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
 
-    private static final String TAG = "HomeFragment";
-
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment homeFragment = new HomeFragment();
-        return homeFragment;
     }
 
     @Override

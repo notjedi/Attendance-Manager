@@ -1,20 +1,6 @@
 package com.attendancemanager;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.preference.Preference;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,9 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -33,17 +26,15 @@ import java.util.List;
 
 public class EditSubjectActivity extends AppCompatActivity {
 
+    private static final String TAG = "EditSubjectActivity";
+    public static boolean changed;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private ExtendedFloatingActionButton extendedFab;
-
     private DBHelper dbHelper;
     private List<Subject> subjectList;
     private Subject deletedSubject;
     private EditSubjectAdapter editSubjectAdapter;
-    public static boolean changed;
-
-    private static final String TAG = "EditSubjectActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +67,9 @@ public class EditSubjectActivity extends AppCompatActivity {
 
         toolbar.setTitle("Subjects");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.light_black));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPinkPrimaryDark));
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
@@ -90,13 +77,8 @@ public class EditSubjectActivity extends AppCompatActivity {
         /* Initializing all recycler view related stuff */
 
         editSubjectAdapter = new EditSubjectAdapter(subjectList, this);
-        editSubjectAdapter.setOnItemClickListener(new EditSubjectAdapter.OnItemClickListener() {
-            /* Overriding interface click listener */
-            @Override
-            public void ItemClickListener(int position) {
-                buildDialog(subjectList.get(position), position);
-            }
-        });
+        /* Overriding interface click listener */
+        editSubjectAdapter.setItemClickListener(position -> buildDialog(subjectList.get(position), position));
 
         recyclerView.setAdapter(editSubjectAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -134,13 +116,10 @@ public class EditSubjectActivity extends AppCompatActivity {
                 subjectList.remove(position);
                 editSubjectAdapter.notifyItemRemoved(position);
                 Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " + deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
-                snackbar.setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        flag[0] = true;
-                        subjectList.add(position, deletedSubject);
-                        editSubjectAdapter.notifyItemInserted(position);
-                    }
+                snackbar.setAction("Undo", v -> {
+                    flag[0] = true;
+                    subjectList.add(position, deletedSubject);
+                    editSubjectAdapter.notifyItemInserted(position);
                 });
                 snackbar.addCallback(new Snackbar.Callback() {
                     @Override
@@ -163,13 +142,7 @@ public class EditSubjectActivity extends AppCompatActivity {
     private void setExtendedFabListener() {
         /* Implement FAB click listener */
 
-        extendedFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                buildDialog(null, -1);
-            }
-        });
+        extendedFab.setOnClickListener(v -> buildDialog(null, -1));
     }
 
     private void buildDialog(Subject subject, int position) {
@@ -206,40 +179,32 @@ public class EditSubjectActivity extends AppCompatActivity {
         }
         dialogBuilder.setView(subjectInputView);
 
-        dialogBuilder.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        dialogBuilder.setPositiveButton(positiveText, (dialog, which) -> {
 
-                String newSubjectName = subjectNameEditText.getText().toString().trim();
-                int attendClass;
-                int totalClass;
+            String newSubjectName = subjectNameEditText.getText().toString().trim();
+            int attendClass;
+            int totalClass;
 
-                try {
-                    attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
-                    totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
-                } catch (NumberFormatException e) {
-                    attendClass = totalClass = 0;
-                }
-
-                if (subject != null)
-                    updateSubject(newSubjectName, attendClass, totalClass, oldSubjectName, position);
-                else
-                    insertSubject(newSubjectName, attendClass, totalClass);
-
-                dialog.dismiss();
+            try {
+                attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
+                totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
+            } catch (NumberFormatException e) {
+                attendClass = totalClass = 0;
             }
+
+            if (subject != null)
+                updateSubject(newSubjectName, attendClass, totalClass, oldSubjectName, position);
+            else
+                insertSubject(newSubjectName, attendClass, totalClass);
+
+            dialog.dismiss();
         });
 
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
-        Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setEnabled(false);
 
         /* Implementing TextChangedListeners for the 3 text fields */

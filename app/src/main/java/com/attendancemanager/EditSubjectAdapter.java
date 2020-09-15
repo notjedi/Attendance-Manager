@@ -17,42 +17,15 @@ public class EditSubjectAdapter extends RecyclerView.Adapter<EditSubjectAdapter.
 
     private List<Subject> mSubjectList;
     private Context mContext;
-    private OnItemClickListener mItemClickListener;
+    private ItemClickListener mItemClickListener;
 
     public EditSubjectAdapter(List<Subject> mSubjectList, Context mContext) {
         this.mSubjectList = mSubjectList;
         this.mContext = mContext;
     }
 
-    public interface OnItemClickListener {
-        void ItemClickListener(int position);
-    }
-
-    public void setOnItemClickListener(EditSubjectAdapter.OnItemClickListener mItemClickListener) {
+    public void setItemClickListener(EditSubjectAdapter.ItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
-    }
-
-    public static class EditSubjectListViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView mSubjectName, mProgressPercentage, mAttendedClasses;
-        private ProgressBar mProgressBar;
-        private EditSubjectAdapter.OnItemClickListener mListener;
-
-        public EditSubjectListViewHolder(@NonNull View itemView, EditSubjectAdapter.OnItemClickListener mListener) {
-            super(itemView);
-
-            mSubjectName = itemView.findViewById(R.id.edit_subject_name);
-            mProgressPercentage = itemView.findViewById(R.id.edit_subject_progressbar_percentage);
-            mAttendedClasses = itemView.findViewById(R.id.edit_total_classes_attended);
-            mProgressBar = itemView.findViewById(R.id.edit_subject_attendance_progressbar);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.ItemClickListener(getAdapterPosition());
-                }
-            });
-        }
     }
 
     @NonNull
@@ -71,12 +44,39 @@ public class EditSubjectAdapter extends RecyclerView.Adapter<EditSubjectAdapter.
 
         holder.mProgressBar.setProgress(percentage);
         holder.mSubjectName.setText(subject.getSubjectName());
-        holder.mAttendedClasses.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), Integer.toString(subject.getAttendedClasses()), Integer.toString(subject.getTotalClasses())));
+        holder.mAttendedClasses.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mProgressPercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
 
     @Override
     public int getItemCount() {
         return mSubjectList.size();
+    }
+
+    public interface ItemClickListener {
+        void OnItemClickListener(int position);
+    }
+
+    public static class EditSubjectListViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mSubjectName, mProgressPercentage, mAttendedClasses;
+        private ProgressBar mProgressBar;
+        private EditSubjectAdapter.ItemClickListener mListener;
+
+        public EditSubjectListViewHolder(@NonNull View itemView, EditSubjectAdapter.ItemClickListener mListener) {
+            super(itemView);
+
+            mSubjectName = itemView.findViewById(R.id.edit_subject_name);
+            mProgressPercentage = itemView.findViewById(R.id.edit_subject_progressbar_percentage);
+            mAttendedClasses = itemView.findViewById(R.id.edit_total_classes_attended);
+            mProgressBar = itemView.findViewById(R.id.edit_subject_attendance_progressbar);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.OnItemClickListener(getAdapterPosition());
+                }
+            });
+        }
     }
 }
