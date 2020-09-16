@@ -51,9 +51,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
         holder.mSubjectName.setText(subject.getSubjectName());
-        holder.mTotalClasses.setText(Integer.toString(subject.getTotalClasses()));
-        holder.mAttendedClasses.setText(Integer.toString(subject.getAttendedClasses()));
-        holder.mCanBunkClasses.setText(Integer.toString(subject.getTotalClasses()));
+        holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), Integer.toString(subject.getAttendedClasses()), Integer.toString(subject.getTotalClasses())));
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
@@ -78,9 +76,9 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         private static final float cancelledAlpha = 0.5f;
         private static final float visibleAlpha = 1.0f;
         private TextView mSubjectName;
-        private TextView mTotalClasses;
-        private TextView mAttendedClasses;
-        private TextView mCanBunkClasses;
+        private TextView mTotalClassesAttended;
+        private TextView mStatusInfo;
+        private TextView mAttendanceStatus;
         private ProgressBar mSubjectAttendanceProgressBar;
         private TextView mSubjectProgressBarPercentage;
         private ImageButton mAttended;
@@ -91,9 +89,9 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
             super(itemView);
 
             mSubjectName = itemView.findViewById(R.id.subject_name);
-            mTotalClasses = itemView.findViewById(R.id.total_classes);
-            mAttendedClasses = itemView.findViewById(R.id.attended_classes);
-            mCanBunkClasses = itemView.findViewById(R.id.can_bunk_classes);
+            mTotalClassesAttended = itemView.findViewById(R.id.total_classes_attended);
+            mStatusInfo = itemView.findViewById(R.id.status_info);
+            mAttendanceStatus = itemView.findViewById(R.id.attendance_status);
 
             mSubjectAttendanceProgressBar = itemView.findViewById(R.id.subject_attendance_progressbar);
             mSubjectProgressBarPercentage = itemView.findViewById(R.id.subject_progressbar_percentage);

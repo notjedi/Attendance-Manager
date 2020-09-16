@@ -36,81 +36,42 @@
                 tools:text="Maths" />
 
             <TextView
-                android:id="@+id/total_classes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/rubik"
-                app:layout_constraintBottom_toTopOf="@id/total_text"
-                app:layout_constraintEnd_toEndOf="@id/total_text"
-                app:layout_constraintStart_toStartOf="@id/total_text"
-                app:layout_constraintTop_toBottomOf="@id/subject_name"
-                tools:text="50" />
-
-            <TextView
-                android:id="@+id/attended_classes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/rubik"
-                app:layout_constraintBottom_toTopOf="@id/attended_text"
-                app:layout_constraintEnd_toEndOf="@id/attended_text"
-                app:layout_constraintStart_toStartOf="@id/attended_text"
-                app:layout_constraintTop_toBottomOf="@id/subject_name"
-                tools:text="30" />
-
-            <TextView
-                android:id="@+id/can_bunk_classes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/rubik"
-                app:layout_constraintBottom_toTopOf="@id/can_bunk_text"
-                app:layout_constraintEnd_toEndOf="@id/can_bunk_text"
-                app:layout_constraintStart_toStartOf="@id/can_bunk_text"
-                app:layout_constraintTop_toBottomOf="@id/subject_name"
-                tools:text="5" />
-
-            <TextView
-                android:id="@+id/total_text"
+                android:id="@+id/total_classes_attended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/rubik"
-                android:text="@string/total"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subject_name"
+                tools:text="Attended: 1000/1000" />
 
             <TextView
-                android:id="@+id/attended_text"
+                android:id="@+id/status_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto"
+                app:layout_constraintBottom_toTopOf="@+id/attendance_status"
+                app:layout_constraintEnd_toStartOf="@+id/cancelled_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/total_classes_attended"
+                tools:text="On Track" />
+
+            <TextView
+                android:id="@+id/attendance_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/rubik"
-                android:text="@string/attended"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/roboto"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/total_text"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:text="Attended" />
-
-            <TextView
-                android:id="@+id/can_bunk_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/rubik"
-                android:text="@string/can_bunk"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/attended_text"
-                tools:text="Can Bunk" />
 
             <ProgressBar
                 android:id="@+id/subject_attendance_progressbar"

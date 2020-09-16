@@ -18,7 +18,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -39,6 +38,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private Preference attendanceCriteriaSelector;
     private Preference editSubject;
     private Preference notificationTimePicker;
+
+    /* TODO: change font for the settings page */
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
