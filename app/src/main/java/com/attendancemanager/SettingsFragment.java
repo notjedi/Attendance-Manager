@@ -1,6 +1,8 @@
 package com.attendancemanager;
 
 import androidx.appcompat.app.AlertDialog;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -132,17 +135,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
             case RESET_DATABASE:
                 /* TODO: Prompt user for confirmation */
-
-                List<Subject> subjectList = dbHelper.getAllSubjects();
-                for (Subject subject: subjectList) {
-                    dbHelper.resetAttendance(subject);
-                }
+                buildAlertDialog(RESET_DATABASE);
                 break;
 
             case CLEAR_DATABASE:
                 /* TODO: Prompt user for confirmation */
-
-                dbHelper.deleteAllData();
+                buildAlertDialog(CLEAR_DATABASE);
                 break;
 
             case ABOUT:
@@ -211,6 +209,50 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
         positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+    }
+
+    private void buildAlertDialog(String key) {
+
+        String title = null;
+        String message = null;
+        String common = "This action cannot be undone. Do you want to continue?";
+        if (key.equals(RESET_DATABASE)){
+            title = "Reset Attendance?";
+            message = "This will wipe your attendance data. " + common;
+        }
+        else if (key.equals(CLEAR_DATABASE)) {
+            title = "Clear Database?";
+            message = "This will wipe all your data. " + common;
+        }
+
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AlertDialog_App_Theme)
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.cancel();
+                })
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    if (key.equals(RESET_DATABASE)) {
+                        resetAttendance();
+                    } else if (key.equals(CLEAR_DATABASE)) {
+                        clearDatabase();
+                    }
+                    dialog.dismiss();
+                });
+        alertDialogBuilder.show();
+    }
+
+    private void resetAttendance() {
+
+        List<Subject> subjectList = dbHelper.getAllSubjects();
+        for (Subject subject: subjectList) {
+            dbHelper.resetAttendance(subject);
+        }
+    }
+
+    private void clearDatabase() {
+
+        dbHelper.deleteAllData();
     }
 
     private void buildTimePicker() {
