@@ -176,8 +176,20 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteAllSubject() {
-        /* Deletes all data from the TABLE_SUBJECT_DETAILS_NAME table */
+    public void resetAttendance(Subject subject) {
+
+        SQLiteDatabase database = getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_SUBJECT_NAME, subject.getSubjectName());
+        contentValues.put(COLUMN_ATTENDED_CLASSES, 0);
+        contentValues.put(COLUMN_TOTAL_CLASSES, 0);
+        database.update(TABLE_SUBJECT_DETAILS_NAME, contentValues,
+                COLUMN_SUBJECT_NAME + " = ?", new String[]{subject.getSubjectName()});
+    }
+
+    public void deleteAllData() {
+        /* Deletes all data from the TABLE_SUBJECT_DETAILS_NAME table and TABLE_DAY_NAMES */
 
         SQLiteDatabase database = getWritableDatabase();
         database.delete(TABLE_SUBJECT_DETAILS_NAME, null, null);

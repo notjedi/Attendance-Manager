@@ -22,6 +22,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
     private List<Subject> mTodaySubjectList;
     private OnItemClickListener mItemClickListener;
     private Context mContext;
+    private boolean mVibrate;
 
     public SubjectListAdapter(List<Subject> mTodaySubjectList, Context mContext) {
         this.mTodaySubjectList = mTodaySubjectList;

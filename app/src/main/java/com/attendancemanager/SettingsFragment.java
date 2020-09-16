@@ -22,6 +22,7 @@ import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.util.List;
 import java.util.Locale;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
@@ -29,15 +30,24 @@ import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     private static final String TAG = "SettingsFragment";
-    private static final String ATTENDANCE_CRITERIA_SELECTOR = "key_attendance_criterion";
-    private static final String EDIT_SUBJECTS = "key_edit_subjects";
-    private static final String NOTIFICATION = "key_notification";
-    private static final String NOTIFICATION_TIME = "key_notification_time";
+    public static final String NAME = "key_name";
+    public static final String VIBRATE = "key_vibration";
+    public static final String ATTENDANCE_CRITERIA_SELECTOR = "key_attendance_criterion";
+    public static final String EDIT_SUBJECTS = "key_edit_subjects";
+    public static final String NOTIFICATION = "key_notification";
+    public static final String NOTIFICATION_TIME = "key_notification_time";
+    public static final String RESET_DATABASE = "key_reset_attendance";
+    public static final String CLEAR_DATABASE = "key_clear_database";
+    public static final String ABOUT = "key_about";
 
     private RecyclerView recyclerView;
+    private DBHelper dbHelper;
     private Preference attendanceCriteriaSelector;
     private Preference editSubject;
     private Preference notificationTimePicker;
+    private Preference resetDatabase;
+    private Preference clearDatabase;
+    private Preference about;
 
     /* TODO: change font for the settings page */
 
@@ -62,9 +72,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        dbHelper = new DBHelper(getContext());
+
         attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
         editSubject = findPreference(getString(R.string.key_edit_subjects));
         notificationTimePicker = findPreference(NOTIFICATION_TIME);
+        resetDatabase = findPreference(RESET_DATABASE);
+        clearDatabase = findPreference(CLEAR_DATABASE);
+        about = findPreference(ABOUT);
+
     }
 
     @Override
@@ -74,6 +90,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
         notificationTimePicker.setOnPreferenceClickListener(this);
+        resetDatabase.setOnPreferenceClickListener(this);
+        clearDatabase.setOnPreferenceClickListener(this);
+        about.setOnPreferenceClickListener(this);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             ExpandableBottomBar bottomBar = getActivity().findViewById(R.id.bottom_bar);
@@ -103,12 +122,32 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 break;
 
             case EDIT_SUBJECTS:
-                Intent intent = new Intent(getContext(), EditSubjectActivity.class);
-                startActivity(intent);
+                Intent editSubjectIntent = new Intent(getContext(), EditSubjectActivity.class);
+                startActivity(editSubjectIntent);
                 break;
 
             case NOTIFICATION_TIME:
                 buildTimePicker();
+                break;
+
+            case RESET_DATABASE:
+                /* TODO: Prompt user for confirmation */
+
+                List<Subject> subjectList = dbHelper.getAllSubjects();
+                for (Subject subject: subjectList) {
+                    dbHelper.resetAttendance(subject);
+                }
+                break;
+
+            case CLEAR_DATABASE:
+                /* TODO: Prompt user for confirmation */
+
+                dbHelper.deleteAllData();
+                break;
+
+            case ABOUT:
+                Intent aboutIntent = new Intent(getContext(), AboutActivity.class);
+                startActivity(aboutIntent);
                 break;
 
             default:

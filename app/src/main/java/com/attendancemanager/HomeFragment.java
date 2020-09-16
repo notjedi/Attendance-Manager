@@ -1,6 +1,11 @@
 package com.attendancemanager;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,9 +37,11 @@ public class HomeFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
+
     private String day;
     private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
+    private SharedPreferences defaultPrefs;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,6 +63,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         mDate = view.findViewById(R.id.date_text_view);
         mDay = view.findViewById(R.id.day_text_view);
         mGreet = view.findViewById(R.id.greet_text_view);
@@ -88,7 +97,8 @@ public class HomeFragment extends Fragment {
 
         simpleDateFormat.applyPattern("EEEE");
         mDay.setText(simpleDateFormat.format(calendar.getTime()));
-        mGreet.setText("Hey there, Krithic");
+        String name = defaultPrefs.getString(SettingsFragment.NAME, null);
+        mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
     }
 
     private void setProgressBar() {
@@ -119,18 +129,23 @@ public class HomeFragment extends Fragment {
 
         mSubjectListAdapter = new SubjectListAdapter(mTodaySubjectList, getContext());
         mSubjectListAdapter.setItemClickListener(new SubjectListAdapter.OnItemClickListener() {
+            boolean vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
+
             @Override
             public void onAttendButtonClick() {
+                vibrateOnTouch(vibrate);
                 Toast.makeText(getContext(), "Attended Button Clicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onBunkButtonClick() {
+                vibrateOnTouch(vibrate);
                 Toast.makeText(getContext(), "Bunked Button Clicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelledButtonClick() {
+                vibrateOnTouch(vibrate);
                 Toast.makeText(getContext(), "Cancelled Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
@@ -156,6 +171,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void vibrateOnTouch(boolean vibrate) {
+
+        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrate) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(70, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(70);
+            }
+        }
     }
 
     @Override
