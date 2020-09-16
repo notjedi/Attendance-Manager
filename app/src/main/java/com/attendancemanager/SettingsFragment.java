@@ -1,9 +1,10 @@
 package com.attendancemanager;
 
-import androidx.appcompat.app.AlertDialog;
-
-import android.content.DialogInterface;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +45,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String NOTIFICATION_TIME = "key_notification_time";
     public static final String RESET_DATABASE = "key_reset_attendance";
     public static final String CLEAR_DATABASE = "key_clear_database";
+    public static final String RATE_APP = "key_rate_app";
+    public static final String SHARE_APP = "key_share_app";
     public static final String ABOUT = "key_about";
 
     private RecyclerView recyclerView;
@@ -50,6 +56,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private Preference notificationTimePicker;
     private Preference resetDatabase;
     private Preference clearDatabase;
+    private Preference rateApp;
+    private Preference shareApp;
     private Preference about;
 
     /* TODO: change font for the settings page */
@@ -82,6 +90,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         notificationTimePicker = findPreference(NOTIFICATION_TIME);
         resetDatabase = findPreference(RESET_DATABASE);
         clearDatabase = findPreference(CLEAR_DATABASE);
+        rateApp = findPreference(RATE_APP);
+        shareApp = findPreference(SHARE_APP);
         about = findPreference(ABOUT);
 
     }
@@ -95,6 +105,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         notificationTimePicker.setOnPreferenceClickListener(this);
         resetDatabase.setOnPreferenceClickListener(this);
         clearDatabase.setOnPreferenceClickListener(this);
+        rateApp.setOnPreferenceClickListener(this);
+        shareApp.setOnPreferenceClickListener(this);
         about.setOnPreferenceClickListener(this);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -143,6 +155,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 buildAlertDialog(CLEAR_DATABASE);
                 break;
 
+            case RATE_APP:
+                openPlayStore();
+                break;
+
+            case SHARE_APP:
+                shareApp();
+                break;
+
             case ABOUT:
                 Intent aboutIntent = new Intent(getContext(), AboutActivity.class);
                 startActivity(aboutIntent);
@@ -176,20 +196,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             public void onStartTrackingTouch(@NonNull Slider slider) {
                 sliderValue = (int) slider.getValue();
                 progressBar.setProgress(sliderValue);
-                attendancePercentage.setText(String.format(Locale.US,"%d%%", sliderValue));
+                attendancePercentage.setText(String.format(Locale.US, "%d%%", sliderValue));
             }
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
                 sliderValue = (int) slider.getValue();
                 progressBar.setProgress(sliderValue);
-                attendancePercentage.setText(String.format(Locale.US,"%d%%", sliderValue));
+                attendancePercentage.setText(String.format(Locale.US, "%d%%", sliderValue));
             }
         });
 
         slider.addOnChangeListener((slider1, value, fromUser) -> {
             progressBar.setProgress((int) value);
-            attendancePercentage.setText(String.format(Locale.US,"%d%%", (int) value));
+            attendancePercentage.setText(String.format(Locale.US, "%d%%", (int) value));
         });
 
         slider.setLabelFormatter(value -> Integer.toString((int) value));
@@ -216,11 +236,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         String title = null;
         String message = null;
         String common = "This action cannot be undone. Do you want to continue?";
-        if (key.equals(RESET_DATABASE)){
+        if (key.equals(RESET_DATABASE)) {
             title = "Reset Attendance?";
             message = "This will wipe your attendance data. " + common;
-        }
-        else if (key.equals(CLEAR_DATABASE)) {
+        } else if (key.equals(CLEAR_DATABASE)) {
             title = "Clear Database?";
             message = "This will wipe all your data. " + common;
         }
@@ -239,13 +258,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     }
                     dialog.dismiss();
                 });
-        alertDialogBuilder.show();
+        AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
+        TextView messageText = dialog.findViewById(android.R.id.message);
+        messageText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway));
     }
 
     private void resetAttendance() {
 
         List<Subject> subjectList = dbHelper.getAllSubjects();
-        for (Subject subject: subjectList) {
+        for (Subject subject : subjectList) {
             dbHelper.resetAttendance(subject);
         }
     }
@@ -266,5 +288,62 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             int minute = dialog.getMinute();
             Log.i(TAG, "buildTimePicker: " + hour + " " + minute);
         });
+    }
+
+    private void openPlayStore() {
+
+        String appPackageName = getString(R.string.app_package_name);
+        try {
+            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+            startActivity(playStoreIntent);
+        } catch (ActivityNotFoundException unused) {
+            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
+            startActivity(playStoreIntent);
+        }
+    }
+
+    private void bugReport() {
+
+        String str2;
+        try {
+            String str3 = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n\n-----------------------------\nPlease don't remove this information\n Device OS: Android \n Device OS version: ");
+            sb.append(Build.VERSION.RELEASE);
+            sb.append("\n App Version: ");
+            sb.append(str3);
+            sb.append("\n Device Brand: ");
+            sb.append(Build.BRAND);
+            sb.append("\n Device Model: ");
+            sb.append(Build.MODEL);
+            sb.append("\n Device Manufacturer: ");
+            sb.append(Build.MANUFACTURER);
+            str2 = sb.toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(getContext(), e.getMessage(), 0).show();
+            str2 = null;
+        }
+        Intent intent = new Intent("android.intent.action.SEND");
+        Intent putExtra = intent.setType("message/rfc822").putExtra("android.intent.extra.EMAIL", new String[]{"mail.kodalog@gmail.com"});
+        StringBuilder sb2 = new StringBuilder();
+        sb2.append(str);
+        sb2.append(": ");
+        sb2.append(getString(R.string.app_name));
+        putExtra.putExtra("android.intent.extra.SUBJECT", sb2.toString()).putExtra("android.intent.extra.TEXT", str2);
+        context.startActivity(Intent.createChooser(intent, context.getString(C0467R.string.choose_email_client)));
+    }
+
+    private void shareApp() {
+
+        Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
+        shareAppIntent.setType("text/plain");
+        StringBuilder shareText = new StringBuilder();
+        shareText.append("Hey, check out this Attendance Managing App - ");
+        shareText.append(getString(R.string.app_name));
+        shareText.append("\n\n http://play.google.com/store/apps/details?id=com.devsebastian.attendancemanager");
+        shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        shareAppIntent.putExtra(Intent.EXTRA_TEXT, shareText.toString());
+        Intent.createChooser(shareAppIntent, "Share via");
+        startActivity(shareAppIntent);
     }
 }
