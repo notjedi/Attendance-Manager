@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorPinkPrimary</item>
         <item name="titleTextStyle">@style/RubixFontStyle</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
@@ -15,6 +16,7 @@
         <item name="android:textColor">@color/light_brown</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="fontFamily">@font/raleway_semibold</item>
+        <item name="android:textAppearanceSmall">@style/MyTextAppearance</item>
     </style>
 
     <style name="MaterialInputTextLayout.App.Theme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -45,6 +47,10 @@
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="MyTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/raleway</item>
     </style>
 
 </resources>
