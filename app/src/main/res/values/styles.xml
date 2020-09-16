@@ -20,7 +20,7 @@
     <style name="MaterialInputTextLayout.App.Theme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextColor">@color/light_brown</item>
     </style>
-    
+
     <style name="MaterialTimePicker.Display.App.Theme" parent="Widget.MaterialComponents.TimePicker.Display">
         <item name="backgroundTint">#6200EE</item>
         <item name="android:textColor">#3700B3</item>
@@ -33,6 +33,18 @@
 
     <style name="RubixFontStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="fontFamily">@font/rubik</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 </resources>

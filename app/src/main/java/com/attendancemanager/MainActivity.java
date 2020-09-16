@@ -1,6 +1,7 @@
 package com.attendancemanager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
+
     private Handler handler;
     private Runnable hideBottomBar = new Runnable() {
         @Override

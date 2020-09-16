@@ -51,5 +51,8 @@
     <string name="total">Total</string>
     <string name="attended">Attended</string>
     <string name="can_bunk">Can Bunk</string>
+    <string name="title_activity_about">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

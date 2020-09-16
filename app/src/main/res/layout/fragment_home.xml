@@ -57,10 +57,12 @@
 
                     <TextView
                         android:id="@+id/greet_text_view"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:ellipsize="end"
                         android:fontFamily="@font/raleway_semibold"
+                        android:maxLines="1"
                         android:textSize="18sp"
                         tools:text="Hey there, Krithic" />
 

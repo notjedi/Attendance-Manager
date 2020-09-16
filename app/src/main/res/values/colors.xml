@@ -10,4 +10,6 @@
     <color name="light_brown">#332424</color>
     <color name="light_grey">#EDEDED</color>
     <color name="light_black">#756B6A</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>
