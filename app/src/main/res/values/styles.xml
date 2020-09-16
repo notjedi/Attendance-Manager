@@ -7,7 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="titleTextStyle">@style/RubixFontStyle</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
@@ -29,6 +29,10 @@
 
     <style name="MaterialSlider.App.Theme" parent="Widget.MaterialComponents.Slider">
         <item name="tickMark">@null</item>
+    </style>
+
+    <style name="RubixFontStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="fontFamily">@font/rubik</item>
     </style>
 
 </resources>
