@@ -84,14 +84,18 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         bottomBar.select(R.id.timeTableFragment);
+                        handler.removeCallbacks(hideBottomBar);
                         break;
 
                     case 1:
                         bottomBar.select(R.id.homeFragment);
+                        handler.removeCallbacks(hideBottomBar);
+                        handler.postDelayed(hideBottomBar, 3000);
                         break;
 
                     case 2:
                         bottomBar.select(R.id.settingsFragment);
+                        handler.removeCallbacks(hideBottomBar);
                         break;
                 }
             }
@@ -108,12 +112,14 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.timeTableFragment:
                     viewPager.setCurrentItem(0);
+                    handler.removeCallbacks(hideBottomBar);
                     break;
                 case R.id.homeFragment:
                     viewPager.setCurrentItem(1);
                     break;
                 case R.id.settingsFragment:
                     viewPager.setCurrentItem(2);
+                    handler.removeCallbacks(hideBottomBar);
                     break;
             }
             return null;
@@ -122,12 +128,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onUserInteraction() {
-        /* Hide the bottom bar after 5 seconds of inactivity */
+        /* Hide the bottom bar after 3 seconds of inactivity */
 
         super.onUserInteraction();
-        handler.removeCallbacks(hideBottomBar);
-        bottomBar.show();
-        handler.postDelayed(hideBottomBar, 3000);
+        if (viewPager.getCurrentItem() == 1) {
+            handler.removeCallbacks(hideBottomBar);
+            bottomBar.show();
+            handler.postDelayed(hideBottomBar, 3000);
+        }
     }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {

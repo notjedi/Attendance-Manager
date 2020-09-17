@@ -82,6 +82,8 @@ public class EditSubjectActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(editSubjectAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

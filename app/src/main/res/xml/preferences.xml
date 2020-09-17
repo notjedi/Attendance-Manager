@@ -33,6 +33,13 @@
             app:summary="Edit all kinds of subject data and add subjects"
             app:title="Edit subjects" />
 
+        <Preference
+            app:enabled="false"
+            app:icon="@drawable/ic_predict"
+            app:key="@string/key_predict"
+            app:summary="Predict attendance of each subject"
+            app:title="Predict" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -58,14 +65,12 @@
         app:iconSpaceReserved="false"
         app:title="@string/header_database">
 
-        <!--        TODO: Show confirmation dialog-->
         <Preference
             app:icon="@drawable/ic_reset"
             app:key="@string/key_reset_attendance"
             app:summary="Resets the attendance, this won't affect the subjects or time table"
             app:title="Reset attendance" />
 
-        <!--        TODO: Show confirmation dialog-->
         <Preference
             app:icon="@drawable/ic_delete"
             app:key="@string/key_clear_database"

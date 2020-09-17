@@ -32,8 +32,6 @@ import com.google.android.material.timepicker.TimeFormat;
 import java.util.List;
 import java.util.Locale;
 
-import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
-
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     private static final String TAG = "SettingsFragment";
@@ -47,6 +45,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String CLEAR_DATABASE = "key_clear_database";
     public static final String RATE_APP = "key_rate_app";
     public static final String SHARE_APP = "key_share_app";
+    public static final String BUG_REPORT = "key_bug_report";
     public static final String ABOUT = "key_about";
 
     private RecyclerView recyclerView;
@@ -58,6 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private Preference clearDatabase;
     private Preference rateApp;
     private Preference shareApp;
+    private Preference bugReport;
     private Preference about;
 
     /* TODO: change font for the settings page */
@@ -92,6 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         clearDatabase = findPreference(CLEAR_DATABASE);
         rateApp = findPreference(RATE_APP);
         shareApp = findPreference(SHARE_APP);
+        bugReport = findPreference(BUG_REPORT);
         about = findPreference(ABOUT);
 
     }
@@ -107,24 +108,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         clearDatabase.setOnPreferenceClickListener(this);
         rateApp.setOnPreferenceClickListener(this);
         shareApp.setOnPreferenceClickListener(this);
+        bugReport.setOnPreferenceClickListener(this);
         about.setOnPreferenceClickListener(this);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            ExpandableBottomBar bottomBar = getActivity().findViewById(R.id.bottom_bar);
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (dy > 0) {
-                    /* Scrolled down */
-                    bottomBar.hide();
-                } else {
-                    /* Scrolled up */
-                    bottomBar.show();
-                }
-            }
-        });
     }
 
     @Override
@@ -146,17 +131,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 break;
 
             case RESET_DATABASE:
-                /* TODO: Prompt user for confirmation */
                 buildAlertDialog(RESET_DATABASE);
                 break;
 
             case CLEAR_DATABASE:
-                /* TODO: Prompt user for confirmation */
                 buildAlertDialog(CLEAR_DATABASE);
                 break;
 
             case RATE_APP:
                 openPlayStore();
+                break;
+
+            case BUG_REPORT:
+                bugReport();
                 break;
 
             case SHARE_APP:
@@ -292,45 +279,47 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     private void openPlayStore() {
 
-        String appPackageName = getString(R.string.app_package_name);
         try {
-            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.market_uri)));
             startActivity(playStoreIntent);
         } catch (ActivityNotFoundException unused) {
-            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
+            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.play_store_url)));
             startActivity(playStoreIntent);
         }
     }
 
     private void bugReport() {
 
-        String str2;
+        String appVersion = null;
+        String mailSubject = getString(R.string.app_name) + "Bug Report";
         try {
-            String str3 = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
-            StringBuilder sb = new StringBuilder();
-            sb.append("\n\n-----------------------------\nPlease don't remove this information\n Device OS: Android \n Device OS version: ");
-            sb.append(Build.VERSION.RELEASE);
-            sb.append("\n App Version: ");
-            sb.append(str3);
-            sb.append("\n Device Brand: ");
-            sb.append(Build.BRAND);
-            sb.append("\n Device Model: ");
-            sb.append(Build.MODEL);
-            sb.append("\n Device Manufacturer: ");
-            sb.append(Build.MANUFACTURER);
-            str2 = sb.toString();
+            appVersion = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(getContext(), e.getMessage(), 0).show();
-            str2 = null;
+            appVersion = getString(R.string.app_version_number) + " (from version number)";
+            Toast.makeText(getContext(), "Not able to get app version", Toast.LENGTH_SHORT).show();
         }
-        Intent intent = new Intent("android.intent.action.SEND");
-        Intent putExtra = intent.setType("message/rfc822").putExtra("android.intent.extra.EMAIL", new String[]{"mail.kodalog@gmail.com"});
-        StringBuilder sb2 = new StringBuilder();
-        sb2.append(str);
-        sb2.append(": ");
-        sb2.append(getString(R.string.app_name));
-        putExtra.putExtra("android.intent.extra.SUBJECT", sb2.toString()).putExtra("android.intent.extra.TEXT", str2);
-        context.startActivity(Intent.createChooser(intent, context.getString(C0467R.string.choose_email_client)));
+        StringBuilder mailInfoBuilder = new StringBuilder();
+
+        mailInfoBuilder.append("\nDevice info: \nAndroid version: ");
+        mailInfoBuilder.append(Build.VERSION.RELEASE);
+
+        mailInfoBuilder.append("\nApp Version: ");
+        mailInfoBuilder.append(appVersion);
+
+        mailInfoBuilder.append("\nDevice Brand: ");
+        mailInfoBuilder.append(Build.BRAND);
+
+        mailInfoBuilder.append("\nDevice Manufacturer: ");
+        mailInfoBuilder.append(Build.MANUFACTURER);
+
+        mailInfoBuilder.append("\nDevice Model: ");
+        mailInfoBuilder.append(Build.MODEL);
+
+        Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto","krithickumar26@gmail.com", null));
+        mailIntent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
+        mailIntent.putExtra(Intent.EXTRA_TEXT, mailInfoBuilder.toString());
+        startActivity(Intent.createChooser(mailIntent, "Choose an email client :"));
     }
 
     private void shareApp() {
@@ -340,7 +329,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         StringBuilder shareText = new StringBuilder();
         shareText.append("Hey, check out this Attendance Managing App - ");
         shareText.append(getString(R.string.app_name));
-        shareText.append("\n\n http://play.google.com/store/apps/details?id=com.devsebastian.attendancemanager");
+        shareText.append("\n\n").append(getString(R.string.play_store_url));
         shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         shareAppIntent.putExtra(Intent.EXTRA_TEXT, shareText.toString());
         Intent.createChooser(shareAppIntent, "Share via");
