@@ -151,6 +151,7 @@ public class HomeFragment extends Fragment {
         });
         mRecyclerView.setAdapter(mSubjectListAdapter);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

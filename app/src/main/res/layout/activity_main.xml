@@ -23,6 +23,7 @@
         app:exb_item_horizontal_padding="25dp"
         app:exb_items="@menu/bottom_bar_menu"
         app:layout_anchor="@id/view_pager"
+        app:layout_behavior="github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior"
         app:layout_anchorGravity="bottom|center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
