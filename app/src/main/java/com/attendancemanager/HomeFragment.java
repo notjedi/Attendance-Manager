@@ -1,24 +1,32 @@
 package com.attendancemanager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,9 +42,15 @@ public class HomeFragment extends Fragment {
     private TextView mDay;
     private TextView mGreet;
     private TextView mProgressPercentage;
+    private ConstraintLayout mBottomSheetLayout;
+    private ImageButton mExtraClassButton;
+    private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBar;
+    private RecyclerView mBottomSheetRecyclerView;
+    private BottomSheetAdapter mBottomSheetAdapter;
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
+    private ExpandableBottomBar expandableBottomBar;
 
     private String day;
     private List<Subject> mTodaySubjectList;
@@ -70,6 +84,10 @@ public class HomeFragment extends Fragment {
         mProgressBar = view.findViewById(R.id.overall_attendance_percentage);
         mProgressPercentage = view.findViewById(R.id.progressbar_percentage);
         mRecyclerView = view.findViewById(R.id.today_subject_recycler_view);
+        mExtraClassButton = view.findViewById(R.id.extra_class_button);
+        mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
+        mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
+        expandableBottomBar = getActivity().findViewById(R.id.bottom_bar);
 
     }
 
@@ -81,7 +99,7 @@ public class HomeFragment extends Fragment {
         setProgressBar();
         getTodayTimeTable();
         buildRecyclerView();
-
+        buildBottomSheetRecyclerView();
     }
 
     private void setDayAndDate() {
@@ -105,6 +123,49 @@ public class HomeFragment extends Fragment {
 
         mProgressBar.setProgress(60);
         mProgressPercentage.setText("60%");
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void buildBottomSheetRecyclerView() {
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
+
+        mExtraClassButton.setOnClickListener(v -> {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    expandableBottomBar.setVisibility(View.VISIBLE);
+                } else {
+                    expandableBottomBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        mBottomSheetAdapter = new BottomSheetAdapter(mTodaySubjectList);
+        mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
+            Log.i(TAG, "buildBottomSheetRecyclerView: " + mTodaySubjectList.get(position));
+        });
+        mBottomSheetBehavior.setDraggable(true);
+        mBottomSheetBehavior.setPeekHeight(0);
+        mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
+        mBottomSheetRecyclerView.setHasFixedSize(true);
+        mBottomSheetRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        mBottomSheetRecyclerView.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            v.onTouchEvent(event);
+            return true;
+        });
+        mBottomSheetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void getTodayTimeTable() {
@@ -176,13 +237,17 @@ public class HomeFragment extends Fragment {
 
     private void vibrateOnTouch(boolean vibrate) {
 
-        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrate) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(70, VibrationEffect.DEFAULT_AMPLITUDE));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(70, VibrationEffect.EFFECT_TICK));
+                } else {
+                    vibrator.vibrate(VibrationEffect.createOneShot(70, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
             } else {
                 //deprecated in API 26
-                v.vibrate(70);
+                vibrator.vibrate(70);
             }
         }
     }
