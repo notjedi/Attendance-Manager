@@ -3,13 +3,11 @@
     <string name="app_name">Attendance Manager</string>
     <string name="developer_name">Krithic Kumar</string>
     <string name="app_version_number">0.5.0-alpha04</string>
-    <string name="app_package_name">com.attendancemanager</string>
     <string name="time_table">Time Table</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
 
     <!--    Home Fragment-->
-    <string name="welcome_message">Hey there, %1$s.</string>
     <string name="attendance">Attendance</string>
     <string name="extra_class">"Extra Class"</string>
     <string name="attended_class">Attended class</string>
@@ -18,9 +16,6 @@
 
     <!--    Subject Row Item-->
     <string name="attended_info_template">Attended: %1$s/%2$s</string>
-    <string name="cancelled_text">Cancelled</string>
-    <string name="attended_text">Attended</string>
-    <string name="bunked_text">Bunked</string>
 
     <!-- Preference Titles -->
     <string name="header_general">General</string>
@@ -33,6 +28,7 @@
     <string name="key_attendance_criterion">key_attendance_criterion</string>
     <string name="key_edit_subjects">key_edit_subjects</string>
     <string name="key_vibration">key_vibration</string>
+    <string name="key_predict">key_predict</string>
     <string name="key_reset_attendance">key_reset_attendance</string>
     <string name="key_clear_database">key_clear_database</string>
     <string name="key_backup">key_backup</string>
@@ -44,19 +40,13 @@
     <string name="key_notification">key_notification</string>
     <string name="key_notification_time">key_notification_time</string>
     <string name="key_developed_by">key_developed_by</string>
+    <string name="play_store_url">https://play.google.com/store/apps/details?id=com.attendancemanager</string>
+    <string name="market_uri">market://details?id=com.attendancemanager</string>
 
     <!--    Edit Subject Activity-->
     <string name="add_subject">Add subject</string>
     <string name="subject_name">Subject Name</string>
     <string name="total_classes">Total Classes</string>
-    <string name="total">Total</string>
-    <string name="attended">Attended</string>
-    <string name="can_bunk">Can Bunk</string>
     <string name="title_activity_about">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="play_store_url">https://play.google.com/store/apps/details?id=com.attendancemanager</string>
-    <string name="market_uri">market://details?id=com.attendancemanager</string>
-    <string name="key_predict">key_predict</string>
 
 </resources>

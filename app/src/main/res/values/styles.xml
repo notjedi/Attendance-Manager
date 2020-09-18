@@ -23,12 +23,6 @@
         <item name="hintTextColor">@color/light_brown</item>
     </style>
 
-    <style name="MaterialTimePicker.Display.App.Theme" parent="Widget.MaterialComponents.TimePicker.Display">
-        <item name="backgroundTint">#6200EE</item>
-        <item name="android:textColor">#3700B3</item>
-        <item name="rippleColor">#6200EE</item>
-    </style>
-
     <style name="MaterialSlider.App.Theme" parent="Widget.MaterialComponents.Slider">
         <item name="tickMark">@null</item>
     </style>
