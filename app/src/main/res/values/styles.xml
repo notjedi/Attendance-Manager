@@ -10,6 +10,7 @@
         <item name="android:statusBarColor">@color/colorPinkPrimary</item>
         <item name="titleTextStyle">@style/RubixFontStyle</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="tooltipStyle">@font/raleway</item>
     </style>
 
     <style name="AlertDialog.App.Theme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
@@ -46,5 +47,19 @@
     <style name="MyTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">@font/raleway</item>
     </style>
+
+    <style name="TabButton.App.Theme" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/raleway_semibold</item>
+        <item name="tooltipStyle">@font/raleway</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

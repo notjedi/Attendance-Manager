@@ -3,14 +3,11 @@ package com.attendancemanager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -48,9 +45,10 @@ public class HomeFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RecyclerView mBottomSheetRecyclerView;
     private BottomSheetAdapter mBottomSheetAdapter;
+    private List<Subject> mAllSubjectList;
     private RecyclerView mRecyclerView;
     private DBHelper dbHelper;
-    private ExpandableBottomBar expandableBottomBar;
+    private ExpandableBottomBar bottomNavBar;
 
     private String day;
     private List<Subject> mTodaySubjectList;
@@ -87,7 +85,7 @@ public class HomeFragment extends Fragment {
         mExtraClassButton = view.findViewById(R.id.extra_class_button);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
-        expandableBottomBar = getActivity().findViewById(R.id.bottom_bar);
+        bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
 
     }
 
@@ -125,49 +123,6 @@ public class HomeFragment extends Fragment {
         mProgressPercentage.setText("60%");
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void buildBottomSheetRecyclerView() {
-
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
-
-        mExtraClassButton.setOnClickListener(v -> {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        });
-
-        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    expandableBottomBar.setVisibility(View.VISIBLE);
-                } else {
-                    expandableBottomBar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-
-        mBottomSheetAdapter = new BottomSheetAdapter(mTodaySubjectList);
-        mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
-            Log.i(TAG, "buildBottomSheetRecyclerView: " + mTodaySubjectList.get(position));
-        });
-        mBottomSheetBehavior.setDraggable(true);
-        mBottomSheetBehavior.setPeekHeight(0);
-        mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
-        mBottomSheetRecyclerView.setHasFixedSize(true);
-        mBottomSheetRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        mBottomSheetRecyclerView.setOnTouchListener((v, event) -> {
-            v.getParent().requestDisallowInterceptTouchEvent(true);
-            v.onTouchEvent(event);
-            return true;
-        });
-        mBottomSheetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
     private void getTodayTimeTable() {
 
         dbHelper = new DBHelper(getContext());
@@ -184,6 +139,7 @@ public class HomeFragment extends Fragment {
 
         day = new SimpleDateFormat("EEEE", Locale.US).format(Calendar.getInstance().getTime()).toLowerCase();
         mTodaySubjectList = dbHelper.getSubjectsOfDay("monday");
+        mAllSubjectList = dbHelper.getAllSubjects();
     }
 
     private void buildRecyclerView() {
@@ -217,8 +173,6 @@ public class HomeFragment extends Fragment {
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            ExpandableBottomBar bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
-
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -233,6 +187,50 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void buildBottomSheetRecyclerView() {
+
+        mExtraClassButton.setOnClickListener(v -> {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+        });
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
+        mBottomSheetBehavior.setDraggable(true);
+        mBottomSheetBehavior.setPeekHeight(0);
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomNavBar.setVisibility(View.VISIBLE);
+                } else {
+                    bottomNavBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
+        mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
+            mTodaySubjectList.add(mAllSubjectList.get(position));
+            mSubjectListAdapter.notifyItemInserted(mTodaySubjectList.size() - 1);
+        });
+
+        mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
+        mBottomSheetRecyclerView.setHasFixedSize(true);
+        mBottomSheetRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        mBottomSheetRecyclerView.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            v.onTouchEvent(event);
+            return true;
+        });
+        mBottomSheetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void vibrateOnTouch(boolean vibrate) {
