@@ -31,10 +31,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:background="@color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Add"
             android:padding="8dp"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_add"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

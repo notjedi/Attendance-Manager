@@ -1,67 +1,120 @@
 package com.attendancemanager;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TimeTableFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.material.tabs.TabLayout;
+
 public class TimeTableFragment extends Fragment {
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String TAG = "TimeTableFragment";
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "TimeTableFragment";
+    public static final String[] DAY_NAMES = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
     public TimeTableFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TimeTableFragment.
-     */
-    public static TimeTableFragment newInstance(String param1, String param2) {
-        TimeTableFragment fragment = new TimeTableFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_time_table, container, false);
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        tabLayout = view.findViewById(R.id.tab_layout);
+        viewPager = view.findViewById(R.id.day_view_pager);
+    }
+
+    @Override
+    @SuppressLint("ClickableViewAccessibility")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        TimeTableViewPagerAdapter pagerAdapter = new TimeTableViewPagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+    }
+
+    public static class DayFragment extends Fragment {
+
+        private static final String ARG_DAY_NAME = "argDayName";
+
+        public static DayFragment newInstance(String day) {
+            DayFragment dayFragment = new DayFragment();
+            final Bundle args = new Bundle();
+            args.putString(ARG_DAY_NAME, day);
+            dayFragment.setArguments(args);
+            return dayFragment;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            String dayName = getArguments().getString(ARG_DAY_NAME);
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_day, container, false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+        }
+    }
+
+    private static class TimeTableViewPagerAdapter extends FragmentPagerAdapter {
+
+        public TimeTableViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return DayFragment.newInstance(DAY_NAMES[position]);
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return DAY_NAMES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return 7;
+        }
     }
 }

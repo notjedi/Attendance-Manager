@@ -48,5 +48,8 @@
     <string name="subject_name">Subject Name</string>
     <string name="total_classes">Total Classes</string>
     <string name="title_activity_about">FullscreenActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 
 </resources>

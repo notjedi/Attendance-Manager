@@ -52,6 +52,12 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.
         private TextView mSubjectName;
         private ImageButton mAddButton;
 
+        private static List<Subject> subjectList;
+
+        public static void setSubjectList(List<Subject> subjects) {
+            subjectList = subjects;
+        }
+
         public BottomSheetViewHolder(@NonNull View itemView, OnAddButtonClickListener listener) {
             super(itemView);
 
