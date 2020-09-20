@@ -2,7 +2,7 @@
     <!--    General-->
     <string name="app_name">Attendance Manager</string>
     <string name="developer_name">Krithic Kumar</string>
-    <string name="app_version_number">0.5.0-alpha04</string>
+    <string name="app_version_number">0.6.0-alpha02</string>
     <string name="time_table">Time Table</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -47,9 +47,6 @@
     <string name="add_subject">Add subject</string>
     <string name="subject_name">Subject Name</string>
     <string name="total_classes">Total Classes</string>
-    <string name="title_activity_about">FullscreenActivity</string>
-    <string name="title_activity_main2">MainActivity2</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_about">AboutActivity</string>
 
 </resources>
