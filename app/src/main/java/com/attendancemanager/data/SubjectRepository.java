@@ -1,22 +1,20 @@
-package com.attendancemanager;
+package com.attendancemanager.data;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.data.Subject;
-
 import java.util.List;
-import java.util.logging.Handler;
 
 public class SubjectRepository {
 
     private SubjectDao subjectDao;
     private LiveData<List<Subject>> allSubjects;
+    private SubjectDataBase dataBase;
 
     public SubjectRepository(Application application) {
 
-        SubjectDataBase dataBase = SubjectDataBase.getInstance(application);
+        dataBase = SubjectDataBase.getInstance(application);
         subjectDao = dataBase.subjectDao();
         allSubjects = subjectDao.getAllSubjects();
     }
@@ -35,6 +33,11 @@ public class SubjectRepository {
 
     public void deleteAllSubjects() {
         new Thread(new DeleteAllSubjectRunnable(subjectDao)).start();
+    }
+
+    public void closeDB() {
+        if (dataBase.isOpen())
+            dataBase.close();
     }
 
     public LiveData<List<Subject>> getAllSubjects() {

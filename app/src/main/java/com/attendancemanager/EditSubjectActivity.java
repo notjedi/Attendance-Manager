@@ -14,35 +14,45 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.adapters.EditSubjectAdapter;
-import com.attendancemanager.data.DBHelper;
 import com.attendancemanager.data.Subject;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EditSubjectActivity extends AppCompatActivity {
 
     private static final String TAG = "EditSubjectActivity";
-    public static boolean changed;
+
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private ExtendedFloatingActionButton extendedFab;
-    private DBHelper dbHelper;
-    private List<Subject> subjectList;
-    private Subject deletedSubject;
+
+    private SubjectViewModel subjectViewModel;
     private EditSubjectAdapter editSubjectAdapter;
+    private Subject deletedSubject;
+    private List<Subject> subjectList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_subject);
+
+        subjectList = new ArrayList<>();
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        subjectViewModel.getAllSubjects().observe(this, subjects -> {
+            subjectList.clear();
+            subjectList.addAll(subjects);
+            editSubjectAdapter.notifyDataSetChanged();
+        });
 
         initialSetup();
         setupToolbar();
@@ -58,10 +68,7 @@ public class EditSubjectActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.edit_subject_recycler_view);
         extendedFab = findViewById(R.id.extended_fab);
 
-        dbHelper = new DBHelper(this);
         deletedSubject = null;
-        changed = false;
-        subjectList = dbHelper.getAllSubjects();
 
     }
 
@@ -132,8 +139,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                         super.onDismissed(transientBottomBar, event);
                         Log.i(TAG, "onDismissed: " + flag[0] + " " + position);
                         if (!flag[0]) {
-                            changed = true;
-                            dbHelper.deleteSubject(deletedSubject.getSubjectName());
+                            subjectViewModel.delete(deletedSubject);
                         }
                     }
                 });
@@ -150,6 +156,7 @@ public class EditSubjectActivity extends AppCompatActivity {
         extendedFab.setOnClickListener(v -> buildDialog(null, -1));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void buildDialog(Subject subject, int position) {
         /* Build alert dialog based on parameters passed
         Add Subject dialog - if parameter not passed
@@ -157,16 +164,13 @@ public class EditSubjectActivity extends AppCompatActivity {
 
         String title;
         String positiveText;
-        String oldSubjectName;
 
         if (subject != null) {
             title = "Edit Subject";
             positiveText = "OK";
-            oldSubjectName = subject.getSubjectName();
         } else {
             title = "Add Subject";
             positiveText = "Add";
-            oldSubjectName = null;
         }
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this, R.style.AlertDialog_App_Theme);
@@ -179,14 +183,14 @@ public class EditSubjectActivity extends AppCompatActivity {
 
         if (subject != null) {
             subjectNameEditText.setText(subject.getSubjectName());
-            attendedClassesEditText.setText(Integer.toString(subject.getAttendedClasses()));
-            totalClassesEditText.setText(Integer.toString(subject.getTotalClasses()));
+            attendedClassesEditText.setText(String.valueOf(subject.getAttendedClasses()));
+            totalClassesEditText.setText(String.valueOf(subject.getTotalClasses()));
         }
         dialogBuilder.setView(subjectInputView);
 
         dialogBuilder.setPositiveButton(positiveText, (dialog, which) -> {
 
-            String newSubjectName = subjectNameEditText.getText().toString().trim();
+            String subjectName = subjectNameEditText.getText().toString().trim();
             int attendClass;
             int totalClass;
 
@@ -198,9 +202,9 @@ public class EditSubjectActivity extends AppCompatActivity {
             }
 
             if (subject != null)
-                updateSubject(newSubjectName, attendClass, totalClass, oldSubjectName, position);
+                updateSubject(subjectName, attendClass, totalClass, position);
             else
-                insertSubject(newSubjectName, attendClass, totalClass);
+                insertSubject(subjectName, attendClass, totalClass);
 
             dialog.dismiss();
         });
@@ -307,12 +311,12 @@ public class EditSubjectActivity extends AppCompatActivity {
         /* End of TextChangedListeners */
     }
 
-    private void updateSubject(String newSubjectName, int attendClass, int totalClass, String oldSubjectName, int position) {
+    private void updateSubject(String subjectName, int attendClass, int totalClass, int position) {
         /* Update existing subject data on the database */
 
-        Subject subject = new Subject(newSubjectName, attendClass, totalClass);
+        Subject subject = new Subject(subjectName, attendClass, totalClass);
 
-        dbHelper.updateSubjectsTable(subject, oldSubjectName);
+        subjectViewModel.update(subject);
         subjectList.set(position, subject);
         editSubjectAdapter.notifyItemChanged(position);
     }
@@ -329,7 +333,7 @@ public class EditSubjectActivity extends AppCompatActivity {
             return;
         }
 
-        dbHelper.addSubject(subject);
+        subjectViewModel.insert(subject);
         subjectList.add(subject);
         editSubjectAdapter.notifyItemInserted(position);
     }

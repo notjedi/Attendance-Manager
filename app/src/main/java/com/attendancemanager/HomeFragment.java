@@ -19,13 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.SubjectListAdapter;
-import com.attendancemanager.data.DBHelper;
 import com.attendancemanager.data.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -39,25 +39,26 @@ import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
+
     private TextView mDate;
     private TextView mDay;
     private TextView mGreet;
     private TextView mProgressPercentage;
-    private ConstraintLayout mBottomSheetLayout;
-    private ImageButton mExtraClassButton;
-    private BottomSheetBehavior mBottomSheetBehavior;
-    private ProgressBar mProgressBar;
-    private RecyclerView mBottomSheetRecyclerView;
-    private BottomSheetAdapter mBottomSheetAdapter;
-    private List<Subject> mAllSubjectList;
     private RecyclerView mRecyclerView;
-    private DBHelper dbHelper;
+    private RecyclerView mBottomSheetRecyclerView;
+    private ImageButton mExtraClassButton;
+    private ProgressBar mProgressBar;
+    private ConstraintLayout mBottomSheetLayout;
     private ExpandableBottomBar bottomNavBar;
 
     private String day;
+    private SubjectViewModel subjectViewModel;
+    private SharedPreferences defaultPrefs;
+    private List<Subject> mAllSubjectList;
     private List<Subject> mTodaySubjectList;
     private SubjectListAdapter mSubjectListAdapter;
-    private SharedPreferences defaultPrefs;
+    @SuppressWarnings("rawtypes")
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -76,6 +77,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -96,6 +98,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
+            mAllSubjectList.clear();
+            mAllSubjectList.addAll(subjects);
+            mSubjectListAdapter.notifyDataSetChanged();
+        });
 
         setDayAndDate();
         setProgressBar();
@@ -130,10 +139,8 @@ public class HomeFragment extends Fragment {
 
     private void getTodayTimeTable() {
 
-        dbHelper = new DBHelper(getContext());
 
         mTodaySubjectList = dbHelper.getSubjectsOfDay(day);
-        mAllSubjectList = dbHelper.getAllSubjects();
     }
 
     private void buildRecyclerView() {
@@ -208,7 +215,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
+        BottomSheetAdapter mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             mTodaySubjectList.add(mAllSubjectList.get(position));
             mSubjectListAdapter.notifyItemInserted(mTodaySubjectList.size() - 1);
@@ -245,11 +252,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (EditSubjectActivity.changed) {
-            mTodaySubjectList.clear();
-            mTodaySubjectList.addAll(dbHelper.getSubjectsOfDay("monday"));
-            mSubjectListAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -258,6 +260,6 @@ public class HomeFragment extends Fragment {
         /* https://stackoverflow.com/questions/17195641/fragment-lifecycle-when-ondestroy-and-ondestroyview-are-not-called */
 
         super.onDestroy();
-        dbHelper.close();
+        subjectViewModel.closeDB();
     }
 }

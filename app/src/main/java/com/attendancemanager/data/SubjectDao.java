@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -26,6 +26,6 @@ public interface SubjectDao {
     @Query("DELETE FROM subject_details_table")
     void deleteAllSubjects();
 
-    @Query("SELECT * FROM subject_details_table WHERE subjectName LIKE  ORDER BY id DESC")
+    @Query("SELECT * FROM subject_details_table ORDER BY id DESC")
     LiveData<List<Subject>> getAllSubjects();
 }

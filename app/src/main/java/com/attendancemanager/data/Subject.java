@@ -3,6 +3,7 @@ package com.attendancemanager.data;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "subject_details_table")
@@ -19,6 +20,11 @@ public class Subject {
         this.subjectName = subjectName;
         this.attendedClasses = attendedClasses;
         this.totalClasses = totalClasses;
+    }
+
+    @Ignore
+    public Subject(String subjectName) {
+        this(subjectName, 0, 0);
     }
 
     public int getId() {

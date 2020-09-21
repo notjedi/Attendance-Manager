@@ -3,7 +3,6 @@ package com.attendancemanager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
