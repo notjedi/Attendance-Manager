@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.attendancemanager.adapters.TimeTableAdapter;
+import com.attendancemanager.data.DBHelper;
+import com.attendancemanager.data.Subject;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Calendar;

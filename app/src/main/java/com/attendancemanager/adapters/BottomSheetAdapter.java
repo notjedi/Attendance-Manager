@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.attendancemanager.R;
+import com.attendancemanager.data.Subject;
 
 import java.util.List;
 

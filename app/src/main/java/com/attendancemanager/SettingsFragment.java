@@ -24,6 +24,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.data.DBHelper;
+import com.attendancemanager.data.Subject;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;

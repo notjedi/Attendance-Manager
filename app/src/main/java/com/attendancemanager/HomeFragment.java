@@ -23,6 +23,10 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.adapters.BottomSheetAdapter;
+import com.attendancemanager.adapters.SubjectListAdapter;
+import com.attendancemanager.data.DBHelper;
+import com.attendancemanager.data.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;

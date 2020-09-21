@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.attendancemanager.R;
+import com.attendancemanager.data.Subject;
 
 import java.util.List;
 import java.util.Locale;
