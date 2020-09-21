@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -38,7 +36,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
     public SubjectListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.subject_list_row, parent, false);
+        View view = layoutInflater.inflate(R.layout.subject_list_item, parent, false);
         return new SubjectListViewHolder(view, mItemClickListener);
     }
 

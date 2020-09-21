@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -66,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
         /* https://proandroiddev.com/the-seven-actually-10-cardinal-sins-of-android-development-491d2f64c8e0
         3rd point */
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter);
         bottomBar.select(R.id.homeFragment);
         viewPager.setCurrentItem(1);
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         bottomBar.select(R.id.timeTableFragment);
                         handler.removeCallbacks(hideBottomBar);
+                        handler.postDelayed(() -> bottomBar.hide(), 1000);
                         break;
 
                     case 1:
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
         /* Listen for item selections and change the view pager accordingly */
         bottomBar.setOnItemSelectedListener((view, item) -> {
-            Log.d(TAG, "onCreate: " + item.getItemId());
             switch (item.getItemId()) {
                 case R.id.timeTableFragment:
                     viewPager.setCurrentItem(0);
