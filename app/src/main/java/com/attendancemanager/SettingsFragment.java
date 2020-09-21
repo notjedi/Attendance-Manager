@@ -1,5 +1,6 @@
 package com.attendancemanager;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,11 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.attendancemanager.data.DBHelper;
 import com.attendancemanager.data.Subject;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
@@ -36,7 +37,6 @@ import java.util.Locale;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
-    private static final String TAG = "SettingsFragment";
     public static final String NAME = "key_name";
     public static final String VIBRATE = "key_vibration";
     public static final String ATTENDANCE_CRITERIA_SELECTOR = "key_attendance_criterion";
@@ -49,9 +49,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String SHARE_APP = "key_share_app";
     public static final String BUG_REPORT = "key_bug_report";
     public static final String ABOUT = "key_about";
+    private static final String TAG = "SettingsFragment";
 
-    private RecyclerView recyclerView;
-    private DBHelper dbHelper;
     private Preference attendanceCriteriaSelector;
     private Preference editSubject;
     private Preference notificationTimePicker;
@@ -61,6 +60,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private Preference shareApp;
     private Preference bugReport;
     private Preference about;
+
+    private SubjectViewModel subjectViewModel;
 
     /* TODO: change font for the settings page */
 
@@ -75,8 +76,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState);
+        RecyclerView recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState);
         recyclerView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
         return recyclerView;
     }
@@ -84,8 +86,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        dbHelper = new DBHelper(getContext());
 
         attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
         editSubject = findPreference(getString(R.string.key_edit_subjects));
@@ -102,6 +102,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
 
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
@@ -164,6 +166,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return true;
     }
 
+    @SuppressLint("SetTextI18n")
+    @SuppressWarnings("ConstantConditions")
     private void buildAttendanceCriteriaSelector() {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
@@ -220,6 +224,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void buildAlertDialog(String key) {
 
         String title = null;
@@ -236,9 +241,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AlertDialog_App_Theme)
                 .setTitle(title)
                 .setMessage(message)
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    dialog.cancel();
-                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
                 .setPositiveButton("Confirm", (dialog, which) -> {
                     if (key.equals(RESET_DATABASE)) {
                         resetAttendance();
@@ -255,15 +258,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     private void resetAttendance() {
 
-        List<Subject> subjectList = dbHelper.getAllSubjects();
+        List<Subject> subjectList = subjectViewModel.getAllSubjects().getValue();
         for (Subject subject : subjectList) {
-            dbHelper.resetAttendance(subject);
+            subjectViewModel.resetAttendance(subject);
         }
     }
 
     private void clearDatabase() {
 
-        dbHelper.deleteAllData();
+        subjectViewModel.deleteAllSubjects();
     }
 
     private void buildTimePicker() {
@@ -290,9 +293,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void bugReport() {
 
-        String appVersion = null;
+        String appVersion;
         String mailSubject = getString(R.string.app_name) + "Bug Report";
         try {
             appVersion = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
@@ -300,7 +304,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             appVersion = getString(R.string.app_version_number) + " (from version number)";
             Toast.makeText(getContext(), "Not able to get app version", Toast.LENGTH_SHORT).show();
         }
-        StringBuilder mailInfoBuilder = new StringBuilder();
+        StringBuilder mailInfoBuilder;
+        mailInfoBuilder = new StringBuilder();
 
         mailInfoBuilder.append("\nDevice info: \nAndroid version: ");
         mailInfoBuilder.append(Build.VERSION.RELEASE);
@@ -318,7 +323,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mailInfoBuilder.append(Build.MODEL);
 
         Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","krithickumar26@gmail.com", null));
+                "mailto", "krithickumar26@gmail.com", null));
         mailIntent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
         mailIntent.putExtra(Intent.EXTRA_TEXT, mailInfoBuilder.toString());
         startActivity(Intent.createChooser(mailIntent, "Choose an email client :"));
@@ -328,7 +333,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         Intent shareAppIntent = new Intent(Intent.ACTION_SEND);
         shareAppIntent.setType("text/plain");
-        StringBuilder shareText = new StringBuilder();
+        StringBuilder shareText;
+        shareText = new StringBuilder();
         shareText.append("Hey, check out this Attendance Managing App - ");
         shareText.append(getString(R.string.app_name));
         shareText.append("\n\n").append(getString(R.string.play_store_url));

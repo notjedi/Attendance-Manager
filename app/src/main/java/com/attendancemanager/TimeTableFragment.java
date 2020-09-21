@@ -19,7 +19,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.TimeTableAdapter;
-import com.attendancemanager.data.DBHelper;
 import com.attendancemanager.data.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -30,8 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
-
 public class TimeTableFragment extends Fragment {
 
     public static final String[] DAY_NAMES = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday",
@@ -41,15 +38,13 @@ public class TimeTableFragment extends Fragment {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private DBHelper dbHelper;
     private ExtendedFloatingActionButton addButtonFab;
     private FloatingActionButton floatingActionButton;
     private RecyclerView mBottomSheetRecyclerView;
     private ConstraintLayout mBottomSheetLayout;
-    private ExpandableBottomBar bottomNavBar;
     private List<Subject> mAllSubjectList;
+    @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
-    private BottomSheetAdapter mBottomSheetAdapter;
 
     public TimeTableFragment() {
         // Required empty public constructor
@@ -73,7 +68,6 @@ public class TimeTableFragment extends Fragment {
 
         toolbar = view.findViewById(R.id.time_table_toolbar);
         tabLayout = view.findViewById(R.id.tab_layout);
-        bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
         viewPager = view.findViewById(R.id.day_view_pager);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         addButtonFab = view.findViewById(R.id.add_extended_fab);
@@ -97,7 +91,6 @@ public class TimeTableFragment extends Fragment {
         viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
         viewPager.setOffscreenPageLimit(3);
 
-        dbHelper = new DBHelper(getContext());
         mAllSubjectList = dbHelper.getAllSubjects();
 
         floatingActionButton.setOnClickListener(v -> {
@@ -134,7 +127,7 @@ public class TimeTableFragment extends Fragment {
             }
         });
 
-        mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
+        BottomSheetAdapter mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             viewPager.getCurrentItem();
             dbHelper.insertSubjectToDayTable(pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString(), new String[]{mAllSubjectList.get(position).getSubjectName()});
@@ -157,7 +150,6 @@ public class TimeTableFragment extends Fragment {
         private static final String ARG_DAY_NAME = "argDayName";
         private RecyclerView timeTableRecyclerView;
         private TimeTableAdapter timeTableAdapter;
-        private DBHelper dbHelper;
         private List<Subject> daySubjectList;
         private String getArgDayName;
 

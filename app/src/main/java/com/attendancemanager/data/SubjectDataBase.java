@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.data;
 
 import android.content.Context;
 
@@ -7,8 +7,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
-import com.attendancemanager.data.Subject;
 
 @Database(entities = {Subject.class}, version = 1)
 public abstract class SubjectDataBase extends RoomDatabase {
