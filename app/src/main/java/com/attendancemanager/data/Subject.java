@@ -2,8 +2,14 @@ package com.attendancemanager.data;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "subject_details_table")
 public class Subject {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
     private String subjectName;
     private int totalClasses;
@@ -15,8 +21,12 @@ public class Subject {
         this.totalClasses = totalClasses;
     }
 
-    public Subject(String subjectName) {
-        this(subjectName, 0, 0);
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSubjectName() {
