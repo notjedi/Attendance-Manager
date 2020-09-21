@@ -8,6 +8,6 @@
         android:id="@+id/time_table_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/time_table_row" />
+        tools:listitem="@layout/time_table_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

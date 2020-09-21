@@ -19,6 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="2"
-        tools:listitem="@layout/bottom_sheet_row" />
+        tools:listitem="@layout/bottom_sheet_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

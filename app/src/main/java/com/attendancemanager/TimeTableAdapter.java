@@ -22,7 +22,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
     @NonNull
     @Override
     public TimeTableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_table_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_table_item, parent, false);
         return new TimeTableViewHolder(view);
     }
 
