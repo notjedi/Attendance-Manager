@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.data;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.data;
 
 import android.content.ContentValues;
 import android.content.Context;
