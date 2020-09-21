@@ -112,6 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private Subject getSubject(String subjectName) {
+
         /* Gets the details of the subjectName from the TABLE_SUBJECT_DETAILS_NAME table */
 
         SQLiteDatabase database = getReadableDatabase();
