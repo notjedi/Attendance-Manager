@@ -15,9 +15,14 @@
             android:name=".AboutActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_about"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".EditSubjectActivity" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".EditSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
