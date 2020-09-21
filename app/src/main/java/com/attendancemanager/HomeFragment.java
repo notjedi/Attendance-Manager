@@ -116,6 +116,7 @@ public class HomeFragment extends Fragment {
         mDate.setText(date.toString());
 
         simpleDateFormat.applyPattern("EEEE");
+        day = simpleDateFormat.format(calendar.getTime()).toLowerCase();
         mDay.setText(simpleDateFormat.format(calendar.getTime()));
         String name = defaultPrefs.getString(SettingsFragment.NAME, null);
         mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
@@ -131,18 +132,7 @@ public class HomeFragment extends Fragment {
 
         dbHelper = new DBHelper(getContext());
 
-//        dbHelper.addSubject(new Subject("English", 10, 20));
-//        dbHelper.addSubject(new Subject("Maths"));
-//        dbHelper.addSubject(new Subject("Indian Constitution", 15, 20));
-//        dbHelper.addSubject(new Subject("Physics", 5, 20));
-//        dbHelper.addSubject(new Subject("Chemistry", 18, 20));
-//        dbHelper.addSubject(new Subject("Computer Science", 8, 20));
-//        dbHelper.addSubject(new Subject("Environmental Valued Science HELLO THIS IS BYE", 2, 3));
-//        String[] names = new String[]{"English", "Maths", "Physics"};
-//        dbHelper.insertSubjectToDayTable("monday", names);
-
-        day = new SimpleDateFormat("EEEE", Locale.US).format(Calendar.getInstance().getTime()).toLowerCase();
-        mTodaySubjectList = dbHelper.getSubjectsOfDay("monday");
+        mTodaySubjectList = dbHelper.getSubjectsOfDay(day);
         mAllSubjectList = dbHelper.getAllSubjects();
     }
 
@@ -196,9 +186,7 @@ public class HomeFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void buildBottomSheetRecyclerView() {
 
-        mExtraClassButton.setOnClickListener(v -> {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-        });
+        mExtraClassButton.setOnClickListener(v -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED));
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         mBottomSheetBehavior.setDraggable(true);
