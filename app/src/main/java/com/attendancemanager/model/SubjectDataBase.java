@@ -36,6 +36,13 @@ public abstract class SubjectDataBase extends RoomDatabase {
     }
 
     public abstract SubjectDao subjectDao();
+    public abstract MondayDao mondayDao();
+    public abstract TuesdayDao tuesdayDao();
+    public abstract WednesdayDao wednesdayDao();
+    public abstract ThursdayDao thursdayDao();
+    public abstract FridayDao fridayDao();
+    public abstract SaturdayDao saturdayDao();
+    public abstract SundayDao sundayDao();
 
     private static class PrePopulateDatabase implements Runnable {
 

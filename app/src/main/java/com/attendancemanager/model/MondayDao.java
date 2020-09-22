@@ -25,5 +25,5 @@ public interface MondayDao {
     void deleteAllSubjects();
 
     @Query("SELECT * FROM monday_table")
-    LiveData<List<Subject>> getAllSubjects();
+    LiveData<List<Monday>> getAllSubjects();
 }

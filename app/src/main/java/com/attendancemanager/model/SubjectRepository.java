@@ -8,9 +8,18 @@ import java.util.List;
 
 public class SubjectRepository {
 
+    private static SubjectRepository instance;
+
     private SubjectDao subjectDao;
     private LiveData<List<Subject>> allSubjects;
     private SubjectDataBase dataBase;
+
+    public static SubjectRepository getInstance(Application application) {
+        if (instance == null) {
+            instance = new SubjectRepository(application);
+        }
+        return instance;
+    }
 
     public SubjectRepository(Application application) {
 
@@ -19,15 +28,15 @@ public class SubjectRepository {
         allSubjects = subjectDao.getAllSubjects();
     }
 
-    public void insert(Subject subject) {
+    public void insertSubject(Subject subject) {
         new Thread(new InsertSubjectRunnable(subjectDao, subject)).start();
     }
 
-    public void delete(Subject subject) {
+    public void deleteSubject(Subject subject) {
         new Thread(new DeleteSubjectRunnable(subjectDao, subject)).start();
     }
 
-    public void update(Subject subject) {
+    public void updateSubject(Subject subject) {
         new Thread(new UpdateSubjectRunnable(subjectDao, subject)).start();
     }
 
@@ -35,13 +44,13 @@ public class SubjectRepository {
         new Thread(new DeleteAllSubjectRunnable(subjectDao)).start();
     }
 
+    public LiveData<List<Subject>> getAllSubjects() {
+        return allSubjects;
+    }
+
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();
-    }
-
-    public LiveData<List<Subject>> getAllSubjects() {
-        return allSubjects;
     }
 
     private static class InsertSubjectRunnable implements Runnable {
