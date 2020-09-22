@@ -24,15 +24,15 @@ public class SubjectViewModel extends AndroidViewModel {
     }
 
     public void insert(Subject subject) {
-        subjectRepository.insert(subject);
+        subjectRepository.insertSubject(subject);
     }
 
     public void update(Subject subject) {
-        subjectRepository.update(subject);
+        subjectRepository.updateSubject(subject);
     }
 
     public void delete(Subject subject) {
-        subjectRepository.delete(subject);
+        subjectRepository.deleteSubject(subject);
     }
 
     public void deleteAllSubjects() {
