@@ -1,4 +1,4 @@
-package com.attendancemanager.data;
+package com.attendancemanager.model;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

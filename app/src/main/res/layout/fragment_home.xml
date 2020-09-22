@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPinkPrimary"
-    tools:context=".HomeFragment">
+    tools:context=".view.HomeFragment">
 
     <!--    https://stackoverflow.com/questions/43116655/recyclerview-last-item-not-shown-inside-coordinator-layout-->
 

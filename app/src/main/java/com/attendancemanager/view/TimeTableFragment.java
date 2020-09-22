@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -17,9 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.TimeTableAdapter;
-import com.attendancemanager.data.Subject;
+import com.attendancemanager.model.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

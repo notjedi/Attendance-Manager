@@ -1,4 +1,4 @@
-package com.attendancemanager.data;
+package com.attendancemanager.model;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -10,20 +10,20 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface SaturdayDao {
+public interface SubjectDao {
 
     @Insert
-    void insert(Saturday saturday);
+    void insert(Subject subject);
 
     @Update
-    void update(Saturday saturday);
+    void update(Subject subject);
 
     @Delete
-    void delete(Saturday saturday);
+    void delete(Subject subject);
 
-    @Query("DELETE FROM saturday_table")
+    @Query("DELETE FROM subject_details_table")
     void deleteAllSubjects();
 
-    @Query("SELECT * FROM saturday_table")
+    @Query("SELECT * FROM subject_details_table ORDER BY id DESC")
     LiveData<List<Subject>> getAllSubjects();
 }
