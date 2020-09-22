@@ -27,8 +27,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.SubjectViewModel;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -261,8 +261,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private void resetAttendance() {
 
         List<Subject> subjectList = subjectViewModel.getAllSubjects().getValue();
-        for (Subject subject : subjectList) {
-            subjectViewModel.resetAttendance(subject);
+        if (subjectList != null) {
+            for (Subject subject : subjectList) {
+                subject.setAttendedClasses(0);
+                subject.setTotalClasses(0);
+                subjectViewModel.update(subject);
+            }
         }
     }
 

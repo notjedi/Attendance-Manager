@@ -1,5 +1,6 @@
 package com.attendancemanager.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,24 +10,38 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 
-import java.util.List;
 import java.util.Locale;
 
-public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.SubjectListViewHolder> {
+public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentListAdapter.SubjectListViewHolder> {
 
     private static final String TAG = "SubjectListAdapter";
-    private List<Subject> mTodaySubjectList;
+    private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            return oldItem.getSubjectName().equals(newItem.getSubjectName()) &&
+                    oldItem.getAttendedClasses() == newItem.getAttendedClasses() &&
+                    oldItem.getTotalClasses() == newItem.getTotalClasses();
+        }
+    };
+
     private OnItemClickListener mItemClickListener;
     private Context mContext;
     private boolean mVibrate;
 
-    public SubjectListAdapter(List<Subject> mTodaySubjectList, Context mContext) {
-        this.mTodaySubjectList = mTodaySubjectList;
+    public HomeFragmentListAdapter(Context mContext) {
+        super(DIFF_CALLBACK);
         this.mContext = mContext;
     }
 
@@ -43,13 +58,14 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         return new SubjectListViewHolder(view, mItemClickListener);
     }
 
+    @SuppressLint("StringFormatMatches")
     @Override
     public void onBindViewHolder(@NonNull SubjectListViewHolder holder, int position) {
 
 //        TODO: set progress bar color based on attendance
 //        TODO: set status
 
-        Subject subject = mTodaySubjectList.get(position);
+        Subject subject = getItem(position);
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
         holder.mSubjectName.setText(subject.getSubjectName());
@@ -58,9 +74,8 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
 
-    @Override
-    public int getItemCount() {
-        return mTodaySubjectList.size();
+    public Subject getSubjectAt(int position) {
+        return getItem(position);
     }
 
     public interface OnItemClickListener {

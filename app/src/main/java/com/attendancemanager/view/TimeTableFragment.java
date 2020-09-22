@@ -13,14 +13,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
-import com.attendancemanager.adapters.TimeTableAdapter;
+import com.attendancemanager.adapters.TimeTableFragmentAdapter;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.viewmodel.DayViewModel;
+import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,6 +47,8 @@ public class TimeTableFragment extends Fragment {
     private RecyclerView mBottomSheetRecyclerView;
     private ConstraintLayout mBottomSheetLayout;
     private List<Subject> mAllSubjectList;
+    private SubjectViewModel subjectViewModel;
+    private DayViewModel dayViewModel;
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -81,6 +86,12 @@ public class TimeTableFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
+        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
+            mAllSubjectList = subjects;
+        });
+
         toolbar.setTitleTextAppearance(getContext(), R.style.RubixFontStyle);
         TimeTableViewPagerAdapter pagerAdapter = new TimeTableViewPagerAdapter(getChildFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -92,7 +103,6 @@ public class TimeTableFragment extends Fragment {
         viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
         viewPager.setOffscreenPageLimit(3);
 
-        mAllSubjectList = dbHelper.getAllSubjects();
 
         floatingActionButton.setOnClickListener(v -> {
             if (addButtonFab.getVisibility() == View.VISIBLE) {
@@ -131,7 +141,7 @@ public class TimeTableFragment extends Fragment {
         BottomSheetAdapter mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             viewPager.getCurrentItem();
-            dbHelper.insertSubjectToDayTable(pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString(), new String[]{mAllSubjectList.get(position).getSubjectName()});
+            dayViewModel.insert(mAllSubjectList.get(position).getSubjectName(), pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
@@ -150,7 +160,8 @@ public class TimeTableFragment extends Fragment {
 
         private static final String ARG_DAY_NAME = "argDayName";
         private RecyclerView timeTableRecyclerView;
-        private TimeTableAdapter timeTableAdapter;
+        private TimeTableFragmentAdapter timeTableAdapter;
+        private DayViewModel dayViewModel;
         private List<Subject> daySubjectList;
         private String getArgDayName;
 
@@ -188,9 +199,7 @@ public class TimeTableFragment extends Fragment {
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
-            dbHelper = new DBHelper(getContext());
-            daySubjectList = dbHelper.getSubjectsOfDay(getArgDayName);
-            timeTableAdapter = new TimeTableAdapter(daySubjectList);
+            timeTableAdapter = new TimeTableFragmentAdapter();
             timeTableRecyclerView.setAdapter(timeTableAdapter);
             timeTableRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             timeTableRecyclerView.setHasFixedSize(true);
