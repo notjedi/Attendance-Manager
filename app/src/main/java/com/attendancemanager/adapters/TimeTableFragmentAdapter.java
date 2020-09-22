@@ -6,20 +6,32 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 
-import java.util.List;
 import java.util.Locale;
 
-public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.TimeTableViewHolder> {
+public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFragmentAdapter.TimeTableViewHolder> {
 
-    private List<Subject> mSubjectList;
 
-    public TimeTableAdapter(List<Subject> mSubjectList) {
-        this.mSubjectList = mSubjectList;
+    private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            return true;
+        }
+    };
+
+    public TimeTableFragmentAdapter() {
+        super(DIFF_CALLBACK);
     }
 
     @NonNull
@@ -32,7 +44,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
     @Override
     public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
 
-        Subject subject = mSubjectList.get(position);
+        Subject subject = getItem(position);
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses()
                 / (float) subject.getTotalClasses()) * 100);
 
@@ -41,9 +53,8 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
         holder.mAttendancePercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
 
-    @Override
-    public int getItemCount() {
-        return mSubjectList.size();
+    public Subject getSubjectAt(int position) {
+        return getItem(position);
     }
 
     public static class TimeTableViewHolder extends RecyclerView.ViewHolder {

@@ -3,7 +3,6 @@ package com.attendancemanager.view;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.SubjectViewModel;
-import com.attendancemanager.adapters.EditSubjectAdapter;
+import com.attendancemanager.viewmodel.SubjectViewModel;
+import com.attendancemanager.adapters.EditSubjectActivityAdapter;
 import com.attendancemanager.model.Subject;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,9 +38,9 @@ public class EditSubjectActivity extends AppCompatActivity {
     private ExtendedFloatingActionButton extendedFab;
 
     private SubjectViewModel subjectViewModel;
-    private EditSubjectAdapter editSubjectAdapter;
-    private Subject deletedSubject;
+    private EditSubjectActivityAdapter editSubjectAdapter;
     private List<Subject> subjectList;
+    private Subject deletedSubject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +50,8 @@ public class EditSubjectActivity extends AppCompatActivity {
         subjectList = new ArrayList<>();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         subjectViewModel.getAllSubjects().observe(this, subjects -> {
-            subjectList.clear();
-            subjectList.addAll(subjects);
-            editSubjectAdapter.notifyDataSetChanged();
+            editSubjectAdapter.submitList(subjects);
+            subjectList = subjects;
         });
 
         initialSetup();
@@ -88,9 +86,9 @@ public class EditSubjectActivity extends AppCompatActivity {
     private void buildRecyclerView() {
         /* Initializing all recycler view related stuff */
 
-        editSubjectAdapter = new EditSubjectAdapter(subjectList, this);
+        editSubjectAdapter = new EditSubjectActivityAdapter(this);
         /* Overriding interface click listener */
-        editSubjectAdapter.setItemClickListener(position -> buildDialog(subjectList.get(position), position));
+        editSubjectAdapter.setItemClickListener(position -> buildDialog(editSubjectAdapter.getSubjectAt(position), position));
 
         recyclerView.setAdapter(editSubjectAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -124,26 +122,12 @@ public class EditSubjectActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
                 int position = viewHolder.getAdapterPosition();
-                final boolean[] flag = {false};
-                deletedSubject = subjectList.get(position);
+                deletedSubject = editSubjectAdapter.getSubjectAt(position);
+                subjectViewModel.delete(editSubjectAdapter.getSubjectAt(position));
 
-                subjectList.remove(position);
-                editSubjectAdapter.notifyItemRemoved(position);
                 Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " + deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
                 snackbar.setAction("Undo", v -> {
-                    flag[0] = true;
-                    subjectList.add(position, deletedSubject);
-                    editSubjectAdapter.notifyItemInserted(position);
-                });
-                snackbar.addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar transientBottomBar, int event) {
-                        super.onDismissed(transientBottomBar, event);
-                        Log.i(TAG, "onDismissed: " + flag[0] + " " + position);
-                        if (!flag[0]) {
-                            subjectViewModel.delete(deletedSubject);
-                        }
-                    }
+                    subjectViewModel.insert(deletedSubject);
                 });
                 snackbar.show();
             }
@@ -204,7 +188,7 @@ public class EditSubjectActivity extends AppCompatActivity {
             }
 
             if (subject != null)
-                updateSubject(subjectName, attendClass, totalClass, position);
+                updateSubject(new Subject(subjectName, attendClass, totalClass));
             else
                 insertSubject(subjectName, attendClass, totalClass);
 
@@ -313,30 +297,23 @@ public class EditSubjectActivity extends AppCompatActivity {
         /* End of TextChangedListeners */
     }
 
-    private void updateSubject(String subjectName, int attendClass, int totalClass, int position) {
+    private void updateSubject(Subject subject) {
         /* Update existing subject data on the database */
 
-        Subject subject = new Subject(subjectName, attendClass, totalClass);
-
         subjectViewModel.update(subject);
-        subjectList.set(position, subject);
-        editSubjectAdapter.notifyItemChanged(position);
     }
 
     private void insertSubject(String newSubjectName, int attendClass, int totalClass) {
         /* Add new subject to the database */
 
         Subject subject = new Subject(newSubjectName, attendClass, totalClass);
-        int position = subjectList.size();
 
-        if (subjectList.contains(subject)) {
+        if (subjectViewModel.containsSubject(subject.getSubjectName())) {
             Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
             snackbar.show();
             return;
         }
 
         subjectViewModel.insert(subject);
-        subjectList.add(subject);
-        editSubjectAdapter.notifyItemInserted(position);
     }
 }

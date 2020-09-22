@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.viewmodel;
 
 import android.app.Application;
 
@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.model.DayRepository;
+import com.attendancemanager.repositories.DayRepository;
 import com.attendancemanager.model.Friday;
 import com.attendancemanager.model.Monday;
 import com.attendancemanager.model.Saturday;
@@ -32,7 +32,7 @@ public class DayViewModel extends AndroidViewModel {
     public DayViewModel(@NonNull Application application) {
         super(application);
 
-        dayRepository = new DayRepository(application);
+        dayRepository = DayRepository.getInstance(application);
         mondayList = dayRepository.getMondayList();
         tuesdayList = dayRepository.getTuesdayList();
         wednesdayList = dayRepository.getWednesdayList();
@@ -40,6 +40,32 @@ public class DayViewModel extends AndroidViewModel {
         fridayList = dayRepository.getFridayList();
         saturdayList = dayRepository.getSaturdayList();
         sundayList = dayRepository.getSundayList();
+    }
+
+    public void insert(String subjectName, String day) {
+        switch (day.toLowerCase()) {
+            case "monday":
+                dayRepository.insert(new Monday(subjectName));
+                break;
+            case "tuesday":
+                dayRepository.insert(new Tuesday(subjectName));
+                break;
+            case "wednesday":
+                dayRepository.insert(new Wednesday(subjectName));
+                break;
+            case "thursday":
+                dayRepository.insert(new Thursday(subjectName));
+                break;
+            case "friday":
+                dayRepository.insert(new Friday(subjectName));
+                break;
+            case "saturday":
+                dayRepository.insert(new Saturday(subjectName));
+                break;
+            case "sunday":
+                dayRepository.insert(new Sunday(subjectName));
+                break;
+        }
     }
 
     public LiveData<List<Monday>> getMondayList() {

@@ -24,14 +24,23 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.model.Friday;
+import com.attendancemanager.model.Saturday;
+import com.attendancemanager.model.Sunday;
+import com.attendancemanager.model.Thursday;
+import com.attendancemanager.model.Tuesday;
+import com.attendancemanager.model.Wednesday;
+import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.R;
-import com.attendancemanager.SubjectViewModel;
+import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.attendancemanager.adapters.BottomSheetAdapter;
-import com.attendancemanager.adapters.SubjectListAdapter;
+import com.attendancemanager.adapters.HomeFragmentListAdapter;
+import com.attendancemanager.model.Monday;
 import com.attendancemanager.model.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -55,10 +64,11 @@ public class HomeFragment extends Fragment {
 
     private String day;
     private SubjectViewModel subjectViewModel;
+    private DayViewModel dayViewModel;
     private SharedPreferences defaultPrefs;
     private List<Subject> mAllSubjectList;
     private List<Subject> mTodaySubjectList;
-    private SubjectListAdapter mSubjectListAdapter;
+    private HomeFragmentListAdapter homeFragmentListAdapter;
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -101,11 +111,11 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mAllSubjectList = new ArrayList<>();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             mAllSubjectList.clear();
             mAllSubjectList.addAll(subjects);
-            mSubjectListAdapter.notifyDataSetChanged();
         });
 
         setDayAndDate();
@@ -140,15 +150,80 @@ public class HomeFragment extends Fragment {
     }
 
     private void getTodayTimeTable() {
-
-
-        mTodaySubjectList = dbHelper.getSubjectsOfDay(day);
+        mTodaySubjectList = new ArrayList<>();
+        switch (day) {
+            case "Monday":
+                dayViewModel.getMondayList().observe(getViewLifecycleOwner(), mondays -> {
+                    mTodaySubjectList.clear();
+                    for (Monday monday: mondays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(monday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            case "Tuesday":
+                dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), tuesdays -> {
+                    mTodaySubjectList.clear();
+                    for (Tuesday tuesday: tuesdays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(tuesday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            case "Wednesday":
+                dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), wednesdays -> {
+                    mTodaySubjectList.clear();
+                    for (Wednesday wednesday: wednesdays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(wednesday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            case "Thursday":
+                dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), thursdays -> {
+                    mTodaySubjectList.clear();
+                    for (Thursday thursday: thursdays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(thursday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            case "Friday":
+                dayViewModel.getFridayList().observe(getViewLifecycleOwner(), fridays -> {
+                    mTodaySubjectList.clear();
+                    for (Friday friday: fridays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(friday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            case "Saturday":
+                dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), saturdays -> {
+                    mTodaySubjectList.clear();
+                    for (Saturday saturday: saturdays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(saturday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            case "Sunday":
+                dayViewModel.getSundayList().observe(getViewLifecycleOwner(), sundays -> {
+                    mTodaySubjectList.clear();
+                    for (Sunday sunday: sundays) {
+                        mTodaySubjectList.add(subjectViewModel.getSubject(sunday.getSubjectName()));
+                    }
+                    homeFragmentListAdapter.submitList(mTodaySubjectList);
+                });
+                break;
+            default:
+                break;
+        }
     }
 
     private void buildRecyclerView() {
 
-        mSubjectListAdapter = new SubjectListAdapter(mTodaySubjectList, getContext());
-        mSubjectListAdapter.setItemClickListener(new SubjectListAdapter.OnItemClickListener() {
+        homeFragmentListAdapter = new HomeFragmentListAdapter(getContext());
+        homeFragmentListAdapter.setItemClickListener(new HomeFragmentListAdapter.OnItemClickListener() {
             boolean vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
 
             @Override
@@ -169,7 +244,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Cancelled Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
-        mRecyclerView.setAdapter(mSubjectListAdapter);
+        mRecyclerView.setAdapter(homeFragmentListAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -220,7 +295,7 @@ public class HomeFragment extends Fragment {
         BottomSheetAdapter mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             mTodaySubjectList.add(mAllSubjectList.get(position));
-            mSubjectListAdapter.notifyItemInserted(mTodaySubjectList.size() - 1);
+            homeFragmentListAdapter.notifyItemInserted(mTodaySubjectList.size() - 1);
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);

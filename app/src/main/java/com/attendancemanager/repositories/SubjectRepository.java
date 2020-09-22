@@ -1,8 +1,12 @@
-package com.attendancemanager.model;
+package com.attendancemanager.repositories;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+
+import com.attendancemanager.model.Subject;
+import com.attendancemanager.model.SubjectDao;
+import com.attendancemanager.model.SubjectDataBase;
 
 import java.util.List;
 
@@ -46,6 +50,14 @@ public class SubjectRepository {
 
     public LiveData<List<Subject>> getAllSubjects() {
         return allSubjects;
+    }
+
+    public boolean containsSubject(String subjectName) {
+        return subjectDao.containsSubject(subjectName);
+    }
+
+    public Subject getSubject(String subjectName) {
+        return subjectDao.getSubject(subjectName);
     }
 
     public void closeDB() {

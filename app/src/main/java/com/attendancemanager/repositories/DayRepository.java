@@ -1,10 +1,26 @@
-package com.attendancemanager.model;
+package com.attendancemanager.repositories;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+
+import com.attendancemanager.model.Friday;
+import com.attendancemanager.model.FridayDao;
+import com.attendancemanager.model.Monday;
+import com.attendancemanager.model.MondayDao;
+import com.attendancemanager.model.Saturday;
+import com.attendancemanager.model.SaturdayDao;
+import com.attendancemanager.model.SubjectDataBase;
+import com.attendancemanager.model.Sunday;
+import com.attendancemanager.model.SundayDao;
+import com.attendancemanager.model.Thursday;
+import com.attendancemanager.model.ThursdayDao;
+import com.attendancemanager.model.Tuesday;
+import com.attendancemanager.model.TuesdayDao;
+import com.attendancemanager.model.Wednesday;
+import com.attendancemanager.model.WednesdayDao;
 
 import java.util.List;
 

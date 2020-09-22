@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.BottomSheetViewHolder> {
@@ -20,6 +21,7 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.
     private OnAddButtonClickListener mListener;
 
     public BottomSheetAdapter(List<Subject> mSubjectList) {
+        this.mSubjectList = new ArrayList<>();
         this.mSubjectList = mSubjectList;
     }
 

@@ -24,6 +24,12 @@ public interface SubjectDao {
     @Query("DELETE FROM subject_details_table")
     void deleteAllSubjects();
 
+    @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
+    boolean containsSubject(String subjectName);
+
+    @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
+    Subject getSubject(String subjectName);
+
     @Query("SELECT * FROM subject_details_table ORDER BY id DESC")
     LiveData<List<Subject>> getAllSubjects();
 }
