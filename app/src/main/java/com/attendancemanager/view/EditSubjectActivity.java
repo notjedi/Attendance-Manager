@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.view;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.R;
+import com.attendancemanager.SubjectViewModel;
 import com.attendancemanager.adapters.EditSubjectAdapter;
-import com.attendancemanager.data.Subject;
+import com.attendancemanager.model.Subject;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;

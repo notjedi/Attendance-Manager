@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,9 +24,11 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.R;
+import com.attendancemanager.SubjectViewModel;
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.SubjectListAdapter;
-import com.attendancemanager.data.Subject;
+import com.attendancemanager.model.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;

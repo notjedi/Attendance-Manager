@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.data.Subject;
-import com.attendancemanager.data.SubjectRepository;
+import com.attendancemanager.model.Subject;
+import com.attendancemanager.model.SubjectRepository;
 
 import java.util.List;
 

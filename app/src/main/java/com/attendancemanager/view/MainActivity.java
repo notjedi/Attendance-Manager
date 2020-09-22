@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.attendancemanager.R;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 

@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.data.Subject;
+import com.attendancemanager.model.Subject;
 
 import java.util.List;
 import java.util.Locale;

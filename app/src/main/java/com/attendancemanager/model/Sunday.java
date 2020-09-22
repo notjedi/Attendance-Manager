@@ -1,16 +1,16 @@
-package com.attendancemanager.data;
+package com.attendancemanager.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "wednesday_table")
-public class Wednesday {
+@Entity(tableName = "sunday_table")
+public class Sunday {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String subjectName;
 
-    public Wednesday(String subjectName) {
+    public Sunday(String subjectName) {
         this.subjectName = subjectName;
     }
 
