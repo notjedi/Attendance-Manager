@@ -8,13 +8,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Subject.class}, version = 1)
+@Database(entities = {Subject.class, Monday.class, Tuesday.class, Wednesday.class,
+        Thursday.class, Friday.class, Saturday.class, Sunday.class}, version = 1)
 public abstract class SubjectDataBase extends RoomDatabase {
 
-    private static SubjectDataBase instance;
     public static final String DATABASE_NAME = "com.attendancemanager.db";
+    private static SubjectDataBase instance;
+    private static RoomDatabase.Callback prePopulateCallback = new RoomDatabase.Callback() {
 
-    public abstract SubjectDao subjectDao();
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            new Thread(new PrePopulateDatabase(instance)).start();
+        }
+    };
 
     public static synchronized SubjectDataBase getInstance(Context context) {
 
@@ -28,14 +35,7 @@ public abstract class SubjectDataBase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback prePopulateCallback = new RoomDatabase.Callback() {
-
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            new Thread(new PrePopulateDatabase(instance)).start();
-        }
-    };
+    public abstract SubjectDao subjectDao();
 
     private static class PrePopulateDatabase implements Runnable {
 

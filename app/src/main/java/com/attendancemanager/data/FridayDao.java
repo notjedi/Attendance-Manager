@@ -10,20 +10,20 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface SubjectDao {
+public interface FridayDao {
 
     @Insert
-    void insert(Subject subject);
+    void insert(Friday friday);
 
     @Update
-    void update(Subject subject);
+    void update(Friday friday);
 
     @Delete
-    void delete(Subject subject);
+    void delete(Friday friday);
 
-    @Query("DELETE FROM subject_details_table")
+    @Query("DELETE FROM friday_table")
     void deleteAllSubjects();
 
-    @Query("SELECT * FROM subject_details_table ORDER BY id DESC")
+    @Query("SELECT * FROM friday_table")
     LiveData<List<Subject>> getAllSubjects();
 }
