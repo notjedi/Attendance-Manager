@@ -52,7 +52,7 @@ public class SubjectRepository {
         return allSubjects;
     }
 
-    public boolean containsSubject(String subjectName) {
+    public Subject containsSubject(String subjectName) {
         return subjectDao.containsSubject(subjectName);
     }
 

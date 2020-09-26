@@ -85,18 +85,21 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         bottomBar.select(R.id.timeTableFragment);
                         handler.removeCallbacks(hideBottomBar);
+                        bottomBar.show();
                         handler.postDelayed(() -> bottomBar.hide(), 1000);
                         break;
 
                     case 1:
                         bottomBar.select(R.id.homeFragment);
                         handler.removeCallbacks(hideBottomBar);
+                        bottomBar.show();
                         handler.postDelayed(hideBottomBar, 3000);
                         break;
 
                     case 2:
                         bottomBar.select(R.id.settingsFragment);
                         handler.removeCallbacks(hideBottomBar);
+                        bottomBar.show();
                         break;
                 }
             }

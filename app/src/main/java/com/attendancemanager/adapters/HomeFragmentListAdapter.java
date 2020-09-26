@@ -38,7 +38,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 
     private OnItemClickListener mItemClickListener;
     private Context mContext;
-    private boolean mVibrate;
 
     public HomeFragmentListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
