@@ -49,6 +49,7 @@ public class TimeTableFragment extends Fragment {
     private List<Subject> mAllSubjectList;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
+    private BottomSheetAdapter mBottomSheetAdapter;
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -79,6 +80,7 @@ public class TimeTableFragment extends Fragment {
         addButtonFab = view.findViewById(R.id.add_extended_fab);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
+        mBottomSheetAdapter = new BottomSheetAdapter();
     }
 
     @Override
@@ -90,6 +92,7 @@ public class TimeTableFragment extends Fragment {
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             mAllSubjectList = subjects;
+            mBottomSheetAdapter.submitList(subjects);
         });
 
         toolbar.setTitleTextAppearance(getContext(), R.style.RubixFontStyle);
@@ -114,7 +117,12 @@ public class TimeTableFragment extends Fragment {
             }
         });
 
-        addButtonFab.setOnClickListener(v -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED));
+        addButtonFab.setOnClickListener(v -> {
+            mBottomSheetLayout.setVisibility(View.VISIBLE);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            addButtonFab.setVisibility(View.GONE);
+            floatingActionButton.setVisibility(View.GONE);
+        });
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         mBottomSheetBehavior.setDraggable(true);
@@ -126,9 +134,6 @@ public class TimeTableFragment extends Fragment {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     addButtonFab.setVisibility(View.VISIBLE);
                     floatingActionButton.setVisibility(View.VISIBLE);
-                } else {
-                    addButtonFab.setVisibility(View.GONE);
-                    floatingActionButton.setVisibility(View.GONE);
                 }
             }
 
@@ -138,10 +143,10 @@ public class TimeTableFragment extends Fragment {
             }
         });
 
-        BottomSheetAdapter mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             viewPager.getCurrentItem();
-            dayViewModel.insert(mAllSubjectList.get(position).getSubjectName(), pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
+            dayViewModel.insert(mAllSubjectList.get(position).getSubjectName(), pagerAdapter.
+                    getPageTitle(viewPager.getCurrentItem()).toString());
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);

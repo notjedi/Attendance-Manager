@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +25,19 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.R;
+import com.attendancemanager.adapters.BottomSheetAdapter;
+import com.attendancemanager.adapters.HomeFragmentListAdapter;
 import com.attendancemanager.model.Friday;
+import com.attendancemanager.model.Monday;
 import com.attendancemanager.model.Saturday;
+import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.Sunday;
 import com.attendancemanager.model.Thursday;
 import com.attendancemanager.model.Tuesday;
 import com.attendancemanager.model.Wednesday;
 import com.attendancemanager.viewmodel.DayViewModel;
-import com.attendancemanager.R;
 import com.attendancemanager.viewmodel.SubjectViewModel;
-import com.attendancemanager.adapters.BottomSheetAdapter;
-import com.attendancemanager.adapters.HomeFragmentListAdapter;
-import com.attendancemanager.model.Monday;
-import com.attendancemanager.model.Subject;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
@@ -68,6 +69,7 @@ public class HomeFragment extends Fragment {
     private SharedPreferences defaultPrefs;
     private List<Subject> mAllSubjectList;
     private List<Subject> mTodaySubjectList;
+    private BottomSheetAdapter mBottomSheetAdapter;
     private HomeFragmentListAdapter homeFragmentListAdapter;
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -111,11 +113,14 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mBottomSheetAdapter = new BottomSheetAdapter();
         mAllSubjectList = new ArrayList<>();
+        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             mAllSubjectList.clear();
             mAllSubjectList.addAll(subjects);
+            mBottomSheetAdapter.submitList(subjects);
         });
 
         setDayAndDate();
@@ -155,7 +160,7 @@ public class HomeFragment extends Fragment {
             case "Monday":
                 dayViewModel.getMondayList().observe(getViewLifecycleOwner(), mondays -> {
                     mTodaySubjectList.clear();
-                    for (Monday monday: mondays) {
+                    for (Monday monday : mondays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(monday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -164,7 +169,7 @@ public class HomeFragment extends Fragment {
             case "Tuesday":
                 dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), tuesdays -> {
                     mTodaySubjectList.clear();
-                    for (Tuesday tuesday: tuesdays) {
+                    for (Tuesday tuesday : tuesdays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(tuesday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -173,7 +178,7 @@ public class HomeFragment extends Fragment {
             case "Wednesday":
                 dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), wednesdays -> {
                     mTodaySubjectList.clear();
-                    for (Wednesday wednesday: wednesdays) {
+                    for (Wednesday wednesday : wednesdays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(wednesday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -182,7 +187,7 @@ public class HomeFragment extends Fragment {
             case "Thursday":
                 dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), thursdays -> {
                     mTodaySubjectList.clear();
-                    for (Thursday thursday: thursdays) {
+                    for (Thursday thursday : thursdays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(thursday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -191,7 +196,7 @@ public class HomeFragment extends Fragment {
             case "Friday":
                 dayViewModel.getFridayList().observe(getViewLifecycleOwner(), fridays -> {
                     mTodaySubjectList.clear();
-                    for (Friday friday: fridays) {
+                    for (Friday friday : fridays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(friday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -200,7 +205,7 @@ public class HomeFragment extends Fragment {
             case "Saturday":
                 dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), saturdays -> {
                     mTodaySubjectList.clear();
-                    for (Saturday saturday: saturdays) {
+                    for (Saturday saturday : saturdays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(saturday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -209,7 +214,7 @@ public class HomeFragment extends Fragment {
             case "Sunday":
                 dayViewModel.getSundayList().observe(getViewLifecycleOwner(), sundays -> {
                     mTodaySubjectList.clear();
-                    for (Sunday sunday: sundays) {
+                    for (Sunday sunday : sundays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(sunday.getSubjectName()));
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
@@ -270,7 +275,11 @@ public class HomeFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void buildBottomSheetRecyclerView() {
 
-        mExtraClassButton.setOnClickListener(v -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED));
+        mExtraClassButton.setOnClickListener(v -> {
+            mBottomSheetLayout.setVisibility(View.VISIBLE);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            bottomNavBar.setVisibility(View.GONE);
+        });
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         mBottomSheetBehavior.setDraggable(true);
@@ -281,8 +290,7 @@ public class HomeFragment extends Fragment {
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomNavBar.setVisibility(View.VISIBLE);
-                } else {
-                    bottomNavBar.setVisibility(View.GONE);
+                    Log.i(TAG, "onStateChanged: visible");
                 }
             }
 
@@ -292,8 +300,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        BottomSheetAdapter mBottomSheetAdapter = new BottomSheetAdapter(mAllSubjectList);
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
+            /* TODO: add subject to cache table */
             mTodaySubjectList.add(mAllSubjectList.get(position));
             homeFragmentListAdapter.notifyItemInserted(mTodaySubjectList.size() - 1);
         });
@@ -302,6 +310,7 @@ public class HomeFragment extends Fragment {
         mBottomSheetRecyclerView.setHasFixedSize(true);
         mBottomSheetRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mBottomSheetRecyclerView.setOnTouchListener((v, event) -> {
+            /* Prevent bottom bar from popping up while interacting with the bottom bar */
             v.getParent().requestDisallowInterceptTouchEvent(true);
             v.onTouchEvent(event);
             return true;

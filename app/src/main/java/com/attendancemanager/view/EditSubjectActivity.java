@@ -308,7 +308,7 @@ public class EditSubjectActivity extends AppCompatActivity {
 
         Subject subject = new Subject(newSubjectName, attendClass, totalClass);
 
-        if (subjectViewModel.containsSubject(subject.getSubjectName())) {
+        if (subjectViewModel.containsSubject(subject.getSubjectName()) != null) {
             Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
             snackbar.show();
             return;

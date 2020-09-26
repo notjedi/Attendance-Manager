@@ -7,22 +7,35 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.BottomSheetViewHolder> {
+public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.BottomSheetViewHolder> {
 
-    private List<Subject> mSubjectList;
+    private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACk = new DiffUtil.ItemCallback<Subject>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            return oldItem.getAttendedClasses() == newItem.getAttendedClasses() &&
+                    oldItem.getTotalClasses() == newItem.getTotalClasses() &&
+                    oldItem.getSubjectName().equals(newItem.getSubjectName());
+        }
+    };
+
     private OnAddButtonClickListener mListener;
 
-    public BottomSheetAdapter(List<Subject> mSubjectList) {
-        this.mSubjectList = new ArrayList<>();
-        this.mSubjectList = mSubjectList;
+    public BottomSheetAdapter() {
+        super(DIFF_CALLBACk);
     }
 
     @NonNull
@@ -36,19 +49,14 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.
     @Override
     public void onBindViewHolder(@NonNull BottomSheetViewHolder holder, int position) {
 
-        holder.mSubjectName.setText(mSubjectList.get(position).getSubjectName());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mSubjectList.size();
+        holder.mSubjectName.setText(getItem(position).getSubjectName());
     }
 
     public void setOnAddButtonClickListener(OnAddButtonClickListener mListener) {
         this.mListener = mListener;
     }
 
-    public interface OnAddButtonClickListener{
+    public interface OnAddButtonClickListener {
         void addButton(int position);
     }
 
@@ -56,12 +64,6 @@ public class BottomSheetAdapter extends RecyclerView.Adapter<BottomSheetAdapter.
 
         private TextView mSubjectName;
         private ImageButton mAddButton;
-
-        private static List<Subject> subjectList;
-
-        public static void setSubjectList(List<Subject> subjects) {
-            subjectList = subjects;
-        }
 
         public BottomSheetViewHolder(@NonNull View itemView, OnAddButtonClickListener listener) {
             super(itemView);

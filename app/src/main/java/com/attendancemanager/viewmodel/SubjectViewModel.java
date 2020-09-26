@@ -43,7 +43,7 @@ public class SubjectViewModel extends AndroidViewModel {
         return allSubjects;
     }
 
-    public boolean containsSubject(String subjectName) {
+    public Subject containsSubject(String subjectName) {
         return subjectRepository.containsSubject(subjectName);
     }
 
