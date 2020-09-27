@@ -9,6 +9,9 @@ import com.attendancemanager.model.SubjectDao;
 import com.attendancemanager.model.SubjectDataBase;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import javax.security.auth.callback.Callback;
 
 public class SubjectRepository {
 
@@ -44,20 +47,29 @@ public class SubjectRepository {
         new Thread(new UpdateSubjectRunnable(subjectDao, subject)).start();
     }
 
+    public boolean containsSubject(String subjectName) {
+        try {
+            Subject result = ((Callable<Subject>) () -> subjectDao.containsSubject(subjectName)).call();
+            return result != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Subject getSubject(String subjectName) {
+        try {
+            return ((Callable<Subject>) () -> subjectDao.getSubject(subjectName)).call();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void deleteAllSubjects() {
         new Thread(new DeleteAllSubjectRunnable(subjectDao)).start();
     }
 
     public LiveData<List<Subject>> getAllSubjects() {
         return allSubjects;
-    }
-
-    public Subject containsSubject(String subjectName) {
-        return subjectDao.containsSubject(subjectName);
-    }
-
-    public Subject getSubject(String subjectName) {
-        return subjectDao.getSubject(subjectName);
     }
 
     public void closeDB() {
@@ -110,6 +122,22 @@ public class SubjectRepository {
         @Override
         public void run() {
             subjectDao.update(subject);
+        }
+    }
+
+    private static class GetSubjectRunnable implements Runnable {
+
+        private SubjectDao subjectDao;
+        private String subjectName;
+
+        GetSubjectRunnable(SubjectDao subjectDao, String subjectName) {
+            this.subjectDao = subjectDao;
+            this.subjectName = subjectName;
+        }
+
+        @Override
+        public void run() {
+            subjectDao.getSubject(subjectName);
         }
     }
 

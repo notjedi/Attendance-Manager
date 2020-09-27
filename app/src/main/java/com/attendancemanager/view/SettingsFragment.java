@@ -171,6 +171,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @SuppressLint("SetTextI18n")
     @SuppressWarnings("ConstantConditions")
     private void buildAttendanceCriteriaSelector() {
+        /* TODO Set default value to current value */
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
         dialogBuilder.setTitle("Set attendance criteria");
