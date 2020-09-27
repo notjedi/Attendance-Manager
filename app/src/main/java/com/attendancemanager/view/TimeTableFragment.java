@@ -10,12 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -50,6 +48,7 @@ public class TimeTableFragment extends Fragment {
     private List<Subject> mAllSubjectList;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
+    private TimeTableViewPagerAdapter pagerAdapter;
     private BottomSheetAdapter mBottomSheetAdapter;
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -81,14 +80,13 @@ public class TimeTableFragment extends Fragment {
         addButtonFab = view.findViewById(R.id.add_extended_fab);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
-        mBottomSheetAdapter = new BottomSheetAdapter();
     }
 
     @Override
-    @SuppressLint("ClickableViewAccessibility")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mBottomSheetAdapter = new BottomSheetAdapter();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
@@ -97,16 +95,6 @@ public class TimeTableFragment extends Fragment {
         });
 
         toolbar.setTitleTextAppearance(getContext(), R.style.RubixFontStyle);
-        TimeTableViewPagerAdapter pagerAdapter = new TimeTableViewPagerAdapter(getChildFragmentManager(),
-                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        Calendar calendar = Calendar.getInstance();
-        Date date = new Date();
-        calendar.setTime(date);
-        viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
-        viewPager.setOffscreenPageLimit(3);
-
 
         floatingActionButton.setOnClickListener(v -> {
             if (addButtonFab.getVisibility() == View.VISIBLE) {
@@ -125,6 +113,30 @@ public class TimeTableFragment extends Fragment {
             floatingActionButton.setVisibility(View.GONE);
         });
 
+        setupViewPager();
+        buildBottomSheet();
+
+    }
+
+    private void setupViewPager() {
+
+        pagerAdapter = new TimeTableViewPagerAdapter(getChildFragmentManager(),
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        calendar.setTime(date);
+        /* TODO make a static method in MainActivity that gets the day of week and use it in all occurrences */
+        /* 0 represents SUNDAY in the Calender class so doing some calculations to make 0 as MONDAY */
+        viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
+        viewPager.setOffscreenPageLimit(3);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void buildBottomSheet() {
+
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         mBottomSheetBehavior.setDraggable(true);
         mBottomSheetBehavior.setPeekHeight(0);
@@ -140,7 +152,6 @@ public class TimeTableFragment extends Fragment {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
             }
         });
 
@@ -154,12 +165,11 @@ public class TimeTableFragment extends Fragment {
         mBottomSheetRecyclerView.setHasFixedSize(true);
         mBottomSheetRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mBottomSheetRecyclerView.setOnTouchListener((v, event) -> {
+            /* Request parent to disallow touch event to prevent the bottom bar form popping up onTouchEvent */
             v.getParent().requestDisallowInterceptTouchEvent(true);
             v.onTouchEvent(event);
             return true;
         });
-        mBottomSheetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 
     public static class DayFragment extends Fragment {
@@ -207,7 +217,6 @@ public class TimeTableFragment extends Fragment {
 
             timeTableAdapter = new TimeTableFragmentAdapter();
             timeTableRecyclerView.setAdapter(timeTableAdapter);
-            timeTableRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             timeTableRecyclerView.setHasFixedSize(true);
         }
     }
@@ -232,7 +241,7 @@ public class TimeTableFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 7;
+            return DAY_NAMES.length;
         }
     }
 }

@@ -15,13 +15,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.attendancemanager.adapters.EditSubjectActivityAdapter;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -84,14 +83,14 @@ public class EditSubjectActivity extends AppCompatActivity {
     }
 
     private void buildRecyclerView() {
-        /* Initializing all recycler view related stuff */
+        /* Initializing recycler view related stuff */
 
         editSubjectAdapter = new EditSubjectActivityAdapter(this);
         /* Overriding interface click listener */
-        editSubjectAdapter.setItemClickListener(position -> buildDialog(editSubjectAdapter.getSubjectAt(position), position));
+        editSubjectAdapter.setItemClickListener(position -> buildDialog(
+                editSubjectAdapter.getSubjectAt(position)));
 
         recyclerView.setAdapter(editSubjectAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -110,11 +109,13 @@ public class EditSubjectActivity extends AppCompatActivity {
             }
         });
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper
+                .SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
             /* ItemTouchHelper for swiping support in recycler view */
 
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -125,10 +126,9 @@ public class EditSubjectActivity extends AppCompatActivity {
                 deletedSubject = editSubjectAdapter.getSubjectAt(position);
                 subjectViewModel.delete(editSubjectAdapter.getSubjectAt(position));
 
-                Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " + deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
-                snackbar.setAction("Undo", v -> {
-                    subjectViewModel.insert(deletedSubject);
-                });
+                Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " +
+                        deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
+                snackbar.setAction("Undo", v -> subjectViewModel.insert(deletedSubject));
                 snackbar.show();
             }
         };
@@ -138,12 +138,11 @@ public class EditSubjectActivity extends AppCompatActivity {
 
     private void setExtendedFabListener() {
         /* Implement FAB click listener */
-
-        extendedFab.setOnClickListener(v -> buildDialog(null, -1));
+        extendedFab.setOnClickListener(v -> buildDialog(null));
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void buildDialog(Subject subject, int position) {
+    private void buildDialog(Subject subject) {
         /* Build alert dialog based on parameters passed
         Add Subject dialog - if parameter not passed
         Edit Subject dialog - if parameter passed */
@@ -159,10 +158,12 @@ public class EditSubjectActivity extends AppCompatActivity {
             positiveText = "Add";
         }
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this, R.style.AlertDialog_App_Theme);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this,
+                R.style.AlertDialog_App_Theme);
         dialogBuilder.setTitle(title);
 
-        View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+        View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text,
+                (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
         TextInputEditText subjectNameEditText = subjectInputView.findViewById(R.id.subject_name_input);
         TextInputEditText attendedClassesEditText = subjectInputView.findViewById(R.id.subject_attended_input);
         TextInputEditText totalClassesEditText = subjectInputView.findViewById(R.id.subject_total_input);
@@ -187,8 +188,12 @@ public class EditSubjectActivity extends AppCompatActivity {
                 attendClass = totalClass = 0;
             }
 
-            if (subject != null)
-                updateSubject(new Subject(subjectName, attendClass, totalClass));
+            if (subject != null) {
+                /* Updating subject based on it's unique id */
+                Subject updatedSubject = new Subject(subjectName, attendClass, totalClass);
+                updatedSubject.setId(subject.getId());
+                updateSubject(updatedSubject);
+            }
             else
                 insertSubject(subjectName, attendClass, totalClass);
 
@@ -217,6 +222,7 @@ public class EditSubjectActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 try {
+                    /* Catching NumberFormatException if the text field is empty */
                     totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
                     attendClass = Integer.parseInt(s.toString());
                 } catch (NumberFormatException e) {
@@ -224,6 +230,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                 }
 
                 if (totalClass < attendClass || totalClass == -1 || attendClass == -1) {
+                    /* Throwing error if total classes less than attended classes */
                     attendedClassesEditText.setError("Total classes less than attended classes");
                     positiveButton.setEnabled(false);
                 } else {
@@ -250,6 +257,7 @@ public class EditSubjectActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 try {
+                    /* Catching NumberFormatException if the text field is empty */
                     totalClass = Integer.parseInt(s.toString());
                     attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
                 } catch (NumberFormatException e) {
@@ -257,6 +265,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                 }
 
                 if (totalClass < attendClass || totalClass == -1 || attendClass == -1) {
+                    /* Throwing error if total classes less than attended classes */
                     attendedClassesEditText.setError("Total classes less than attended classes");
                     positiveButton.setEnabled(false);
                 } else {
@@ -283,9 +292,11 @@ public class EditSubjectActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (subjectList.contains(new Subject(s.toString().trim())) && subject == null) {
+                    /* Throwing this error only if the user is adding a new subject */
                     positiveButton.setEnabled(false);
                     subjectNameEditText.setError("Subject already exists");
-                } else if (s.toString().isEmpty()) {
+                } else if (s.toString().trim().isEmpty()) {
+                    /* Throwing error if subject name is empty */
                     positiveButton.setEnabled(false);
                     subjectNameEditText.setError("Subject name cannot be empty");
                 } else {
@@ -299,7 +310,6 @@ public class EditSubjectActivity extends AppCompatActivity {
 
     private void updateSubject(Subject subject) {
         /* Update existing subject data on the database */
-
         subjectViewModel.update(subject);
     }
 
@@ -313,8 +323,13 @@ public class EditSubjectActivity extends AppCompatActivity {
             snackbar.show();
             return;
         } else if (newSubjectName.isEmpty()) {
+            /* TextChange listeners are trickable so implementing safety checks */
             Snackbar.make(recyclerView, "Subject name cannot be empty", Snackbar.LENGTH_SHORT).show();
             return;
+        } else if (attendClass > totalClass) {
+            /* TextChange listeners are trickable so implementing safety checks */
+            subject.setAttendedClasses(0);
+            subject.setTotalClasses(0);
         }
 
         subjectViewModel.insert(subject);

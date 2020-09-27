@@ -130,6 +130,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setDayAndDate() {
+        /* Sets the data and greet text */
 
         Calendar calendar = Calendar.getInstance();
         StringBuilder date = new StringBuilder();
@@ -148,12 +149,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void setProgressBar() {
+        /* Sets main progress bar progress */
 
         mProgressBar.setProgress(60);
         mProgressPercentage.setText("60%");
     }
 
     private void getTodayTimeTable() {
+        /* Gets all the subjects for the current day for corresponding table */
+
         mTodaySubjectList = new ArrayList<>();
         switch (day) {
             case "Monday":
@@ -225,6 +229,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void buildRecyclerView() {
+        /* Builds the recycler view */
 
         homeFragmentListAdapter = new HomeFragmentListAdapter(getContext());
         homeFragmentListAdapter.setItemClickListener(new HomeFragmentListAdapter.OnItemClickListener() {
@@ -273,8 +278,15 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void buildBottomSheetRecyclerView() {
+        /* Builds the bottom sheet to add extra subjects for day */
 
         mExtraClassButton.setOnClickListener(v -> {
+            /* Bottom sheet kinda has a weird bug which triggers newState change without clicking on
+            the mExtraClassButton (currently observed only when the recycler view is empty), so
+            setting the visibility to View.GONE in the XML file and making it VISIBLE onClicking
+            the mExtraClassButton. This somehow gets rid of the bug. */
+            /* TODO animate opening the sheet for the first time */
+
             mBottomSheetLayout.setVisibility(View.VISIBLE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             bottomNavBar.setVisibility(View.GONE);
@@ -294,7 +306,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
             }
         });
 
@@ -313,7 +324,6 @@ public class HomeFragment extends Fragment {
             v.onTouchEvent(event);
             return true;
         });
-        mBottomSheetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void vibrateOnTouch(boolean vibrate) {
@@ -331,11 +341,6 @@ public class HomeFragment extends Fragment {
                 vibrator.vibrate(70);
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override

@@ -41,13 +41,6 @@ public class DayRepository {
     private SaturdayDao saturdayDao;
     private SundayDao sundayDao;
 
-    public static DayRepository getInstance(Application application) {
-        if (instance == null) {
-            instance = new DayRepository(application);
-        }
-        return instance;
-    }
-
     public DayRepository(Application application) {
 
         dataBase = SubjectDataBase.getInstance(application);
@@ -58,6 +51,13 @@ public class DayRepository {
         fridayDao = dataBase.fridayDao();
         saturdayDao = dataBase.saturdayDao();
         sundayDao = dataBase.sundayDao();
+    }
+
+    public static DayRepository getInstance(Application application) {
+        if (instance == null) {
+            instance = new DayRepository(application);
+        }
+        return instance;
     }
 
     public void insert(Object object) {
@@ -74,6 +74,7 @@ public class DayRepository {
 
     private void runOperation(Object object, int operation) {
         /* https://stackoverflow.com/questions/50946488/java-instanceof-vs-class-name-switch-performance */
+        /* TODO try to migrate parameters to SubjectMinimal class */
 
         if (object instanceof Monday)
             new Thread(new MondayOperations(mondayDao, ((Monday) object), operation)).start();
@@ -91,19 +92,33 @@ public class DayRepository {
             new Thread(new SundayOperations(sundayDao, ((Sunday) object), operation)).start();
     }
 
-    public LiveData<List<Monday>> getMondayList() { return mondayDao.getAllSubjects(); }
+    public LiveData<List<Monday>> getMondayList() {
+        return mondayDao.getAllSubjects();
+    }
 
-    public LiveData<List<Tuesday>> getTuesdayList() { return tuesdayDao.getAllSubjects(); }
+    public LiveData<List<Tuesday>> getTuesdayList() {
+        return tuesdayDao.getAllSubjects();
+    }
 
-    public LiveData<List<Wednesday>> getWednesdayList() { return wednesdayDao.getAllSubjects(); }
+    public LiveData<List<Wednesday>> getWednesdayList() {
+        return wednesdayDao.getAllSubjects();
+    }
 
-    public LiveData<List<Thursday>> getThursdayList() { return thursdayDao.getAllSubjects(); }
+    public LiveData<List<Thursday>> getThursdayList() {
+        return thursdayDao.getAllSubjects();
+    }
 
-    public LiveData<List<Friday>> getFridayList() { return fridayDao.getAllSubjects(); }
+    public LiveData<List<Friday>> getFridayList() {
+        return fridayDao.getAllSubjects();
+    }
 
-    public LiveData<List<Saturday>> getSaturdayList() { return saturdayDao.getAllSubjects(); }
+    public LiveData<List<Saturday>> getSaturdayList() {
+        return saturdayDao.getAllSubjects();
+    }
 
-    public LiveData<List<Sunday>> getSundayList() { return sundayDao.getAllSubjects(); }
+    public LiveData<List<Sunday>> getSundayList() {
+        return sundayDao.getAllSubjects();
+    }
 
     public void closeDB() {
         if (dataBase.isOpen())

@@ -11,8 +11,6 @@ import com.attendancemanager.model.SubjectDataBase;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.security.auth.callback.Callback;
-
 public class SubjectRepository {
 
     private static SubjectRepository instance;
@@ -21,18 +19,18 @@ public class SubjectRepository {
     private LiveData<List<Subject>> allSubjects;
     private SubjectDataBase dataBase;
 
-    public static SubjectRepository getInstance(Application application) {
-        if (instance == null) {
-            instance = new SubjectRepository(application);
-        }
-        return instance;
-    }
-
     public SubjectRepository(Application application) {
 
         dataBase = SubjectDataBase.getInstance(application);
         subjectDao = dataBase.subjectDao();
         allSubjects = subjectDao.getAllSubjects();
+    }
+
+    public static SubjectRepository getInstance(Application application) {
+        if (instance == null) {
+            instance = new SubjectRepository(application);
+        }
+        return instance;
     }
 
     public void insertSubject(Subject subject) {
@@ -48,6 +46,8 @@ public class SubjectRepository {
     }
 
     public boolean containsSubject(String subjectName) {
+        /* Executing method in background and using
+        Callable<Subject> instead of Runnable to get a return value */
         try {
             Subject result = ((Callable<Subject>) () -> subjectDao.containsSubject(subjectName)).call();
             return result != null;
@@ -57,6 +57,7 @@ public class SubjectRepository {
     }
 
     public Subject getSubject(String subjectName) {
+        /* Executing method in background thread */
         try {
             return ((Callable<Subject>) () -> subjectDao.getSubject(subjectName)).call();
         } catch (Exception e) {
@@ -122,22 +123,6 @@ public class SubjectRepository {
         @Override
         public void run() {
             subjectDao.update(subject);
-        }
-    }
-
-    private static class GetSubjectRunnable implements Runnable {
-
-        private SubjectDao subjectDao;
-        private String subjectName;
-
-        GetSubjectRunnable(SubjectDao subjectDao, String subjectName) {
-            this.subjectDao = subjectDao;
-            this.subjectName = subjectName;
-        }
-
-        @Override
-        public void run() {
-            subjectDao.getSubject(subjectName);
         }
     }
 
