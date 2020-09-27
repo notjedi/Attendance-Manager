@@ -10,6 +10,8 @@ import com.attendancemanager.model.SubjectDataBase;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class SubjectRepository {
 
@@ -49,8 +51,9 @@ public class SubjectRepository {
         /* Executing method in background and using
         Callable<Subject> instead of Runnable to get a return value */
         try {
-            Subject result = ((Callable<Subject>) () -> subjectDao.containsSubject(subjectName)).call();
-            return result != null;
+            Callable<Subject> callable = () -> subjectDao.getSubject(subjectName);
+            Future<Subject> future = Executors.newSingleThreadExecutor().submit(callable);
+            return future.get() != null;
         } catch (Exception e) {
             return false;
         }
@@ -58,8 +61,11 @@ public class SubjectRepository {
 
     public Subject getSubject(String subjectName) {
         /* Executing method in background thread */
+        /* https://stackoverflow.com/a/62567937 */
         try {
-            return ((Callable<Subject>) () -> subjectDao.getSubject(subjectName)).call();
+            Callable<Subject> callable = () -> subjectDao.getSubject(subjectName);
+            Future<Subject> future = Executors.newSingleThreadExecutor().submit(callable);
+            return future.get();
         } catch (Exception e) {
             return null;
         }

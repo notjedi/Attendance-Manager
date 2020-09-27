@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,7 +143,7 @@ public class HomeFragment extends Fragment {
         mDate.setText(date.toString());
 
         simpleDateFormat.applyPattern("EEEE");
-        day = simpleDateFormat.format(calendar.getTime()).toLowerCase();
+        day = simpleDateFormat.format(calendar.getTime());
         mDay.setText(simpleDateFormat.format(calendar.getTime()));
         String name = defaultPrefs.getString(SettingsFragment.NAME, null);
         mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
@@ -159,8 +160,9 @@ public class HomeFragment extends Fragment {
         /* Gets all the subjects for the current day for corresponding table */
 
         mTodaySubjectList = new ArrayList<>();
-        switch (day) {
-            case "Monday":
+        Log.i(TAG, "getTodayTimeTable: ");
+        switch (day.toLowerCase()) {
+            case "monday":
                 dayViewModel.getMondayList().observe(getViewLifecycleOwner(), mondays -> {
                     mTodaySubjectList.clear();
                     for (Monday monday : mondays) {
@@ -169,7 +171,7 @@ public class HomeFragment extends Fragment {
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
-            case "Tuesday":
+            case "tuesday":
                 dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), tuesdays -> {
                     mTodaySubjectList.clear();
                     for (Tuesday tuesday : tuesdays) {
@@ -178,7 +180,7 @@ public class HomeFragment extends Fragment {
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
-            case "Wednesday":
+            case "wednesday":
                 dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), wednesdays -> {
                     mTodaySubjectList.clear();
                     for (Wednesday wednesday : wednesdays) {
@@ -187,7 +189,7 @@ public class HomeFragment extends Fragment {
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
-            case "Thursday":
+            case "thursday":
                 dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), thursdays -> {
                     mTodaySubjectList.clear();
                     for (Thursday thursday : thursdays) {
@@ -196,7 +198,7 @@ public class HomeFragment extends Fragment {
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
-            case "Friday":
+            case "friday":
                 dayViewModel.getFridayList().observe(getViewLifecycleOwner(), fridays -> {
                     mTodaySubjectList.clear();
                     for (Friday friday : fridays) {
@@ -205,7 +207,7 @@ public class HomeFragment extends Fragment {
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
-            case "Saturday":
+            case "saturday":
                 dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), saturdays -> {
                     mTodaySubjectList.clear();
                     for (Saturday saturday : saturdays) {
@@ -214,11 +216,12 @@ public class HomeFragment extends Fragment {
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
-            case "Sunday":
+            case "sunday":
                 dayViewModel.getSundayList().observe(getViewLifecycleOwner(), sundays -> {
                     mTodaySubjectList.clear();
                     for (Sunday sunday : sundays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(sunday.getSubjectName()));
+                        Log.i(TAG, "getTodayTimeTable: " + sunday.getSubjectName());
                     }
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
