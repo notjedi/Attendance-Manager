@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,7 +54,7 @@ public class TimeTableFragment extends Fragment {
     private ExtendedFloatingActionButton addButtonFab;
     private FloatingActionButton floatingActionButton;
     private RecyclerView mBottomSheetRecyclerView;
-    private ConstraintLayout mBottomSheetLayout;
+    private LinearLayout mBottomSheetLayout;
     private List<Subject> mAllSubjectList;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;

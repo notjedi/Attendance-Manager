@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mBottomSheetRecyclerView;
     private ImageButton mExtraClassButton;
     private ProgressBar mProgressBar;
-    private ConstraintLayout mBottomSheetLayout;
+    private LinearLayout mBottomSheetLayout;
     private ExpandableBottomBar bottomNavBar;
 
     private String day;
@@ -290,9 +291,7 @@ public class HomeFragment extends Fragment {
             the mExtraClassButton. This somehow gets rid of the bug. */
             /* TODO animate opening the sheet for the first time */
 
-            mBottomSheetLayout.setVisibility(View.VISIBLE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            bottomNavBar.setVisibility(View.GONE);
         });
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
@@ -304,6 +303,8 @@ public class HomeFragment extends Fragment {
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomNavBar.setVisibility(View.VISIBLE);
+                } else {
+                    bottomNavBar.setVisibility(View.GONE);
                 }
             }
 
