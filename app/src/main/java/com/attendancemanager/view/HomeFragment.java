@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -290,7 +289,6 @@ public class HomeFragment extends Fragment {
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomNavBar.setVisibility(View.VISIBLE);
-                    Log.i(TAG, "onStateChanged: visible");
                 }
             }
 

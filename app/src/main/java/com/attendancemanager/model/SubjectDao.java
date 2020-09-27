@@ -30,6 +30,6 @@ public interface SubjectDao {
     @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
     Subject getSubject(String subjectName);
 
-    @Query("SELECT * FROM subject_details_table ORDER BY id DESC")
+    @Query("SELECT * FROM subject_details_table")
     LiveData<List<Subject>> getAllSubjects();
 }

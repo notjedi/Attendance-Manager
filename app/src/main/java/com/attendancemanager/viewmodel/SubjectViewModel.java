@@ -27,12 +27,20 @@ public class SubjectViewModel extends AndroidViewModel {
         subjectRepository.insertSubject(subject);
     }
 
+    public void delete(Subject subject) {
+        subjectRepository.deleteSubject(subject);
+    }
+
     public void update(Subject subject) {
         subjectRepository.updateSubject(subject);
     }
 
-    public void delete(Subject subject) {
-        subjectRepository.deleteSubject(subject);
+    public boolean containsSubject(String subjectName) {
+        return subjectRepository.containsSubject(subjectName);
+    }
+
+    public Subject getSubject(String subjectName) {
+        return subjectRepository.getSubject(subjectName);
     }
 
     public void deleteAllSubjects() {
@@ -41,14 +49,6 @@ public class SubjectViewModel extends AndroidViewModel {
 
     public LiveData<List<Subject>> getAllSubjects() {
         return allSubjects;
-    }
-
-    public Subject containsSubject(String subjectName) {
-        return subjectRepository.containsSubject(subjectName);
-    }
-
-    public Subject getSubject(String subjectName) {
-        return subjectRepository.getSubject(subjectName);
     }
 
     public void closeDB() {
