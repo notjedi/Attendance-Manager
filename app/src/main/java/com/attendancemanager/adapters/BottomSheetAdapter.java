@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 
-import java.util.List;
-
 public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.BottomSheetViewHolder> {
 
-    private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACk = new DiffUtil.ItemCallback<Subject>() {
+    private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
+        /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
+
         @Override
         public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
             return oldItem.getId() == newItem.getId();
@@ -26,16 +26,15 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
 
         @Override
         public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
-            return oldItem.getAttendedClasses() == newItem.getAttendedClasses() &&
-                    oldItem.getTotalClasses() == newItem.getTotalClasses() &&
-                    oldItem.getSubjectName().equals(newItem.getSubjectName());
+            /* No need to check if attended classes and total classes are same */
+            return oldItem.getSubjectName().equals(newItem.getSubjectName());
         }
     };
 
     private OnAddButtonClickListener mListener;
 
     public BottomSheetAdapter() {
-        super(DIFF_CALLBACk);
+        super(DIFF_CALLBACK);
     }
 
     @NonNull
@@ -63,17 +62,14 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
     public static class BottomSheetViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mSubjectName;
-        private ImageButton mAddButton;
 
         public BottomSheetViewHolder(@NonNull View itemView, OnAddButtonClickListener listener) {
             super(itemView);
 
             mSubjectName = itemView.findViewById(R.id.bottom_sheet_subject_name);
-            mAddButton = itemView.findViewById(R.id.bottom_sheet_add_button);
+            ImageButton mAddButton = itemView.findViewById(R.id.bottom_sheet_add_button);
 
-            mAddButton.setOnClickListener(v -> {
-                listener.addButton(getAdapterPosition());
-            });
+            mAddButton.setOnClickListener(v -> listener.addButton(getAdapterPosition()));
         }
     }
 }

@@ -115,14 +115,12 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.timeTableFragment:
                     viewPager.setCurrentItem(0);
-                    handler.removeCallbacks(hideBottomBar);
                     break;
                 case R.id.homeFragment:
                     viewPager.setCurrentItem(1);
                     break;
                 case R.id.settingsFragment:
                     viewPager.setCurrentItem(2);
-                    handler.removeCallbacks(hideBottomBar);
                     break;
             }
             return null;
@@ -131,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onUserInteraction() {
-        /* Hide the bottom bar after 3 seconds of inactivity */
+        /* Hide the bottom bar after 3 seconds of inactivity only when currentTab = HomeFragment */
 
         super.onUserInteraction();
         if (viewPager.getCurrentItem() == 1) {

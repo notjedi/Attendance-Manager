@@ -2,7 +2,6 @@ package com.attendancemanager.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,8 @@ import java.util.Locale;
 public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubjectActivityAdapter.EditSubjectListViewHolder> {
 
     private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
+        /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
+
         @Override
         public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
             return oldItem.getId() == newItem.getId();
@@ -59,11 +60,13 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
     public void onBindViewHolder(@NonNull EditSubjectActivityAdapter.EditSubjectListViewHolder holder, int position) {
 
         Subject subject = getItem(position);
-        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
+        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
+                (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
         holder.mProgressBar.setProgress(percentage);
         holder.mSubjectName.setText(subject.getSubjectName());
-        holder.mAttendedClasses.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), subject.getAttendedClasses(), subject.getTotalClasses()));
+        holder.mAttendedClasses.setText(String.format(mContext.getResources()
+                .getString(R.string.attended_info_template), subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mProgressPercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
 

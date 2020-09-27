@@ -23,6 +23,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 
     private static final String TAG = "SubjectListAdapter";
     private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
+        /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
+
         @Override
         public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
             return oldItem.getId() == newItem.getId();
@@ -65,10 +67,12 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 //        TODO: set status
 
         Subject subject = getItem(position);
-        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
+        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
+                (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
         holder.mSubjectName.setText(subject.getSubjectName());
-        holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template), subject.getAttendedClasses(), subject.getTotalClasses()));
+        holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template),
+                subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }

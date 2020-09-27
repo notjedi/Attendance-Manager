@@ -17,8 +17,9 @@ import java.util.Locale;
 
 public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFragmentAdapter.TimeTableViewHolder> {
 
-
     private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
+        /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
+
         @Override
         public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
             return oldItem.getId() == newItem.getId();
@@ -26,7 +27,8 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
 
         @Override
         public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
-            return true;
+            /* No need to check if attended classes and total classes are same */
+            return oldItem.getSubjectName().equals(newItem.getSubjectName());
         }
     };
 
@@ -45,8 +47,8 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
     public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
 
         Subject subject = getItem(position);
-        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round(((float) subject.getAttendedClasses()
-                / (float) subject.getTotalClasses()) * 100);
+        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
+                (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
         holder.mPosition.setText(String.valueOf(position + 1));
         holder.mSubjectName.setText(subject.getSubjectName());

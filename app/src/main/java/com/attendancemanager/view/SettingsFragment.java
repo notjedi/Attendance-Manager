@@ -68,7 +68,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     /* TODO: change font for the settings page */
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -175,7 +176,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
         dialogBuilder.setTitle("Set attendance criteria");
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.attendance_criteria_slider, (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.attendance_criteria_slider,
+                (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
 
         Slider slider = view.findViewById(R.id.attendance_criteria_slider);
         TextView attendancePercentage = view.findViewById(R.id.attendance_criteria_percentage);
@@ -241,7 +243,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             message = "This will wipe all your data. " + common;
         }
 
-        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext(), R.style.AlertDialog_App_Theme)
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext(),
+                R.style.AlertDialog_App_Theme)
                 .setTitle(title)
                 .setMessage(message)
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
