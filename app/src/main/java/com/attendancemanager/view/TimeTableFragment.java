@@ -69,7 +69,7 @@ public class TimeTableFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         mBottomSheetAdapter = new BottomSheetAdapter();
         mAllSubjectList = new ArrayList<>();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);

@@ -62,7 +62,7 @@ public class SubjectRepository {
 
     public Subject getSubject(String subjectName) {
         /* Executing method in background thread */
-        /* https://stackoverflow.com/a/62567937 */
+        /* https://stackoverflow.com/a/51720501 */
         try {
             Callable<Subject> callable = () -> subjectDao.getSubject(subjectName);
             Future<Subject> future = Executors.newSingleThreadExecutor().submit(callable);
