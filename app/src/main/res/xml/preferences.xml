@@ -34,7 +34,6 @@
             app:title="Edit subjects" />
 
         <Preference
-            app:enabled="false"
             app:icon="@drawable/ic_predict"
             app:key="@string/key_predict"
             app:summary="Predict attendance of each subject"

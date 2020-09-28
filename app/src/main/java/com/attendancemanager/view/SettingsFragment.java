@@ -44,6 +44,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String VIBRATE = "key_vibration";
     public static final String ATTENDANCE_CRITERIA_SELECTOR = "key_attendance_criterion";
     public static final String EDIT_SUBJECTS = "key_edit_subjects";
+    public static final String PREDICT = "key_predict";
     public static final String NOTIFICATION = "key_notification";
     public static final String NOTIFICATION_TIME = "key_notification_time";
     public static final String RESET_DATABASE = "key_reset_attendance";
@@ -56,6 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     private Preference attendanceCriteriaSelector;
     private Preference editSubject;
+    private Preference predict;
     private Preference notificationTimePicker;
     private Preference resetDatabase;
     private Preference clearDatabase;
@@ -102,7 +104,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         super.onViewCreated(view, savedInstanceState);
 
         attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
-        editSubject = findPreference(getString(R.string.key_edit_subjects));
+        editSubject = findPreference(EDIT_SUBJECTS);
+        predict = findPreference(PREDICT);
         notificationTimePicker = findPreference(NOTIFICATION_TIME);
         resetDatabase = findPreference(RESET_DATABASE);
         clearDatabase = findPreference(CLEAR_DATABASE);
@@ -113,6 +116,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
+        predict.setOnPreferenceClickListener(this);
         notificationTimePicker.setOnPreferenceClickListener(this);
         resetDatabase.setOnPreferenceClickListener(this);
         clearDatabase.setOnPreferenceClickListener(this);
@@ -135,6 +139,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case EDIT_SUBJECTS:
                 Intent editSubjectIntent = new Intent(getContext(), EditSubjectActivity.class);
                 startActivity(editSubjectIntent);
+                break;
+
+            case PREDICT:
+                Intent predictIntent = new Intent(getContext(), PredictActivity.class);
+                startActivity(predictIntent);
                 break;
 
             case NOTIFICATION_TIME:
