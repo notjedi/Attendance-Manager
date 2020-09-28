@@ -69,6 +69,11 @@ public class TimeTableFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        mBottomSheetAdapter = new BottomSheetAdapter();
+        mAllSubjectList = new ArrayList<>();
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
     }
 
     @Override
@@ -89,16 +94,8 @@ public class TimeTableFragment extends Fragment {
         addButtonFab = view.findViewById(R.id.add_extended_fab);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        mBottomSheetAdapter = new BottomSheetAdapter();
-        mAllSubjectList = new ArrayList<>();
-        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
-        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             mAllSubjectList.clear();
             mAllSubjectList.addAll(subjects);
@@ -126,7 +123,6 @@ public class TimeTableFragment extends Fragment {
 
         setupViewPager();
         buildBottomSheet();
-
     }
 
     private void setupViewPager() {

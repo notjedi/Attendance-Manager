@@ -82,6 +82,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBottomSheetAdapter = new BottomSheetAdapter();
+        mAllSubjectList = new ArrayList<>();
+        defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
     }
 
     @Override
@@ -96,7 +102,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         mDate = view.findViewById(R.id.date_text_view);
         mDay = view.findViewById(R.id.day_text_view);
         mGreet = view.findViewById(R.id.greet_text_view);
@@ -108,16 +113,6 @@ public class HomeFragment extends Fragment {
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
         bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
 
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mBottomSheetAdapter = new BottomSheetAdapter();
-        mAllSubjectList = new ArrayList<>();
-        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
-        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             mAllSubjectList.clear();
             mAllSubjectList.addAll(subjects);
@@ -129,6 +124,7 @@ public class HomeFragment extends Fragment {
         getTodayTimeTable();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
+
     }
 
     private void setDayAndDate() {

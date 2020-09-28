@@ -70,6 +70,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     /* TODO: change font for the settings page */
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -83,6 +91,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     @SuppressWarnings("ConstantConditions")
     public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+
         RecyclerView recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState);
         recyclerView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
         return recyclerView;
@@ -102,15 +111,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         bugReport = findPreference(BUG_REPORT);
         about = findPreference(ABOUT);
 
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
-        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
-
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
         notificationTimePicker.setOnPreferenceClickListener(this);
@@ -120,6 +120,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         shareApp.setOnPreferenceClickListener(this);
         bugReport.setOnPreferenceClickListener(this);
         about.setOnPreferenceClickListener(this);
+
     }
 
     @Override
