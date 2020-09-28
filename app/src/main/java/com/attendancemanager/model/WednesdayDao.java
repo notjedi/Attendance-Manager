@@ -25,5 +25,5 @@ public interface WednesdayDao {
     void deleteAllSubjects();
 
     @Query("SELECT * FROM wednesday_table")
-    LiveData<List<Wednesday>> getAllSubjects();
+    LiveData<List<SubjectMinimal>> getAllSubjects();
 }

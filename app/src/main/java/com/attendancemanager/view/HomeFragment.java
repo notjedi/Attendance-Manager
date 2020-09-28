@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +18,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.HomeFragmentListAdapter;
-import com.attendancemanager.model.Friday;
-import com.attendancemanager.model.Monday;
-import com.attendancemanager.model.Saturday;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.Sunday;
-import com.attendancemanager.model.Thursday;
-import com.attendancemanager.model.Tuesday;
-import com.attendancemanager.model.Wednesday;
+import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -159,11 +150,11 @@ public class HomeFragment extends Fragment {
         mTodaySubjectList = new ArrayList<>();
         switch (day.toLowerCase()) {
             case "monday":
-                dayViewModel.getMondayList().observe(getViewLifecycleOwner(), mondays -> {
+                dayViewModel.getMondayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Monday monday : mondays) {
-                        Subject subject = subjectViewModel.getSubject(monday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -173,11 +164,11 @@ public class HomeFragment extends Fragment {
                 });
                 break;
             case "tuesday":
-                dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), tuesdays -> {
+                dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Tuesday tuesday : tuesdays) {
-                        Subject subject = subjectViewModel.getSubject(tuesday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -187,11 +178,11 @@ public class HomeFragment extends Fragment {
                 });
                 break;
             case "wednesday":
-                dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), wednesdays -> {
+                dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Wednesday wednesday : wednesdays) {
-                        Subject subject = subjectViewModel.getSubject(wednesday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -201,11 +192,11 @@ public class HomeFragment extends Fragment {
                 });
                 break;
             case "thursday":
-                dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), thursdays -> {
+                dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Thursday thursday : thursdays) {
-                        Subject subject = subjectViewModel.getSubject(thursday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -215,11 +206,11 @@ public class HomeFragment extends Fragment {
                 });
                 break;
             case "friday":
-                dayViewModel.getFridayList().observe(getViewLifecycleOwner(), fridays -> {
+                dayViewModel.getFridayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Friday friday : fridays) {
-                        Subject subject = subjectViewModel.getSubject(friday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -229,11 +220,11 @@ public class HomeFragment extends Fragment {
                 });
                 break;
             case "saturday":
-                dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), saturdays -> {
+                dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Saturday saturday : saturdays) {
-                        Subject subject = subjectViewModel.getSubject(saturday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -243,11 +234,11 @@ public class HomeFragment extends Fragment {
                 });
                 break;
             case "sunday":
-                dayViewModel.getSundayList().observe(getViewLifecycleOwner(), sundays -> {
+                dayViewModel.getSundayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                     List<Subject> subjectList = new ArrayList<>();
                     mTodaySubjectList.clear();
-                    for (Sunday sunday : sundays) {
-                        Subject subject = subjectViewModel.getSubject(sunday.getSubjectName());
+                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                         if (subject != null) {
                             mTodaySubjectList.add(subject);
                             subjectList.add(subject);
@@ -259,6 +250,10 @@ public class HomeFragment extends Fragment {
             default:
                 break;
         }
+    }
+
+    private void notifyChanges(SubjectMinimal subjectMinimal) {
+
     }
 
     private void buildRecyclerView() {
