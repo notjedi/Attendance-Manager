@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 @Database(entities = {Subject.class, Monday.class, Tuesday.class, Wednesday.class,
-        Thursday.class, Friday.class, Saturday.class, Sunday.class}, version = 1)
+        Thursday.class, Friday.class, Saturday.class, Sunday.class}, version = 1, exportSchema = false)
 public abstract class SubjectDataBase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
@@ -33,6 +33,11 @@ public abstract class SubjectDataBase extends RoomDatabase {
                     .build();
         }
         return instance;
+    }
+
+    public void closeDB() {
+        instance.close();
+        instance = null;
     }
 
     public abstract SubjectDao subjectDao();

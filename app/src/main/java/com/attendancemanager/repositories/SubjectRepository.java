@@ -1,6 +1,7 @@
 package com.attendancemanager.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -82,6 +83,7 @@ public class SubjectRepository {
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();
+        instance = null;
     }
 
     private static class InsertSubjectRunnable implements Runnable {

@@ -1,5 +1,6 @@
 package com.attendancemanager.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,15 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
 
         @Override
         public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
+            Log.i("CHECK ID", "areItemsTheSame: " + String.valueOf(oldItem.getId() == newItem.getId()));
             return oldItem.getId() == newItem.getId();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
             /* No need to check if attended classes and total classes are same */
+            /* TODO check if attendance is getting updated */
+            Log.i("CHECK NAME", "areContentsTheSame: " + oldItem.getSubjectName().equals(newItem.getSubjectName()));
             return oldItem.getSubjectName().equals(newItem.getSubjectName());
         }
     };
@@ -47,6 +51,7 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
     public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
 
         Subject subject = getItem(position);
+        Log.i("TAH", "onBindViewHolder: " + getItemCount() + " " + subject.getId());
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
                 (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 

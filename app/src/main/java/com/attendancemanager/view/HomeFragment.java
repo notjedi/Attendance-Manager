@@ -161,7 +161,6 @@ public class HomeFragment extends Fragment {
         /* Gets all the subjects for the current day for corresponding table */
 
         mTodaySubjectList = new ArrayList<>();
-        Log.i(TAG, "getTodayTimeTable: ");
         switch (day.toLowerCase()) {
             case "monday":
                 dayViewModel.getMondayList().observe(getViewLifecycleOwner(), mondays -> {
@@ -222,8 +221,8 @@ public class HomeFragment extends Fragment {
                     mTodaySubjectList.clear();
                     for (Sunday sunday : sundays) {
                         mTodaySubjectList.add(subjectViewModel.getSubject(sunday.getSubjectName()));
-                        Log.i(TAG, "getTodayTimeTable: " + sunday.getSubjectName());
                     }
+                    Log.i(TAG, "getTodayTimeTable: " + mTodaySubjectList.size());
                     homeFragmentListAdapter.submitList(mTodaySubjectList);
                 });
                 break;
@@ -260,7 +259,6 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setAdapter(homeFragmentListAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -290,10 +288,12 @@ public class HomeFragment extends Fragment {
             setting the visibility to View.GONE in the XML file and making it VISIBLE onClicking
             the mExtraClassButton. This somehow gets rid of the bug. */
             /* TODO animate opening the sheet for the first time */
-
+            mBottomSheetLayout.setVisibility(View.VISIBLE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            bottomNavBar.setVisibility(View.GONE);
         });
 
+        /* TODO do not display bottom bar if list of subjects is empty */
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         mBottomSheetBehavior.setDraggable(true);
         mBottomSheetBehavior.setPeekHeight(0);
@@ -303,8 +303,6 @@ public class HomeFragment extends Fragment {
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomNavBar.setVisibility(View.VISIBLE);
-                } else {
-                    bottomNavBar.setVisibility(View.GONE);
                 }
             }
 
@@ -353,6 +351,5 @@ public class HomeFragment extends Fragment {
         /* https://stackoverflow.com/questions/17195641/fragment-lifecycle-when-ondestroy-and-ondestroyview-are-not-called */
 
         super.onDestroy();
-        subjectViewModel.closeDB();
     }
 }
