@@ -3,6 +3,7 @@ package com.attendancemanager.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,9 +13,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.attendancemanager.R;
+import com.attendancemanager.viewmodel.SubjectViewModel;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 
@@ -139,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /* TODO close database */
+        SubjectViewModel subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        subjectViewModel.closeDB();
+        Log.i(TAG, "onDestroy: ");
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

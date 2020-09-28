@@ -72,6 +72,10 @@ public class DayViewModel extends AndroidViewModel {
         return sundayList;
     }
 
+    public LiveData<List<SubjectMinimal>> getDaySubjectList(String dayName) {
+        return dayRepository.getDaySubjectList(dayName);
+    }
+
     public void closeDB() {
         dayRepository.closeDB();
     }

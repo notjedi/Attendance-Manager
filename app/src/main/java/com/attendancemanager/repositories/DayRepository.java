@@ -141,6 +141,27 @@ public class DayRepository {
         return sundayDao.getAllSubjects();
     }
 
+    public LiveData<List<SubjectMinimal>> getDaySubjectList(String dayName) {
+
+        switch (dayName.toLowerCase()) {
+            case "monday":
+                return getMondayList();
+            case "tuesday":
+                return getTuesdayList();
+            case "wednesday":
+                return getWednesdayList();
+            case "thursday":
+                return getThursdayList();
+            case "friday":
+                return getFridayList();
+            case "saturday":
+                return getSaturdayList();
+            case "sunday":
+                return getSundayList();
+        }
+        return null;
+    }
+
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();
