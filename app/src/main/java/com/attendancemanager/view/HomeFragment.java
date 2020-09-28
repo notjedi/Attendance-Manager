@@ -148,112 +148,18 @@ public class HomeFragment extends Fragment {
         /* Gets all the subjects for the current day for corresponding table */
 
         mTodaySubjectList = new ArrayList<>();
-        switch (day.toLowerCase()) {
-            case "monday":
-                dayViewModel.getMondayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            case "tuesday":
-                dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            case "wednesday":
-                dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            case "thursday":
-                dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            case "friday":
-                dayViewModel.getFridayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            case "saturday":
-                dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            case "sunday":
-                dayViewModel.getSundayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                    List<Subject> subjectList = new ArrayList<>();
-                    mTodaySubjectList.clear();
-                    for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                        Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
-                        if (subject != null) {
-                            mTodaySubjectList.add(subject);
-                            subjectList.add(subject);
-                        }
-                    }
-                    homeFragmentListAdapter.submitList(subjectList);
-                });
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void notifyChanges(SubjectMinimal subjectMinimal) {
-
+        dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
+            List<Subject> subjectList = new ArrayList<>();
+            mTodaySubjectList.clear();
+            for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
+                if (subject != null) {
+                    subjectList.add(subject);
+                    mTodaySubjectList.add(subject);
+                }
+            }
+            homeFragmentListAdapter.submitList(subjectList);
+        });
     }
 
     private void buildRecyclerView() {
