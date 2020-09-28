@@ -11,8 +11,8 @@
 - Time Table view to edit you time table
 
 ## Roadmap
-[ ] Implement [themes](themes/)
-[ ] Mark attendance based on location(maybe)
+[ ] Implement [themes](themes/)\
+[ ] Mark attendance based on location(maybe)\
 [ ] Migrate to Kotlin
 
 ## Developer Insight
@@ -34,7 +34,7 @@
 ## CHANGELOG
 See [CHANGELOG.md](CHANGELOG.md)
 
-## Contributions
+## CONTRIBUTIONS
 See [CONTRIBUTIONS.md](CONTRIBUTIONS.md)
 
 ## Similar apps to checkout
