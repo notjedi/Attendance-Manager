@@ -6,27 +6,21 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.repositories.DayRepository;
-import com.attendancemanager.model.Friday;
-import com.attendancemanager.model.Monday;
-import com.attendancemanager.model.Saturday;
-import com.attendancemanager.model.Sunday;
-import com.attendancemanager.model.Thursday;
-import com.attendancemanager.model.Tuesday;
-import com.attendancemanager.model.Wednesday;
 
 import java.util.List;
 
 public class DayViewModel extends AndroidViewModel {
 
     private DayRepository dayRepository;
-    private LiveData<List<Monday>> mondayList;
-    private LiveData<List<Tuesday>> tuesdayList;
-    private LiveData<List<Wednesday>> wednesdayList;
-    private LiveData<List<Thursday>> thursdayList;
-    private LiveData<List<Friday>> fridayList;
-    private LiveData<List<Saturday>> saturdayList;
-    private LiveData<List<Sunday>> sundayList;
+    private LiveData<List<SubjectMinimal>> mondayList;
+    private LiveData<List<SubjectMinimal>> tuesdayList;
+    private LiveData<List<SubjectMinimal>> wednesdayList;
+    private LiveData<List<SubjectMinimal>> thursdayList;
+    private LiveData<List<SubjectMinimal>> fridayList;
+    private LiveData<List<SubjectMinimal>> saturdayList;
+    private LiveData<List<SubjectMinimal>> sundayList;
 
 
     public DayViewModel(@NonNull Application application) {
@@ -42,61 +36,39 @@ public class DayViewModel extends AndroidViewModel {
         sundayList = dayRepository.getSundayList();
     }
 
-    public void insert(String subjectName, String day) {
-        switch (day.toLowerCase()) {
-            case "monday":
-                dayRepository.insert(new Monday(subjectName));
-                break;
-            case "tuesday":
-                dayRepository.insert(new Tuesday(subjectName));
-                break;
-            case "wednesday":
-                dayRepository.insert(new Wednesday(subjectName));
-                break;
-            case "thursday":
-                dayRepository.insert(new Thursday(subjectName));
-                break;
-            case "friday":
-                dayRepository.insert(new Friday(subjectName));
-                break;
-            case "saturday":
-                dayRepository.insert(new Saturday(subjectName));
-                break;
-            case "sunday":
-                dayRepository.insert(new Sunday(subjectName));
-                break;
-        }
+    public void insert(SubjectMinimal subjectMinimal) {
+        dayRepository.insert(subjectMinimal);
     }
 
     public void deleteAllSubjects() {
         dayRepository.deleteAllSubjects();
     }
 
-    public LiveData<List<Monday>> getMondayList() {
+    public LiveData<List<SubjectMinimal>> getMondayList() {
         return mondayList;
     }
 
-    public LiveData<List<Tuesday>> getTuesdayList() {
+    public LiveData<List<SubjectMinimal>> getTuesdayList() {
         return tuesdayList;
     }
 
-    public LiveData<List<Wednesday>> getWednesdayList() {
+    public LiveData<List<SubjectMinimal>> getWednesdayList() {
         return wednesdayList;
     }
 
-    public LiveData<List<Thursday>> getThursdayList() {
+    public LiveData<List<SubjectMinimal>> getThursdayList() {
         return thursdayList;
     }
 
-    public LiveData<List<Friday>> getFridayList() {
+    public LiveData<List<SubjectMinimal>> getFridayList() {
         return fridayList;
     }
 
-    public LiveData<List<Saturday>> getSaturdayList() {
+    public LiveData<List<SubjectMinimal>> getSaturdayList() {
         return saturdayList;
     }
 
-    public LiveData<List<Sunday>> getSundayList() {
+    public LiveData<List<SubjectMinimal>> getSundayList() {
         return sundayList;
     }
 

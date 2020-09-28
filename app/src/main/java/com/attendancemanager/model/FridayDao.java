@@ -1,7 +1,6 @@
 package com.attendancemanager.model;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -26,5 +25,5 @@ public interface FridayDao {
     void deleteAllSubjects();
 
     @Query("SELECT * FROM friday_table")
-    LiveData<List<Friday>> getAllSubjects();
+    LiveData<List<SubjectMinimal>> getAllSubjects();
 }

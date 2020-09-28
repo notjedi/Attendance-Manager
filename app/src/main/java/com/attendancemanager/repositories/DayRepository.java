@@ -1,7 +1,6 @@
 package com.attendancemanager.repositories;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +13,7 @@ import com.attendancemanager.model.MondayDao;
 import com.attendancemanager.model.Saturday;
 import com.attendancemanager.model.SaturdayDao;
 import com.attendancemanager.model.SubjectDataBase;
+import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.model.Sunday;
 import com.attendancemanager.model.SundayDao;
 import com.attendancemanager.model.Thursday;
@@ -61,19 +61,19 @@ public class DayRepository {
         return instance;
     }
 
-    public void insert(Object object) {
-        runOperation(object, INSERT);
+    public void insert(SubjectMinimal subjectMinimal) {
+        runOperation(subjectMinimal, INSERT);
     }
 
-    public void delete(Object object) {
-        runOperation(object, DELETE);
+    public void delete(SubjectMinimal subjectMinimal) {
+        runOperation(subjectMinimal, DELETE);
     }
 
     public void deleteAllSubjects() {
         runOperation(null, DELETE_ALL_SUBJECTS);
     }
 
-    private void runOperation(Object object, int operation) {
+    private void runOperation(SubjectMinimal subjectMinimal, int operation) {
         /* https://stackoverflow.com/questions/50946488/java-instanceof-vs-class-name-switch-performance */
         /* TODO try to migrate parameters to a new SubjectMinimal class */
 
@@ -88,47 +88,56 @@ public class DayRepository {
             return;
         }
 
-        if (object instanceof Monday)
-            new Thread(new MondayOperations(mondayDao, ((Monday) object), operation)).start();
-        else if (object instanceof Tuesday)
-            new Thread(new TuesdayOperations(tuesdayDao, ((Tuesday) object), operation)).start();
-        else if (object instanceof Wednesday)
-            new Thread(new WednesdayOperations(wednesdayDao, ((Wednesday) object), operation)).start();
-        else if (object instanceof Thursday)
-            new Thread(new ThursdayOperations(thursdayDao, ((Thursday) object), operation)).start();
-        else if (object instanceof Friday)
-            new Thread(new FridayOperations(fridayDao, ((Friday) object), operation)).start();
-        else if (object instanceof Saturday)
-            new Thread(new SaturdayOperations(saturdayDao, ((Saturday) object), operation)).start();
-        else if (object instanceof Sunday)
-            new Thread(new SundayOperations(sundayDao, ((Sunday) object), operation)).start();
+        switch (subjectMinimal.getDay()) {
+            case "monday":
+                new Thread(new MondayOperations(mondayDao, subjectMinimal, operation)).start();
+                break;
+            case "tuesday":
+                new Thread(new TuesdayOperations(tuesdayDao, subjectMinimal, operation)).start();
+                break;
+            case "wednesday":
+                new Thread(new WednesdayOperations(wednesdayDao, subjectMinimal, operation)).start();
+                break;
+            case "thursday":
+                new Thread(new ThursdayOperations(thursdayDao, subjectMinimal, operation)).start();
+                break;
+            case "friday":
+                new Thread(new FridayOperations(fridayDao, subjectMinimal, operation)).start();
+                break;
+            case "saturday":
+                new Thread(new SaturdayOperations(saturdayDao, subjectMinimal, operation)).start();
+                break;
+            case "sunday":
+                new Thread(new SundayOperations(sundayDao, subjectMinimal, operation)).start();
+                break;
+        }
     }
 
-    public LiveData<List<Monday>> getMondayList() {
+    public LiveData<List<SubjectMinimal>> getMondayList() {
         return mondayDao.getAllSubjects();
     }
 
-    public LiveData<List<Tuesday>> getTuesdayList() {
+    public LiveData<List<SubjectMinimal>> getTuesdayList() {
         return tuesdayDao.getAllSubjects();
     }
 
-    public LiveData<List<Wednesday>> getWednesdayList() {
+    public LiveData<List<SubjectMinimal>> getWednesdayList() {
         return wednesdayDao.getAllSubjects();
     }
 
-    public LiveData<List<Thursday>> getThursdayList() {
+    public LiveData<List<SubjectMinimal>> getThursdayList() {
         return thursdayDao.getAllSubjects();
     }
 
-    public LiveData<List<Friday>> getFridayList() {
+    public LiveData<List<SubjectMinimal>> getFridayList() {
         return fridayDao.getAllSubjects();
     }
 
-    public LiveData<List<Saturday>> getSaturdayList() {
+    public LiveData<List<SubjectMinimal>> getSaturdayList() {
         return saturdayDao.getAllSubjects();
     }
 
-    public LiveData<List<Sunday>> getSundayList() {
+    public LiveData<List<SubjectMinimal>> getSundayList() {
         return sundayDao.getAllSubjects();
     }
 
@@ -142,22 +151,22 @@ public class DayRepository {
 
         private int operation;
         private MondayDao mondayDao;
-        private Monday monday;
+        private SubjectMinimal subjectMinimal;
 
-        public MondayOperations(@NonNull MondayDao mondayDao, @Nullable Monday monday, int operation) {
+        public MondayOperations(@NonNull MondayDao mondayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.mondayDao = mondayDao;
-            this.monday = monday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    mondayDao.insert(monday);
+                    mondayDao.insert(new Monday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    mondayDao.delete(monday);
+                    mondayDao.delete(new Monday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     mondayDao.deleteAllSubjects();
@@ -172,22 +181,22 @@ public class DayRepository {
 
         private int operation;
         private TuesdayDao tuesdayDao;
-        private Tuesday tuesday;
+        private SubjectMinimal subjectMinimal;
 
-        public TuesdayOperations(@NonNull TuesdayDao tuesdayDao, @Nullable Tuesday tuesday, int operation) {
+        public TuesdayOperations(@NonNull TuesdayDao tuesdayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.tuesdayDao = tuesdayDao;
-            this.tuesday = tuesday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    tuesdayDao.insert(tuesday);
+                    tuesdayDao.insert(new Tuesday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    tuesdayDao.delete(tuesday);
+                    tuesdayDao.delete(new Tuesday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     tuesdayDao.deleteAllSubjects();
@@ -202,22 +211,22 @@ public class DayRepository {
 
         private int operation;
         private WednesdayDao wednesdayDao;
-        private Wednesday wednesday;
+        private SubjectMinimal subjectMinimal;
 
-        public WednesdayOperations(@NonNull WednesdayDao wednesdayDao, @Nullable Wednesday wednesday, int operation) {
+        public WednesdayOperations(@NonNull WednesdayDao wednesdayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.wednesdayDao = wednesdayDao;
-            this.wednesday = wednesday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    wednesdayDao.insert(wednesday);
+                    wednesdayDao.insert(new Wednesday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    wednesdayDao.delete(wednesday);
+                    wednesdayDao.delete(new Wednesday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     wednesdayDao.deleteAllSubjects();
@@ -232,22 +241,22 @@ public class DayRepository {
 
         private int operation;
         private ThursdayDao thursdayDao;
-        private Thursday thursday;
+        private SubjectMinimal subjectMinimal;
 
-        public ThursdayOperations(@NonNull ThursdayDao thursdayDao, @Nullable Thursday thursday, int operation) {
+        public ThursdayOperations(@NonNull ThursdayDao thursdayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.thursdayDao = thursdayDao;
-            this.thursday = thursday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    thursdayDao.insert(thursday);
+                    thursdayDao.insert(new Thursday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    thursdayDao.delete(thursday);
+                    thursdayDao.delete(new Thursday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     thursdayDao.deleteAllSubjects();
@@ -262,22 +271,22 @@ public class DayRepository {
 
         private int operation;
         private FridayDao fridayDao;
-        private Friday friday;
+        private SubjectMinimal subjectMinimal;
 
-        public FridayOperations(@NonNull FridayDao fridayDao, @Nullable Friday friday, int operation) {
+        public FridayOperations(@NonNull FridayDao fridayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.fridayDao = fridayDao;
-            this.friday = friday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    fridayDao.insert(friday);
+                    fridayDao.insert(new Friday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    fridayDao.delete(friday);
+                    fridayDao.delete(new Friday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     fridayDao.deleteAllSubjects();
@@ -292,22 +301,22 @@ public class DayRepository {
 
         private int operation;
         private SaturdayDao saturdayDao;
-        private Saturday saturday;
+        private SubjectMinimal subjectMinimal;
 
-        public SaturdayOperations(@NonNull SaturdayDao saturdayDao, @Nullable Saturday saturday, int operation) {
+        public SaturdayOperations(@NonNull SaturdayDao saturdayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.saturdayDao = saturdayDao;
-            this.saturday = saturday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    saturdayDao.insert(saturday);
+                    saturdayDao.insert(new Saturday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    saturdayDao.delete(saturday);
+                    saturdayDao.delete(new Saturday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     saturdayDao.deleteAllSubjects();
@@ -322,22 +331,22 @@ public class DayRepository {
 
         private int operation;
         private SundayDao sundayDao;
-        private Sunday sunday;
+        private SubjectMinimal subjectMinimal;
 
-        public SundayOperations(@NonNull SundayDao sundayDao, @Nullable Sunday sunday, int operation) {
+        public SundayOperations(@NonNull SundayDao sundayDao, @Nullable SubjectMinimal subjectMinimal, int operation) {
             this.operation = operation;
             this.sundayDao = sundayDao;
-            this.sunday = sunday;
+            this.subjectMinimal = subjectMinimal;
         }
 
         @Override
         public void run() {
             switch (operation) {
                 case INSERT:
-                    sundayDao.insert(sunday);
+                    sundayDao.insert(new Sunday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    sundayDao.delete(sunday);
+                    sundayDao.delete(new Sunday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE_ALL_SUBJECTS:
                     sundayDao.deleteAllSubjects();

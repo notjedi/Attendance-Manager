@@ -21,14 +21,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.TimeTableFragmentAdapter;
-import com.attendancemanager.model.Friday;
-import com.attendancemanager.model.Monday;
-import com.attendancemanager.model.Saturday;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.Sunday;
-import com.attendancemanager.model.Thursday;
-import com.attendancemanager.model.Tuesday;
-import com.attendancemanager.model.Wednesday;
+import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -142,6 +136,7 @@ public class TimeTableFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    @SuppressWarnings("ConstantConditions")
     private void buildBottomSheet() {
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
@@ -163,9 +158,9 @@ public class TimeTableFragment extends Fragment {
         });
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
-            viewPager.getCurrentItem();
-            dayViewModel.insert(mAllSubjectList.get(position).getSubjectName(), pagerAdapter.
-                    getPageTitle(viewPager.getCurrentItem()).toString());
+            SubjectMinimal subject = new SubjectMinimal(mAllSubjectList.get(position).getSubjectName(),
+                    pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
+            dayViewModel.insert(subject);
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
@@ -228,12 +223,12 @@ public class TimeTableFragment extends Fragment {
             switch (getArgDayName.toLowerCase()) {
                 /* https://stackoverflow.com/a/50031492 */
                 case "monday":
-                    dayViewModel.getMondayList().observe(getViewLifecycleOwner(), mondays -> {
+                    dayViewModel.getMondayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         daySubjectList.clear();
                         List<Subject> subjectList = new ArrayList<>();
-                        for (Monday monday : mondays) {
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
                             Log.i(TAG, "onActivityCreated: done");
-                            Subject subject = subjectViewModel.getSubject(monday.getSubjectName());
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
@@ -244,11 +239,11 @@ public class TimeTableFragment extends Fragment {
                     });
                     break;
                 case "tuesday":
-                    dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), tuesdays -> {
+                    dayViewModel.getTuesdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         List<Subject> subjectList = new ArrayList<>();
                         daySubjectList.clear();
-                        for (Tuesday tuesday : tuesdays) {
-                            Subject subject = subjectViewModel.getSubject(tuesday.getSubjectName());
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
@@ -258,11 +253,11 @@ public class TimeTableFragment extends Fragment {
                     });
                     break;
                 case "wednesday":
-                    dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), wednesdays -> {
+                    dayViewModel.getWednesdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         List<Subject> subjectList = new ArrayList<>();
                         daySubjectList.clear();
-                        for (Wednesday wednesday : wednesdays) {
-                            Subject subject = subjectViewModel.getSubject(wednesday.getSubjectName());
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
@@ -272,11 +267,11 @@ public class TimeTableFragment extends Fragment {
                     });
                     break;
                 case "thursday":
-                    dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), thursdays -> {
+                    dayViewModel.getThursdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         List<Subject> subjectList = new ArrayList<>();
                         daySubjectList.clear();
-                        for (Thursday thursday : thursdays) {
-                            Subject subject = subjectViewModel.getSubject(thursday.getSubjectName());
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
@@ -286,11 +281,11 @@ public class TimeTableFragment extends Fragment {
                     });
                     break;
                 case "friday":
-                    dayViewModel.getFridayList().observe(getViewLifecycleOwner(), fridays -> {
+                    dayViewModel.getFridayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         List<Subject> subjectList = new ArrayList<>();
                         daySubjectList.clear();
-                        for (Friday friday : fridays) {
-                            Subject subject = subjectViewModel.getSubject(friday.getSubjectName());
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
@@ -300,11 +295,11 @@ public class TimeTableFragment extends Fragment {
                     });
                     break;
                 case "saturday":
-                    dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), saturdays -> {
+                    dayViewModel.getSaturdayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         List<Subject> subjectList = new ArrayList<>();
                         daySubjectList.clear();
-                        for (Saturday saturday : saturdays) {
-                            Subject subject = subjectViewModel.getSubject(saturday.getSubjectName());
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
@@ -314,11 +309,11 @@ public class TimeTableFragment extends Fragment {
                     });
                     break;
                 case "sunday":
-                    dayViewModel.getSundayList().observe(getViewLifecycleOwner(), sundays -> {
+                    dayViewModel.getSundayList().observe(getViewLifecycleOwner(), subjectMinimalList -> {
                         List<Subject> subjectList = new ArrayList<>();
                         daySubjectList.clear();
-                        for (Sunday sunday : sundays) {
-                            Subject subject = subjectViewModel.getSubject(sunday.getSubjectName());
+                        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                            Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                             if (subject != null) {
                                 subjectList.add(subject);
                                 daySubjectList.add(subject);
