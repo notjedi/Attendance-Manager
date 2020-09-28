@@ -1,6 +1,7 @@
 package com.attendancemanager.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,7 +75,18 @@ public class DayRepository {
 
     private void runOperation(Object object, int operation) {
         /* https://stackoverflow.com/questions/50946488/java-instanceof-vs-class-name-switch-performance */
-        /* TODO try to migrate parameters to SubjectMinimal class */
+        /* TODO try to migrate parameters to a new SubjectMinimal class */
+
+        if (operation == DELETE_ALL_SUBJECTS) {
+            new Thread(new MondayOperations(mondayDao, null, operation)).start();
+            new Thread(new TuesdayOperations(tuesdayDao, null, operation)).start();
+            new Thread(new WednesdayOperations(wednesdayDao, null, operation)).start();
+            new Thread(new ThursdayOperations(thursdayDao, null, operation)).start();
+            new Thread(new FridayOperations(fridayDao, null, operation)).start();
+            new Thread(new SaturdayOperations(saturdayDao, null, operation)).start();
+            new Thread(new SundayOperations(sundayDao, null, operation)).start();
+            return;
+        }
 
         if (object instanceof Monday)
             new Thread(new MondayOperations(mondayDao, ((Monday) object), operation)).start();
@@ -123,6 +135,7 @@ public class DayRepository {
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();
+        instance = null;
     }
 
     private static class MondayOperations implements Runnable {

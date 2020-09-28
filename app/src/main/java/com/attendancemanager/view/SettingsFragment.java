@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
@@ -64,6 +65,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private Preference about;
 
     private SubjectViewModel subjectViewModel;
+    private DayViewModel dayViewModel;
 
     /* TODO: change font for the settings page */
 
@@ -107,6 +109,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         super.onActivityCreated(savedInstanceState);
 
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
+        dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
 
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
@@ -277,6 +280,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private void clearDatabase() {
 
         subjectViewModel.deleteAllSubjects();
+        dayViewModel.deleteAllSubjects();
     }
 
     private void buildTimePicker() {

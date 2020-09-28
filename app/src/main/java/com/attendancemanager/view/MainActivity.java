@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -137,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
             bottomBar.show();
             handler.postDelayed(hideBottomBar, 3000);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        /* TODO close database */
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

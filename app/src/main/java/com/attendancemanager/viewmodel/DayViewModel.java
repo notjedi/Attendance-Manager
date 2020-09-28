@@ -68,6 +68,10 @@ public class DayViewModel extends AndroidViewModel {
         }
     }
 
+    public void deleteAllSubjects() {
+        dayRepository.deleteAllSubjects();
+    }
+
     public LiveData<List<Monday>> getMondayList() {
         return mondayList;
     }
