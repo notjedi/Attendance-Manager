@@ -42,6 +42,7 @@
     <string name="key_developed_by">key_developed_by</string>
     <string name="play_store_url">https://play.google.com/store/apps/details?id=com.attendancemanager</string>
     <string name="market_uri">market://details?id=com.attendancemanager</string>
+    <string name="github_developer_url">https://github.com/jedi2610</string>
 
     <!--    Edit Subject Activity-->
     <string name="add_subject">Add subject</string>
@@ -50,10 +51,5 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="add">Add</string>
     <string name="title_activity_predict">PredictActivity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
 
 </resources>

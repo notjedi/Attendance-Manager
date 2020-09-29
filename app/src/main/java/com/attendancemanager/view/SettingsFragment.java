@@ -53,18 +53,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String SHARE_APP = "key_share_app";
     public static final String BUG_REPORT = "key_bug_report";
     public static final String ABOUT = "key_about";
+    public static final String DEVELOPED_BY = "key_developed_by";
     private static final String TAG = "SettingsFragment";
-
-    private Preference attendanceCriteriaSelector;
-    private Preference editSubject;
-    private Preference predict;
-    private Preference notificationTimePicker;
-    private Preference resetDatabase;
-    private Preference clearDatabase;
-    private Preference rateApp;
-    private Preference shareApp;
-    private Preference bugReport;
-    private Preference about;
 
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
@@ -100,19 +90,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
-        editSubject = findPreference(EDIT_SUBJECTS);
-        predict = findPreference(PREDICT);
-        notificationTimePicker = findPreference(NOTIFICATION_TIME);
-        resetDatabase = findPreference(RESET_DATABASE);
-        clearDatabase = findPreference(CLEAR_DATABASE);
-        rateApp = findPreference(RATE_APP);
-        shareApp = findPreference(SHARE_APP);
-        bugReport = findPreference(BUG_REPORT);
-        about = findPreference(ABOUT);
+        Preference attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
+        Preference editSubject = findPreference(EDIT_SUBJECTS);
+        Preference predict = findPreference(PREDICT);
+        Preference notificationTimePicker = findPreference(NOTIFICATION_TIME);
+        Preference resetDatabase = findPreference(RESET_DATABASE);
+        Preference clearDatabase = findPreference(CLEAR_DATABASE);
+        Preference rateApp = findPreference(RATE_APP);
+        Preference shareApp = findPreference(SHARE_APP);
+        Preference bugReport = findPreference(BUG_REPORT);
+        Preference about = findPreference(ABOUT);
+        Preference developedBy = findPreference(DEVELOPED_BY);
 
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
@@ -124,6 +116,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         shareApp.setOnPreferenceClickListener(this);
         bugReport.setOnPreferenceClickListener(this);
         about.setOnPreferenceClickListener(this);
+        developedBy.setOnPreferenceClickListener(this);
 
     }
 
@@ -173,6 +166,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case ABOUT:
                 Intent aboutIntent = new Intent(getContext(), AboutActivity.class);
                 startActivity(aboutIntent);
+                break;
+
+            case DEVELOPED_BY:
+                Intent githubIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_developer_url)));
+                startActivity(githubIntent);
                 break;
 
             default:
