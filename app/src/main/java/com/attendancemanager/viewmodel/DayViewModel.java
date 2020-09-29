@@ -73,7 +73,23 @@ public class DayViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<SubjectMinimal>> getDaySubjectList(String dayName) {
-        return dayRepository.getDaySubjectList(dayName);
+        switch (dayName.toLowerCase()) {
+            case "monday":
+                return getMondayList();
+            case "tuesday":
+                return getTuesdayList();
+            case "wednesday":
+                return getWednesdayList();
+            case "thursday":
+                return getThursdayList();
+            case "friday":
+                return getFridayList();
+            case "saturday":
+                return getSaturdayList();
+            case "sunday":
+                return getSundayList();
+        }
+        return null;
     }
 
     public void closeDB() {

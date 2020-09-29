@@ -11,6 +11,7 @@
 - Time Table view to edit you time table
 
 ## Roadmap
+- [ ] Dark Theme
 - [ ] Implement [themes](themes/)
 - [ ] Mark attendance based on location(maybe)
 - [ ] Migrate to Kotlin

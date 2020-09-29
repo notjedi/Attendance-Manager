@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -123,6 +122,7 @@ public class EditSubjectActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
+                /* TODO Delete subject form dayViewModel */
                 int position = viewHolder.getAdapterPosition();
                 deletedSubject = editSubjectAdapter.getSubjectAt(position);
                 subjectViewModel.delete(editSubjectAdapter.getSubjectAt(position));

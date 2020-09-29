@@ -6,6 +6,7 @@ public class SubjectMinimal {
 
     protected int id;
     protected String subjectName;
+    @Ignore
     protected String day;
 
     public SubjectMinimal(String subjectName) {
