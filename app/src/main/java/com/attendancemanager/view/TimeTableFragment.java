@@ -41,7 +41,6 @@ public class TimeTableFragment extends Fragment {
             "Friday", "Saturday", "Sunday"};
     private static final String TAG = "TimeTableFragment";
 
-    private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ExtendedFloatingActionButton addButtonFab;
@@ -81,7 +80,7 @@ public class TimeTableFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toolbar = view.findViewById(R.id.time_table_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.time_table_toolbar);
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.day_view_pager);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
@@ -132,7 +131,7 @@ public class TimeTableFragment extends Fragment {
         /* TODO make a static method in MainActivity that gets the day of week and use it in all occurrences */
         /* 0 represents SUNDAY in the Calender class so doing some calculations to make 0 as MONDAY */
         viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
     }
 
     @SuppressLint("ClickableViewAccessibility")

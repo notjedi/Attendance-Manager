@@ -65,6 +65,7 @@ public class Subject {
 
     public void decrementTotalClasses() {
         this.totalClasses--;
+        this.totalClasses = this.totalClasses == -1 ? 0 : this.totalClasses;
     }
 
     public void incrementAttendedClasses() {
@@ -73,6 +74,7 @@ public class Subject {
 
     public void decrementAttendedClasses() {
         this.attendedClasses--;
+        this.attendedClasses = this.attendedClasses == -1 ? 0 : this.attendedClasses;
     }
 
     @NonNull
