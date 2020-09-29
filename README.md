@@ -27,7 +27,6 @@
 - [Material Design](https://material.io) library
 
 ## Credits
-- [st235](https://github.com/st235) for the bottom bar.
 - [Zhuinden](https://github.com/Zhuinden) for helping me out on various stuff while developing the app.
 - [/r/AndroidDev](https://discord.gg/ZDarQnp) discord server.
 
