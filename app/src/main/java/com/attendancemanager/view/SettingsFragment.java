@@ -177,7 +177,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case RESTORE_DATABASE:
                 if (checkPermissions("read")) {
                     Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    fileChooserIntent.setType("/*");
+                    fileChooserIntent.setType("*/*");
                     startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
                 } else
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
@@ -224,10 +224,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case READ_PERMISSION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    fileChooserIntent.setType("/*");
+                    fileChooserIntent.setType("*/*");
                     startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
                 } else
-                    Toast.makeText(getContext(), "Restore failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -237,9 +237,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FILE_CHOOSER_ACTIVITY_REQUEST) {
             if (resultCode == Activity.RESULT_OK)
-                restoreDatabase(data.getData());
+                if (data != null)
+                    restoreDatabase(data.getData());
+                else
+                    Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(getContext(), "Recover failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -358,15 +361,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private boolean checkPermissions(String type) {
         /* https://developer.android.com/training/permissions/requesting */
         if (type.equals("write")) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED)
-                return true;
-            return false;
+            return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED;
         } else if (type.equals("read")) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED)
-                return true;
-            return false;
+            return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED;
         }
         return false;
     }
@@ -414,7 +413,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     private void restoreDatabase(Uri uri) {
-
+        Log.i(TAG, "restoreDatabase: " + uri.toString());
     }
 
     private void buildTimePicker() {
@@ -443,7 +442,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @SuppressWarnings("ConstantConditions")
     private void bugReport() {
-        /* TODO extra info not showing up */
 
         String appVersion;
         String mailSubject = getString(R.string.app_name) + ": Bug Report";
@@ -462,17 +460,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mailInfoBuilder.append("\nApp Version: ");
         mailInfoBuilder.append(appVersion);
 
-        mailInfoBuilder.append("\nDevice Brand: ");
-        mailInfoBuilder.append(Build.BRAND);
-
         mailInfoBuilder.append("\nDevice Manufacturer: ");
         mailInfoBuilder.append(Build.MANUFACTURER);
 
         mailInfoBuilder.append("\nDevice Model: ");
         mailInfoBuilder.append(Build.MODEL);
 
-        Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", "krithickumar26@gmail.com", null));
+        Intent mailIntent = new Intent(Intent.ACTION_SEND);
+        mailIntent.setType("message/rfc822");
+        mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"krithickumar26@gmail.com"});
         mailIntent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
         mailIntent.putExtra(Intent.EXTRA_TEXT, mailInfoBuilder.toString());
         startActivity(Intent.createChooser(mailIntent, "Choose an email client :"));
