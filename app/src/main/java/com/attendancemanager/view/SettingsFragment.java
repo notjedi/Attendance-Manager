@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +29,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
+import com.attendancemanager.model.Database;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.SubjectDataBase;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -227,8 +226,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
                     fileChooserIntent.setType("/*");
                     startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
-                }
-                else
+                } else
                     Toast.makeText(getContext(), "Restore failed", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -376,8 +374,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
 
-        File dbFile = getContext().getDatabasePath(SubjectDataBase.DATABASE_NAME);
-        Log.i(TAG, "backupDatabase: " + getContext().getDatabasePath(SubjectDataBase.DATABASE_NAME));
+        File dbFile = getContext().getDatabasePath(Database.DATABASE_NAME);
+        Log.i(TAG, "backupDatabase: " + getContext().getDatabasePath(Database.DATABASE_NAME));
         // Creating a directory named "backup" in external storage
         File outDir = new File(getContext().getExternalFilesDir(null), "backup");
         FileInputStream dbFileInputStream;
@@ -398,6 +396,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         try {
             /* Writing the input stream into the bakFilOutputStream */
             /* https://stackoverflow.com/questions/13502223/backup-restore-sqlite-db-in-android */
+
             bakFileOutputStream = new FileOutputStream(new File(outDir, "test2.db"));
             byte[] buffer = new byte[1024];
             int length;
@@ -407,7 +406,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             bakFileOutputStream.close();
             Log.i(TAG, "backupDatabase: done");
             dbFileInputStream.close();
-
         } catch (IOException e) {
             Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
             return;
@@ -448,7 +446,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         /* TODO extra info not showing up */
 
         String appVersion;
-        String mailSubject = getString(R.string.app_name) + "Bug Report";
+        String mailSubject = getString(R.string.app_name) + ": Bug Report";
         try {
             appVersion = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {

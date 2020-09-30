@@ -3,17 +3,16 @@ package com.attendancemanager.model;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Subject.class, Monday.class, Tuesday.class, Wednesday.class,
+@androidx.room.Database(entities = {Subject.class, Monday.class, Tuesday.class, Wednesday.class,
         Thursday.class, Friday.class, Saturday.class, Sunday.class}, version = 1, exportSchema = false)
-public abstract class SubjectDataBase extends RoomDatabase {
+public abstract class Database extends RoomDatabase {
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
-    private static SubjectDataBase instance;
+    private static Database instance;
     private static RoomDatabase.Callback prePopulateCallback = new RoomDatabase.Callback() {
 
         @Override
@@ -23,11 +22,11 @@ public abstract class SubjectDataBase extends RoomDatabase {
         }
     };
 
-    public static synchronized SubjectDataBase getInstance(Context context) {
+    public static synchronized Database getInstance(Context context) {
 
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    SubjectDataBase.class, DATABASE_NAME)
+                    Database.class, DATABASE_NAME)
                     .addCallback(prePopulateCallback)
                     .fallbackToDestructiveMigration()
                     .build();
@@ -53,7 +52,7 @@ public abstract class SubjectDataBase extends RoomDatabase {
 
         private SubjectDao subjectDao;
 
-        PrePopulateDatabase(SubjectDataBase dataBase) {
+        PrePopulateDatabase(Database dataBase) {
             subjectDao = dataBase.subjectDao();
         }
 

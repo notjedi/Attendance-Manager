@@ -1,13 +1,12 @@
 package com.attendancemanager.repositories;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.attendancemanager.model.Database;
 import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.SubjectDao;
-import com.attendancemanager.model.SubjectDataBase;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -20,11 +19,11 @@ public class SubjectRepository {
 
     private SubjectDao subjectDao;
     private LiveData<List<Subject>> allSubjects;
-    private SubjectDataBase dataBase;
+    private Database dataBase;
 
     public SubjectRepository(Application application) {
 
-        dataBase = SubjectDataBase.getInstance(application);
+        dataBase = Database.getInstance(application);
         subjectDao = dataBase.subjectDao();
         allSubjects = subjectDao.getAllSubjects();
     }
