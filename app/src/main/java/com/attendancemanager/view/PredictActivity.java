@@ -1,7 +1,6 @@
 package com.attendancemanager.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.CompoundButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +32,6 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     private RecyclerView recyclerView;
 
     private PredictAdapter predictAdapter;
-    private List<Subject> predictSubjectList;
     private List<SubjectMinimal> mondayList;
     private List<SubjectMinimal> tuesdayList;
     private List<SubjectMinimal> wednesdayList;
@@ -47,7 +45,6 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_predict);
-        Log.i("TAG", "onCreate: ");
 
         chip1 = findViewById(R.id.chip_1);
         chip2 = findViewById(R.id.chip_2);
@@ -61,8 +58,8 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         predictAdapter = new PredictAdapter(this);
         SubjectViewModel subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         DayViewModel dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
-        predictSubjectList = subjectViewModel.getAllSubjects().getValue();
 
+        subjectViewModel.getAllSubjects().observe(this, subjects -> predictAdapter.submitList(subjects));
         dayViewModel.getMondayList().observe(this, subjectMinimals -> mondayList = subjectMinimals);
         dayViewModel.getTuesdayList().observe(this, subjectMinimals -> tuesdayList = subjectMinimals);
         dayViewModel.getWednesdayList().observe(this, subjectMinimals -> wednesdayList = subjectMinimals);
@@ -114,7 +111,7 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     private void buildRecyclerView() {
 
         recyclerView.setAdapter(predictAdapter);
-        predictAdapter.submitList(predictSubjectList);
+        recyclerView.setHasFixedSize(true);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -126,13 +123,12 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         for (SubjectMinimal subjectMinimal : subjectMinimalList) {
             indexList.addAll(indexOf(subjectMinimal));
             for (Integer index : indexList) {
-                Subject subject = predictSubjectList.get(index);
+                Subject subject = predictAdapter.getSubjectAt(index);
                 if (isChecked) {
                     subject.incrementTotalClasses();
                 } else {
                     subject.decrementTotalClasses();
                 }
-                predictSubjectList.set(index, subject);
                 predictAdapter.notifyItemChanged(index);
             }
             indexList.clear();
@@ -161,8 +157,9 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
 
     private List<Integer> indexOf(SubjectMinimal subjectMinimal) {
         List<Integer> indexList = new ArrayList<>();
-        for (int i = 0; i < predictSubjectList.size(); i++) {
-            if (predictSubjectList.get(i).getSubjectName().equals(subjectMinimal.getSubjectName())) {
+        for (int i = 0; i < predictAdapter.getItemCount(); i++) {
+            if (predictAdapter.getSubjectAt(i).getSubjectName()
+                    .equals(subjectMinimal.getSubjectName())) {
                 indexList.add(i);
             }
         }
@@ -175,32 +172,18 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("TAG", "onResume: ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("TAG", "onStop: ");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("TAG", "onDestroy: ");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("TAG", "onStart: ");
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        Log.i("TAG", "onPause: ");
+        /* A weird bug causes the changes in the arraylist(passed to the adapter) to persist even
+        after leaving the activity and i'm able to notifyItemChanged() without submitting the list
+        to the adapter(maybe because they are pointing to the same location under the hood). This
+        is my ugly fix to the problem, probably the ugliest. */
+        chip1.setChecked(false);
+        chip2.setChecked(false);
+        chip3.setChecked(false);
+        chip4.setChecked(false);
+        chip5.setChecked(false);
+        chip6.setChecked(false);
+        chip7.setChecked(false);
     }
 }

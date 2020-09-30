@@ -158,6 +158,7 @@ public class HomeFragment extends Fragment {
                     mTodaySubjectList.add(subject);
                 }
             }
+            /* https://stackoverflow.com/a/50031492 */
             homeFragmentListAdapter.submitList(subjectList);
         });
     }
