@@ -84,7 +84,7 @@
 
         <Preference
             app:icon="@drawable/ic_recover"
-            app:key="@string/key_recover"
+            app:key="@string/key_restore"
             app:summary="Restore data from a local backup file"
             app:title="Restore" />
 

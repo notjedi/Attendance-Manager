@@ -32,7 +32,7 @@
     <string name="key_reset_attendance">key_reset_attendance</string>
     <string name="key_clear_database">key_clear_database</string>
     <string name="key_backup">key_backup</string>
-    <string name="key_recover">key_recover</string>
+    <string name="key_restore">key_restore</string>
     <string name="key_rate_app">key_rate_app</string>
     <string name="key_bug_report">key_bug_report</string>
     <string name="key_share_app">key_share_app</string>

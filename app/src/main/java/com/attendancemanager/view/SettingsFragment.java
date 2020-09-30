@@ -1,12 +1,15 @@
 package com.attendancemanager.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.model.SubjectDataBase;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,6 +39,11 @@ import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,13 +58,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String NOTIFICATION_TIME = "key_notification_time";
     public static final String RESET_DATABASE = "key_reset_attendance";
     public static final String CLEAR_DATABASE = "key_clear_database";
+    public static final String BACKUP_DATABASE = "key_backup";
+    public static final String RESTORE_DATABASE = "key_restore";
     public static final String RATE_APP = "key_rate_app";
     public static final String SHARE_APP = "key_share_app";
     public static final String BUG_REPORT = "key_bug_report";
     public static final String ABOUT = "key_about";
     public static final String DEVELOPED_BY = "key_developed_by";
+    public static final int WRITE_PERMISSION_REQUEST = 1;
+    public static final int READ_PERMISSION_REQUEST = 2;
+    public static final int FILE_CHOOSER_ACTIVITY_REQUEST = 1;
     private static final String TAG = "SettingsFragment";
-
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
 
@@ -100,6 +113,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Preference notificationTimePicker = findPreference(NOTIFICATION_TIME);
         Preference resetDatabase = findPreference(RESET_DATABASE);
         Preference clearDatabase = findPreference(CLEAR_DATABASE);
+        Preference backupDatabase = findPreference(BACKUP_DATABASE);
+        Preference restoreDatabase = findPreference(RESTORE_DATABASE);
         Preference rateApp = findPreference(RATE_APP);
         Preference shareApp = findPreference(SHARE_APP);
         Preference bugReport = findPreference(BUG_REPORT);
@@ -112,6 +127,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         notificationTimePicker.setOnPreferenceClickListener(this);
         resetDatabase.setOnPreferenceClickListener(this);
         clearDatabase.setOnPreferenceClickListener(this);
+        backupDatabase.setOnPreferenceClickListener(this);
+        restoreDatabase.setOnPreferenceClickListener(this);
         rateApp.setOnPreferenceClickListener(this);
         shareApp.setOnPreferenceClickListener(this);
         bugReport.setOnPreferenceClickListener(this);
@@ -151,6 +168,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 buildAlertDialog(CLEAR_DATABASE);
                 break;
 
+            case BACKUP_DATABASE:
+                if (checkPermissions("write"))
+                    backupDatabase();
+                else
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSION_REQUEST);
+                break;
+
+            case RESTORE_DATABASE:
+                if (checkPermissions("read")) {
+                    Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    fileChooserIntent.setType("/*");
+                    startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
+                } else
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
+                break;
+
             case RATE_APP:
                 openPlayStore();
                 break;
@@ -178,6 +211,38 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
 
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case WRITE_PERMISSION_REQUEST:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    backupDatabase();
+                else
+                    Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_SHORT).show();
+                break;
+            case READ_PERMISSION_REQUEST:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    fileChooserIntent.setType("/*");
+                    startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
+                }
+                else
+                    Toast.makeText(getContext(), "Restore failed", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_CHOOSER_ACTIVITY_REQUEST) {
+            if (resultCode == Activity.RESULT_OK)
+                restoreDatabase(data.getData());
+            else
+                Toast.makeText(getContext(), "Recover failed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -242,6 +307,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @SuppressWarnings("ConstantConditions")
     private void buildAlertDialog(String key) {
+        /* Alert dialog for clearing database and resetting attendance based on @param key*/
 
         String title = null;
         String message = null;
@@ -291,6 +357,68 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         dayViewModel.deleteAllSubjects();
     }
 
+    private boolean checkPermissions(String type) {
+        /* https://developer.android.com/training/permissions/requesting */
+        if (type.equals("write")) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED)
+                return true;
+            return false;
+        } else if (type.equals("read")) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED)
+                return true;
+            return false;
+        }
+        return false;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void backupDatabase() {
+
+        File dbFile = getContext().getDatabasePath(SubjectDataBase.DATABASE_NAME);
+        Log.i(TAG, "backupDatabase: " + getContext().getDatabasePath(SubjectDataBase.DATABASE_NAME));
+        // Creating a directory named "backup" in external storage
+        File outDir = new File(getContext().getExternalFilesDir(null), "backup");
+        FileInputStream dbFileInputStream;
+        FileOutputStream bakFileOutputStream;
+        if (!outDir.exists())
+            outDir.mkdir();
+        Log.i(TAG, "backupDatabase: " + outDir.getAbsolutePath());
+
+        try {
+            /* Getting input stream of db file */
+            dbFileInputStream = new FileInputStream(dbFile);
+        } catch (FileNotFoundException e) {
+            Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Log.i(TAG, "backupDatabase: " + new File(outDir, "test3").getAbsolutePath());
+        try {
+            /* Writing the input stream into the bakFilOutputStream */
+            /* https://stackoverflow.com/questions/13502223/backup-restore-sqlite-db-in-android */
+            bakFileOutputStream = new FileOutputStream(new File(outDir, "test2.db"));
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = dbFileInputStream.read(buffer)) > 0)
+                bakFileOutputStream.write(buffer, 0, length);
+            bakFileOutputStream.flush();
+            bakFileOutputStream.close();
+            Log.i(TAG, "backupDatabase: done");
+            dbFileInputStream.close();
+
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Toast.makeText(getContext(), "Backup successful", Toast.LENGTH_LONG).show();
+    }
+
+    private void restoreDatabase(Uri uri) {
+
+    }
+
     private void buildTimePicker() {
 
         MaterialTimePicker timePicker = new MaterialTimePicker();
@@ -317,6 +445,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @SuppressWarnings("ConstantConditions")
     private void bugReport() {
+        /* TODO extra info not showing up */
 
         String appVersion;
         String mailSubject = getString(R.string.app_name) + "Bug Report";
