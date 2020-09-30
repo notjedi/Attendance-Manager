@@ -35,14 +35,11 @@ android {
 
 dependencies {
 
-    implementation 'androidx.wear:wear:1.0.0'
-    compileOnly 'com.google.android.wearable:wearable:2.5.0'
     def nav_version = "2.3.0"
     def room_version = "2.2.5"
     def lifecycle_version = "2.2.0"
 
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
