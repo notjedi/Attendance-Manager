@@ -194,8 +194,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                 Subject updatedSubject = new Subject(subjectName, attendClass, totalClass);
                 updatedSubject.setId(subject.getId());
                 updateSubject(updatedSubject);
-            }
-            else
+            } else
                 insertSubject(subjectName, attendClass, totalClass);
 
             dialog.dismiss();

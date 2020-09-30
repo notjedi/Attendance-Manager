@@ -40,6 +40,10 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
         this.mContext = mContext;
     }
 
+    public Subject getSubjectAt(int index) {
+        return getItem(index);
+    }
+
     @NonNull
     @Override
     public PredictViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
