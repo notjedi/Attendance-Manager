@@ -60,13 +60,13 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         DayViewModel dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
 
         subjectViewModel.getAllSubjects().observe(this, subjects -> predictAdapter.submitList(subjects));
-        dayViewModel.getMondayList().observe(this, subjectMinimals -> mondayList = subjectMinimals);
-        dayViewModel.getTuesdayList().observe(this, subjectMinimals -> tuesdayList = subjectMinimals);
-        dayViewModel.getWednesdayList().observe(this, subjectMinimals -> wednesdayList = subjectMinimals);
-        dayViewModel.getThursdayList().observe(this, subjectMinimals -> thursdayList = subjectMinimals);
-        dayViewModel.getFridayList().observe(this, subjectMinimals -> fridayList = subjectMinimals);
-        dayViewModel.getSaturdayList().observe(this, subjectMinimals -> saturdayList = subjectMinimals);
-        dayViewModel.getSundayList().observe(this, subjectMinimals -> sundayList = subjectMinimals);
+        mondayList = dayViewModel.getSubjectList("monday");
+        tuesdayList = dayViewModel.getSubjectList("tuesday");
+        wednesdayList = dayViewModel.getSubjectList("wednesday");
+        thursdayList = dayViewModel.getSubjectList("thursday");
+        fridayList = dayViewModel.getSubjectList("friday");
+        saturdayList = dayViewModel.getSubjectList("saturday");
+        sundayList = dayViewModel.getSubjectList("sunday");
 
         setChipText();
         buildRecyclerView();
