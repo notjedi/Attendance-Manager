@@ -6,14 +6,19 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.Expose;
+
 @Entity(tableName = "subject_details_table")
 public class Subject {
 
+    @Expose
     @PrimaryKey(autoGenerate = true)
     private int id;
-
+    @Expose
     private String subjectName;
+    @Expose
     private int totalClasses;
+    @Expose
     private int attendedClasses;
 
     public Subject(String subjectName, int attendedClasses, int totalClasses) {

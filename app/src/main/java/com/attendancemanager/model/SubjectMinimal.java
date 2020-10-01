@@ -2,9 +2,13 @@ package com.attendancemanager.model;
 
 import androidx.room.Ignore;
 
+import com.google.gson.annotations.Expose;
+
 public class SubjectMinimal {
 
+    @Expose
     protected int id;
+    @Expose
     protected String subjectName;
     @Ignore
     protected String day;
