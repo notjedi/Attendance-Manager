@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
         StringBuilder date = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd", Locale.US);
         date.append(simpleDateFormat.format(calendar.getTime()));
-        date.append("th ");
+        date.append(" ");
         simpleDateFormat.applyPattern("MMMM");
         date.append(simpleDateFormat.format(calendar.getTime()));
         mDate.setText(date.toString());

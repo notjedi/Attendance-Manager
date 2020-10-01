@@ -29,17 +29,23 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
+import com.attendancemanager.model.Database;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,6 +70,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final int WRITE_PERMISSION_REQUEST = 1;
     public static final int READ_PERMISSION_REQUEST = 2;
     public static final int FILE_CHOOSER_ACTIVITY_REQUEST = 1;
+    public static final String BACKUP_FILE_NAME = "attendance-manager";
     private static final String TAG = "SettingsFragment";
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
@@ -367,20 +374,47 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return false;
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
-        Gson gson = new Gson();
-        List<Subject> subjectList = subjectViewModel.getAllSubjects().getValue();
-        List<SubjectMinimal> daySubjectList = new ArrayList<>();
-        for (String dayName: TimeTableFragment.DAY_NAMES)
-            daySubjectList.addAll(dayViewModel.getSubjectList(dayName));
-        String subjectListGson = gson.toJson(subjectList);
-        String daySubjectListGson = gson.toJson(daySubjectList);
-        Log.i(TAG, "backupDatabase: " + subjectListGson);
-        Log.i(TAG, "backupDatabase: " + daySubjectListGson);
+
+        Calendar calendar = Calendar.getInstance();
+        String bakFileName = BACKUP_FILE_NAME +
+                new SimpleDateFormat("-dd-MM-yyyy-hh-mm-ss", Locale.getDefault()).format(calendar.getTime()) + ".db";
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Path dbPath = Paths.get(getContext().getDatabasePath(Database.DATABASE_NAME).toURI());
+            Path bakPath = Paths.get(new File(getContext().getExternalFilesDir(null), bakFileName).toURI());
+            try {
+                Files.copy(dbPath, bakPath, StandardCopyOption.REPLACE_EXISTING);
+                Toast.makeText(getContext(), "Backup created successfully", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void restoreDatabase(Uri uri) {
 
+        subjectViewModel.deleteAllSubjects();
+        dayViewModel.deleteAllSubjects();
+        boolean success = new File(getContext().getDatabasePath(Database.DATABASE_NAME).getParent(), Database.DATABASE_NAME).delete();
+        if (!success) {
+            Toast.makeText(getContext(), "Failed to delete database", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Path dbPath = Paths.get(getContext().getDatabasePath(Database.DATABASE_NAME).toURI());
+            try {
+                Files.copy(getContext().getContentResolver().openInputStream(uri), dbPath, StandardCopyOption.REPLACE_EXISTING);
+                Toast.makeText(getContext(), "Restored successfully", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void buildTimePicker() {
