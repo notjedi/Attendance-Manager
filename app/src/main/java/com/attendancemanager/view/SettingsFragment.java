@@ -30,13 +30,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -364,9 +367,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return false;
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
-        
+        Gson gson = new Gson();
+        List<Subject> subjectList = subjectViewModel.getAllSubjects().getValue();
+        List<SubjectMinimal> daySubjectList = new ArrayList<>();
+        for (String dayName: TimeTableFragment.DAY_NAMES)
+            daySubjectList.addAll(dayViewModel.getSubjectList(dayName));
+        String subjectListGson = gson.toJson(subjectList);
+        String daySubjectListGson = gson.toJson(daySubjectList);
+        Log.i(TAG, "backupDatabase: " + subjectListGson);
+        Log.i(TAG, "backupDatabase: " + daySubjectListGson);
     }
 
     private void restoreDatabase(Uri uri) {

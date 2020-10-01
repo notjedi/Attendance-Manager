@@ -26,4 +26,7 @@ public interface FridayDao {
 
     @Query("SELECT * FROM friday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();
+
+    @Query("SELECT * FROM friday_table")
+    List<SubjectMinimal> getSubjectList();
 }

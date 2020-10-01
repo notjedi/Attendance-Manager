@@ -26,4 +26,7 @@ public interface MondayDao {
 
     @Query("SELECT * FROM monday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();
+
+    @Query("SELECT * FROM monday_table")
+    List<SubjectMinimal> getSubjectList();
 }
