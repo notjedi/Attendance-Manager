@@ -144,7 +144,6 @@ public class DayRepository {
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();
-        instance = null;
     }
 
     private static class MondayOperations implements Runnable {

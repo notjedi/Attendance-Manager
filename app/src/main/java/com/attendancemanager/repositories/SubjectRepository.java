@@ -81,8 +81,7 @@ public class SubjectRepository {
 
     public void closeDB() {
         if (dataBase.isOpen())
-            dataBase.close();
-        instance = null;
+            dataBase.closeDB();
     }
 
     private static class InsertSubjectRunnable implements Runnable {

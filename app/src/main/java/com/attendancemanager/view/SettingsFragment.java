@@ -29,7 +29,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.model.Database;
 import com.attendancemanager.model.Subject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
@@ -38,11 +37,6 @@ import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -372,48 +366,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
-
-        File dbFile = getContext().getDatabasePath(Database.DATABASE_NAME);
-        Log.i(TAG, "backupDatabase: " + getContext().getDatabasePath(Database.DATABASE_NAME));
-        // Creating a directory named "backup" in external storage
-        File outDir = new File(getContext().getExternalFilesDir(null), "backup");
-        FileInputStream dbFileInputStream;
-        FileOutputStream bakFileOutputStream;
-        if (!outDir.exists())
-            outDir.mkdir();
-        Log.i(TAG, "backupDatabase: " + outDir.getAbsolutePath());
-
-        try {
-            /* Getting input stream of db file */
-            dbFileInputStream = new FileInputStream(dbFile);
-        } catch (FileNotFoundException e) {
-            Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        Log.i(TAG, "backupDatabase: " + new File(outDir, "test3").getAbsolutePath());
-        try {
-            /* Writing the input stream into the bakFilOutputStream */
-            /* https://stackoverflow.com/questions/13502223/backup-restore-sqlite-db-in-android */
-
-            bakFileOutputStream = new FileOutputStream(new File(outDir, "test2.db"));
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = dbFileInputStream.read(buffer)) > 0)
-                bakFileOutputStream.write(buffer, 0, length);
-            bakFileOutputStream.flush();
-            bakFileOutputStream.close();
-            Log.i(TAG, "backupDatabase: done");
-            dbFileInputStream.close();
-        } catch (IOException e) {
-            Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
-            return;
-        }
-        Toast.makeText(getContext(), "Backup successful", Toast.LENGTH_LONG).show();
+        
     }
 
     private void restoreDatabase(Uri uri) {
-        Log.i(TAG, "restoreDatabase: " + uri.toString());
+
     }
 
     private void buildTimePicker() {
