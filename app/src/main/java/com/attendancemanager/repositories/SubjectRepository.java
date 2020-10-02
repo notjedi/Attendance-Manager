@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.model.Database;
+import com.attendancemanager.model.AppDatabase;
 import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.SubjectDao;
 
@@ -19,11 +19,11 @@ public class SubjectRepository {
 
     private SubjectDao subjectDao;
     private LiveData<List<Subject>> allSubjects;
-    private Database dataBase;
+    private AppDatabase dataBase;
 
     public SubjectRepository(Application application) {
 
-        dataBase = Database.getInstance(application);
+        dataBase = AppDatabase.getInstance(application);
         subjectDao = dataBase.subjectDao();
         allSubjects = subjectDao.getAllSubjects();
     }

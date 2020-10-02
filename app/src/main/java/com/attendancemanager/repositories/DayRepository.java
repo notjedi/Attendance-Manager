@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.model.Database;
+import com.attendancemanager.model.AppDatabase;
 import com.attendancemanager.model.Friday;
 import com.attendancemanager.model.FridayDao;
 import com.attendancemanager.model.Monday;
@@ -33,7 +33,7 @@ public class DayRepository {
 
     private static DayRepository instance;
 
-    private Database dataBase;
+    private AppDatabase dataBase;
     private MondayDao mondayDao;
     private TuesdayDao tuesdayDao;
     private WednesdayDao wednesdayDao;
@@ -44,7 +44,7 @@ public class DayRepository {
 
     public DayRepository(Application application) {
 
-        dataBase = Database.getInstance(application);
+        dataBase = AppDatabase.getInstance(application);
         mondayDao = dataBase.mondayDao();
         tuesdayDao = dataBase.tuesdayDao();
         wednesdayDao = dataBase.wednesdayDao();
