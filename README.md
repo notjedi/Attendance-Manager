@@ -12,6 +12,7 @@
 
 ## Roadmap
 - [ ] Dark Theme
+- [ ] Timeline support
 - [ ] Implement [themes](themes/)
 - [ ] Mark attendance based on location(maybe)
 - [ ] Migrate to Kotlin
@@ -26,6 +27,7 @@
 - [Room](https://developer.android.com/topic/libraries/architecture/room)
 - [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
 - [Material Design](https://material.io) library
+- [GSON](https://github.com/google/gson)
 
 ## Credits
 - [Zhuinden](https://github.com/Zhuinden) for helping me out on various stuff while developing the app.
