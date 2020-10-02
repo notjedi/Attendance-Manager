@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,21 +30,29 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.model.AppDatabase;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -374,47 +383,107 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return false;
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
 
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         Calendar calendar = Calendar.getInstance();
         String bakFileName = BACKUP_FILE_NAME +
-                new SimpleDateFormat("-dd-MM-yyyy-hh-mm-ss", Locale.getDefault()).format(calendar.getTime()) + ".db";
+                new SimpleDateFormat("-dd-MM-yyyy-hh-mm-ss", Locale.getDefault()).format(calendar.getTime()) + ".bak";
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Path dbPath = Paths.get(getContext().getDatabasePath(AppDatabase.DATABASE_NAME).toURI());
-            Path bakPath = Paths.get(new File(getContext().getExternalFilesDir(null), bakFileName).toURI());
-            try {
-                Files.copy(dbPath, bakPath, StandardCopyOption.REPLACE_EXISTING);
-                Toast.makeText(getContext(), "Backup created successfully", Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
+        try {
+            /* Adding subjects data */
+            String subjectListString = gson.toJson(subjectViewModel.getAllSubjects().getValue());
+            JSONArray subjectJsonArray = new JSONArray(subjectListString);
+            jsonObject.put("subjects", subjectJsonArray);
+
+            /* Adding time table data */
+            for (String dayName : TimeTableFragment.DAY_NAMES) {
+                /* Serializing array data to JSON format */
+                String dayListString = gson.toJson(dayViewModel.getSubjectList(dayName));
+                /* Creating a JsonArray object out of the string */
+                JSONArray dayListJsonArray = new JSONArray(dayListString);
+                jsonObject.put(dayName.toLowerCase(), dayListJsonArray);
             }
+
+            File file = new File(getContext().getExternalFilesDir(null), bakFileName);
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(Base64.encodeToString(jsonObject.toString().getBytes(), Base64.DEFAULT));
+            fileWriter.flush();
+            fileWriter.close();
+            Toast.makeText(getContext(), "Backup successfully created in Android/data/com.attendancemanager/files", Toast.LENGTH_LONG).show();
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void restoreDatabase(Uri uri) {
+        /* TODO display alert dialog that all data will be lost */
+
+        String jsonString = readJsonFile(uri);
+        JSONObject jsonObject;
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        if (jsonString == null) {
+            Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            jsonObject = new JSONObject(jsonString);
+            Type subjectType = new TypeToken<List<Subject>>() {
+            }.getType();
+            Type subjectMinimalType = new TypeToken<List<SubjectMinimal>>() {
+            }.getType();
+            subjectViewModel.deleteAllSubjects();
+            dayViewModel.deleteAllSubjects();
+
+            List<Subject> subjectList = gson.fromJson(jsonObject.get("subjects").toString(), subjectType);
+            for (Subject subject : subjectList)
+                subjectViewModel.insert(subject);
+
+            for (String dayName : TimeTableFragment.DAY_NAMES) {
+                List<SubjectMinimal> subjectMinimalList = gson.fromJson(jsonObject.get(dayName.toLowerCase()).toString(), subjectMinimalType);
+                for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                    subjectMinimal.setDay(dayName);
+                    dayViewModel.insert(subjectMinimal);
+                }
+            }
+            Toast.makeText(getContext(), "Restored successfully", Toast.LENGTH_LONG).show();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Recovery failed. Choose a valid file", Toast.LENGTH_LONG).show();
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void restoreDatabase(Uri uri) {
+    private String readJsonFile(Uri uri) {
 
-        subjectViewModel.deleteAllSubjects();
-        dayViewModel.deleteAllSubjects();
-        boolean success = new File(getContext().getDatabasePath(AppDatabase.DATABASE_NAME).getParent(), AppDatabase.DATABASE_NAME).delete();
-        if (!success) {
-            Toast.makeText(getContext(), "Failed to delete database", Toast.LENGTH_LONG).show();
-            return;
+        StringBuilder jsonString = new StringBuilder();
+        BufferedReader fileReader;
+        try {
+            fileReader = new BufferedReader(new InputStreamReader(getContext().getContentResolver().openInputStream(uri)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "File not found", Toast.LENGTH_LONG).show();
+            return null;
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Path dbPath = Paths.get(getContext().getDatabasePath(AppDatabase.DATABASE_NAME).toURI());
-            try {
-                Files.copy(getContext().getContentResolver().openInputStream(uri), dbPath, StandardCopyOption.REPLACE_EXISTING);
-                Toast.makeText(getContext(), "Restored successfully", Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_LONG).show();
+        try {
+            while (true) {
+                String readLine = fileReader.readLine();
+                if (readLine == null)
+                    break;
+                jsonString.append(readLine);
             }
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Unable to read file", Toast.LENGTH_LONG).show();
+            return null;
         }
+        return new String(Base64.decode(jsonString.toString(), Base64.DEFAULT));
     }
 
     private void buildTimePicker() {
