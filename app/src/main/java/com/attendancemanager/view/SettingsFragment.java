@@ -29,7 +29,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
-import com.attendancemanager.model.Database;
+import com.attendancemanager.model.AppDatabase;
 import com.attendancemanager.model.Subject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
@@ -382,7 +382,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 new SimpleDateFormat("-dd-MM-yyyy-hh-mm-ss", Locale.getDefault()).format(calendar.getTime()) + ".db";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Path dbPath = Paths.get(getContext().getDatabasePath(Database.DATABASE_NAME).toURI());
+            Path dbPath = Paths.get(getContext().getDatabasePath(AppDatabase.DATABASE_NAME).toURI());
             Path bakPath = Paths.get(new File(getContext().getExternalFilesDir(null), bakFileName).toURI());
             try {
                 Files.copy(dbPath, bakPath, StandardCopyOption.REPLACE_EXISTING);
@@ -399,14 +399,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         subjectViewModel.deleteAllSubjects();
         dayViewModel.deleteAllSubjects();
-        boolean success = new File(getContext().getDatabasePath(Database.DATABASE_NAME).getParent(), Database.DATABASE_NAME).delete();
+        boolean success = new File(getContext().getDatabasePath(AppDatabase.DATABASE_NAME).getParent(), AppDatabase.DATABASE_NAME).delete();
         if (!success) {
             Toast.makeText(getContext(), "Failed to delete database", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Path dbPath = Paths.get(getContext().getDatabasePath(Database.DATABASE_NAME).toURI());
+            Path dbPath = Paths.get(getContext().getDatabasePath(AppDatabase.DATABASE_NAME).toURI());
             try {
                 Files.copy(getContext().getContentResolver().openInputStream(uri), dbPath, StandardCopyOption.REPLACE_EXISTING);
                 Toast.makeText(getContext(), "Restored successfully", Toast.LENGTH_LONG).show();
