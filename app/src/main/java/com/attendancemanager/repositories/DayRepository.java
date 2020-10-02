@@ -88,7 +88,7 @@ public class DayRepository {
             return;
         }
 
-        switch (subjectMinimal.getDay()) {
+        switch (subjectMinimal.getDay().toLowerCase()) {
             case "monday":
                 new Thread(new MondayOperations(mondayDao, subjectMinimal, operation)).start();
                 break;
