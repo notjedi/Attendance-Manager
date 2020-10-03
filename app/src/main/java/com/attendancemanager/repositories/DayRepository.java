@@ -23,6 +23,7 @@ import com.attendancemanager.model.TuesdayDao;
 import com.attendancemanager.model.Wednesday;
 import com.attendancemanager.model.WednesdayDao;
 
+import java.io.FileWriter;
 import java.util.List;
 
 public class DayRepository {
@@ -185,7 +186,9 @@ public class DayRepository {
                     mondayDao.insert(new Monday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    mondayDao.delete(new Monday(subjectMinimal.getSubjectName()));
+                    Monday monday = new Monday(subjectMinimal.getSubjectName());
+                    monday.setId(subjectMinimal.getId());
+                    mondayDao.delete(monday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     mondayDao.deleteAllSubjects();
@@ -215,7 +218,9 @@ public class DayRepository {
                     tuesdayDao.insert(new Tuesday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    tuesdayDao.delete(new Tuesday(subjectMinimal.getSubjectName()));
+                    Tuesday tuesday = new Tuesday(subjectMinimal.getSubjectName());
+                    tuesday.setId(subjectMinimal.getId());
+                    tuesdayDao.delete(tuesday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     tuesdayDao.deleteAllSubjects();
@@ -245,7 +250,9 @@ public class DayRepository {
                     wednesdayDao.insert(new Wednesday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    wednesdayDao.delete(new Wednesday(subjectMinimal.getSubjectName()));
+                    Wednesday wednesday = new Wednesday(subjectMinimal.getSubjectName());
+                    wednesday.setId(subjectMinimal.getId());
+                    wednesdayDao.delete(wednesday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     wednesdayDao.deleteAllSubjects();
@@ -275,7 +282,9 @@ public class DayRepository {
                     thursdayDao.insert(new Thursday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    thursdayDao.delete(new Thursday(subjectMinimal.getSubjectName()));
+                    Thursday thursday = new Thursday(subjectMinimal.getSubjectName());
+                    thursday.setId(subjectMinimal.getId());
+                    thursdayDao.delete(thursday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     thursdayDao.deleteAllSubjects();
@@ -305,7 +314,9 @@ public class DayRepository {
                     fridayDao.insert(new Friday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    fridayDao.delete(new Friday(subjectMinimal.getSubjectName()));
+                    Friday friday = new Friday(subjectMinimal.getSubjectName());
+                    friday.setId(subjectMinimal.getId());
+                    fridayDao.delete(friday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     fridayDao.deleteAllSubjects();
@@ -335,7 +346,9 @@ public class DayRepository {
                     saturdayDao.insert(new Saturday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    saturdayDao.delete(new Saturday(subjectMinimal.getSubjectName()));
+                    Saturday saturday = new Saturday(subjectMinimal.getSubjectName());
+                    saturday.setId(subjectMinimal.getId());
+                    saturdayDao.delete(saturday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     saturdayDao.deleteAllSubjects();
@@ -365,7 +378,9 @@ public class DayRepository {
                     sundayDao.insert(new Sunday(subjectMinimal.getSubjectName()));
                     break;
                 case DELETE:
-                    sundayDao.delete(new Sunday(subjectMinimal.getSubjectName()));
+                    Sunday sunday = new Sunday(subjectMinimal.getSubjectName());
+                    sunday.setId(subjectMinimal.getId());
+                    sundayDao.delete(sunday);
                     break;
                 case DELETE_ALL_SUBJECTS:
                     sundayDao.deleteAllSubjects();

@@ -45,6 +45,10 @@ public class DayViewModel extends AndroidViewModel {
         dayRepository.insert(subjectMinimal);
     }
 
+    public void delete(SubjectMinimal subjectMinimal) {
+        dayRepository.delete(subjectMinimal);
+    }
+
     public void deleteAllSubjects() {
         dayRepository.deleteAllSubjects();
     }
