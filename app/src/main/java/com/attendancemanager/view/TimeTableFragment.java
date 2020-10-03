@@ -2,7 +2,6 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -218,6 +218,22 @@ public class TimeTableFragment extends Fragment {
             timeTableAdapter = new TimeTableFragmentAdapter();
             timeTableRecyclerView.setAdapter(timeTableAdapter);
             timeTableRecyclerView.setHasFixedSize(true);
+
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.LEFT) {
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView,
+                                      @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    int position = viewHolder.getAdapterPosition();
+                    SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(getArgDayName).get(position);
+                    subjectMinimal.setDay(getArgDayName);
+                    dayViewModel.delete(subjectMinimal);
+                }
+            }).attachToRecyclerView(timeTableRecyclerView);
 
             dayViewModel.getDaySubjectList(getArgDayName).observe(getViewLifecycleOwner(), subjectMinimalList -> {
                 daySubjectList.clear();
