@@ -27,6 +27,6 @@ public interface TuesdayDao {
     @Query("SELECT * FROM tuesday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();
 
-    @Query("SELECT * FROM tuesday_table")
+    @Query("SELECT * FROM tuesday_table ORDER BY id")
     List<SubjectMinimal> getSubjectList();
 }

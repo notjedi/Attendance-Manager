@@ -29,8 +29,9 @@ import java.util.List;
 public class DayRepository {
 
     public static final int INSERT = 0;
-    public static final int DELETE = 1;
-    public static final int DELETE_ALL_SUBJECTS = 2;
+    public static final int UPDATE = 1;
+    public static final int DELETE = 2;
+    public static final int DELETE_ALL_SUBJECTS = 3;
 
     private static DayRepository instance;
 
@@ -64,6 +65,10 @@ public class DayRepository {
 
     public void insert(SubjectMinimal subjectMinimal) {
         runOperation(subjectMinimal, INSERT);
+    }
+
+    public void update(SubjectMinimal subjectMinimal) {
+        runOperation(subjectMinimal, UPDATE);
     }
 
     public void delete(SubjectMinimal subjectMinimal) {
@@ -181,12 +186,18 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Monday monday;
             switch (operation) {
                 case INSERT:
                     mondayDao.insert(new Monday(subjectMinimal.getSubjectName()));
                     break;
+                case UPDATE:
+                    monday = new Monday(subjectMinimal.getSubjectName());
+                    monday.setId(subjectMinimal.getId());
+                    mondayDao.update(monday);
+                    break;
                 case DELETE:
-                    Monday monday = new Monday(subjectMinimal.getSubjectName());
+                    monday = new Monday(subjectMinimal.getSubjectName());
                     monday.setId(subjectMinimal.getId());
                     mondayDao.delete(monday);
                     break;
@@ -213,12 +224,18 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Tuesday tuesday;
             switch (operation) {
                 case INSERT:
                     tuesdayDao.insert(new Tuesday(subjectMinimal.getSubjectName()));
                     break;
+                case UPDATE:
+                    tuesday = new Tuesday(subjectMinimal.getSubjectName());
+                    tuesday.setId(subjectMinimal.getId());
+                    tuesdayDao.update(tuesday);
+                    break;
                 case DELETE:
-                    Tuesday tuesday = new Tuesday(subjectMinimal.getSubjectName());
+                    tuesday = new Tuesday(subjectMinimal.getSubjectName());
                     tuesday.setId(subjectMinimal.getId());
                     tuesdayDao.delete(tuesday);
                     break;
