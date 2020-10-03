@@ -220,6 +220,10 @@ public class HomeFragment extends Fragment {
             setting the visibility to View.GONE in the XML file and making it VISIBLE onClicking
             the mExtraClassButton. This somehow gets rid of the bug. */
             /* TODO animate opening the sheet for the first time */
+            if (mBottomSheetAdapter.getItemCount() == 0) {
+                Toast.makeText(getContext(), "Add a few subjects", Toast.LENGTH_SHORT).show();
+                return;
+            }
             mBottomSheetLayout.setVisibility(View.VISIBLE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             bottomNavBar.setVisibility(View.GONE);

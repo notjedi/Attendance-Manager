@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.repositories.DayRepository;
 
@@ -43,6 +44,10 @@ public class DayViewModel extends AndroidViewModel {
 
     public void insert(SubjectMinimal subjectMinimal) {
         dayRepository.insert(subjectMinimal);
+    }
+
+    public void update(SubjectMinimal subjectMinimal) {
+        dayRepository.update(subjectMinimal);
     }
 
     public void delete(SubjectMinimal subjectMinimal) {

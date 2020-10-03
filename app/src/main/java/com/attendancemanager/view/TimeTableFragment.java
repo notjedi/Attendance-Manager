@@ -2,10 +2,12 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -108,6 +110,10 @@ public class TimeTableFragment extends Fragment {
         });
 
         addButtonFab.setOnClickListener(v -> {
+            if (mBottomSheetAdapter.getItemCount() == 0) {
+                Toast.makeText(getContext(), "Add a few subjects", Toast.LENGTH_SHORT).show();
+                return;
+            }
             mBottomSheetLayout.setVisibility(View.VISIBLE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             addButtonFab.setVisibility(View.GONE);
@@ -176,11 +182,9 @@ public class TimeTableFragment extends Fragment {
     public static class DayFragment extends Fragment {
 
         private static final String ARG_DAY_NAME = "argDayName";
-        private RecyclerView timeTableRecyclerView;
         private TimeTableFragmentAdapter timeTableAdapter;
         private DayViewModel dayViewModel;
         private SubjectViewModel subjectViewModel;
-        private List<Subject> daySubjectList;
         private String getArgDayName;
 
         public static DayFragment newInstance(String day) {
@@ -210,19 +214,40 @@ public class TimeTableFragment extends Fragment {
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
-            timeTableRecyclerView = view.findViewById(R.id.time_table_recycler_view);
+            RecyclerView timeTableRecyclerView = view.findViewById(R.id.time_table_recycler_view);
             dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
             subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
 
-            daySubjectList = new ArrayList<>();
             timeTableAdapter = new TimeTableFragmentAdapter();
             timeTableRecyclerView.setAdapter(timeTableAdapter);
             timeTableRecyclerView.setHasFixedSize(true);
 
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.LEFT) {
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP |
+                    ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView,
-                                      @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                                      @NonNull RecyclerView.ViewHolder viewHolder,
+                                      @NonNull RecyclerView.ViewHolder target) {
+
+                    List<SubjectMinimal> subjectList = dayViewModel.getSubjectList(getArgDayName);
+                    int fromPos = viewHolder.getAdapterPosition();
+                    int toPos = target.getAdapterPosition();
+                    Log.i(TAG, "onMove: " + fromPos + toPos);
+                    if (fromPos == -1) fromPos = 0;
+                    if (toPos == -1) toPos = 0;
+                    SubjectMinimal fromSubject = subjectList.get(fromPos);
+                    SubjectMinimal toSubject = subjectList.get(toPos);
+                    fromSubject.setDay(getArgDayName);
+                    toSubject.setDay(getArgDayName);
+                    int fromId = fromSubject.getId();
+                    int toId = toSubject.getId();
+                    fromSubject.setId(toId);
+                    toSubject.setId(fromId);
+                    Log.i(TAG, "onMove: " + fromSubject.getId() + toSubject.getId() + " " + fromSubject.getSubjectName() + toSubject.getSubjectName());
+                    dayViewModel.update(fromSubject);
+                    dayViewModel.update(toSubject);
+//                    timeTableAdapter.notifyItemMoved(fromPos, toPos);
                     return false;
                 }
 
@@ -236,13 +261,11 @@ public class TimeTableFragment extends Fragment {
             }).attachToRecyclerView(timeTableRecyclerView);
 
             dayViewModel.getDaySubjectList(getArgDayName).observe(getViewLifecycleOwner(), subjectMinimalList -> {
-                daySubjectList.clear();
                 List<Subject> subjectList = new ArrayList<>();
                 for (SubjectMinimal subjectMinimal : subjectMinimalList) {
                     Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                     if (subject != null) {
                         subjectList.add(subject);
-                        daySubjectList.add(subject);
                     }
                 }
                 timeTableAdapter.submitList(subjectList);

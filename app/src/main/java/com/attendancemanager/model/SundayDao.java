@@ -27,6 +27,6 @@ public interface SundayDao {
     @Query("SELECT * FROM sunday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();
 
-    @Query("SELECT * FROM sunday_table")
+    @Query("SELECT * FROM sunday_table ORDER BY id")
     List<SubjectMinimal> getSubjectList();
 }
