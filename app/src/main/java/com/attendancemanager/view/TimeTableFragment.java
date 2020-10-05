@@ -2,7 +2,6 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,32 +221,11 @@ public class TimeTableFragment extends Fragment {
             timeTableRecyclerView.setAdapter(timeTableAdapter);
             timeTableRecyclerView.setHasFixedSize(true);
 
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP |
-                    ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
 
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView,
-                                      @NonNull RecyclerView.ViewHolder viewHolder,
-                                      @NonNull RecyclerView.ViewHolder target) {
-
-                    List<SubjectMinimal> subjectList = dayViewModel.getSubjectList(getArgDayName);
-                    int fromPos = viewHolder.getAdapterPosition();
-                    int toPos = target.getAdapterPosition();
-                    Log.i(TAG, "onMove: " + fromPos + toPos);
-                    if (fromPos == -1) fromPos = 0;
-                    if (toPos == -1) toPos = 0;
-                    SubjectMinimal fromSubject = subjectList.get(fromPos);
-                    SubjectMinimal toSubject = subjectList.get(toPos);
-                    fromSubject.setDay(getArgDayName);
-                    toSubject.setDay(getArgDayName);
-                    int fromId = fromSubject.getId();
-                    int toId = toSubject.getId();
-                    fromSubject.setId(toId);
-                    toSubject.setId(fromId);
-                    Log.i(TAG, "onMove: " + fromSubject.getId() + toSubject.getId() + " " + fromSubject.getSubjectName() + toSubject.getSubjectName());
-                    dayViewModel.update(fromSubject);
-                    dayViewModel.update(toSubject);
-//                    timeTableAdapter.notifyItemMoved(fromPos, toPos);
+                                      @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                     return false;
                 }
 

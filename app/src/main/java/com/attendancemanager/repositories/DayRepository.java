@@ -23,7 +23,6 @@ import com.attendancemanager.model.TuesdayDao;
 import com.attendancemanager.model.Wednesday;
 import com.attendancemanager.model.WednesdayDao;
 
-import java.io.FileWriter;
 import java.util.List;
 
 public class DayRepository {
