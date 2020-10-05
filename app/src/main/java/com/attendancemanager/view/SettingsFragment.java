@@ -3,8 +3,12 @@ package com.attendancemanager.view;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -27,8 +31,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.attendancemanager.AlertReceiver;
+import com.attendancemanager.NotificationHelper;
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.SubjectMinimal;
@@ -122,6 +129,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Preference attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
         Preference editSubject = findPreference(EDIT_SUBJECTS);
         Preference predict = findPreference(PREDICT);
+        Preference isNotificationEnabled = findPreference(NOTIFICATION);
         Preference notificationTimePicker = findPreference(NOTIFICATION_TIME);
         Preference resetDatabase = findPreference(RESET_DATABASE);
         Preference clearDatabase = findPreference(CLEAR_DATABASE);
@@ -136,6 +144,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
         predict.setOnPreferenceClickListener(this);
+        isNotificationEnabled.setOnPreferenceClickListener(this);
         notificationTimePicker.setOnPreferenceClickListener(this);
         resetDatabase.setOnPreferenceClickListener(this);
         clearDatabase.setOnPreferenceClickListener(this);
@@ -166,6 +175,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case PREDICT:
                 Intent predictIntent = new Intent(getContext(), PredictActivity.class);
                 startActivity(predictIntent);
+                break;
+
+            case NOTIFICATION:
+                SharedPreferences settingsPrefs = getActivity().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+                updateNotificationSettings(PreferenceManager.getDefaultSharedPreferences(getContext())
+                                .getBoolean(NOTIFICATION, true), settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, 17),
+                        settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, 30));
                 break;
 
             case NOTIFICATION_TIME:
@@ -486,16 +502,53 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return new String(Base64.decode(jsonString.toString(), Base64.DEFAULT));
     }
 
+    private void updateNotificationSettings(boolean isNotificationEnabled, int hour, int minute) {
+
+        if (!isNotificationEnabled) {
+            cancelNotification();
+            return;
+        }
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent(getContext(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        Log.i(TAG, "updateNotificationSettings: " + hour + " " + minute);
+        if (calendar.before(Calendar.getInstance()))
+            calendar.add(Calendar.DATE, 1);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+    private void cancelNotification() {
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent(getContext(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, notificationIntent, 0);
+
+        alarmManager.cancel(pendingIntent);
+    }
+
     private void buildTimePicker() {
 
-        MaterialTimePicker timePicker = new MaterialTimePicker();
+        SharedPreferences settingsPrefs = getActivity()
+                .getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, 17))
+                .setMinute(settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, 30))
+                .build();
         timePicker.show(getChildFragmentManager(), "time_picker");
-        timePicker.setTimeFormat(TimeFormat.CLOCK_12H);
 
-        timePicker.setListener(dialog -> {
-            int hour = dialog.getHour();
-            int minute = dialog.getMinute();
-            Log.i(TAG, "buildTimePicker: " + hour + " " + minute);
+        timePicker.addOnPositiveButtonClickListener(dialog -> {
+            int hour = timePicker.getHour();
+            int minute = timePicker.getMinute();
+            SharedPreferences.Editor settingsPrefEditor = settingsPrefs.edit();
+            settingsPrefEditor.putInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, hour);
+            settingsPrefEditor.putInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, minute);
+            settingsPrefEditor.apply();
+            updateNotificationSettings(settingsPrefs.getBoolean(NOTIFICATION, true), hour, minute);
         });
     }
 
