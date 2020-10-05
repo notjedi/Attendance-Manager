@@ -2,9 +2,9 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".view.MainActivity">
 
     <androidx.viewpager.widget.ViewPager
@@ -22,7 +22,7 @@
         app:exb_item_horizontal_padding="25dp"
         app:exb_items="@menu/bottom_bar_menu"
         app:layout_anchor="@id/view_pager"
-        app:layout_behavior="github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|center"
+        app:layout_behavior="github.com.st235.lib_expandablebottombar.behavior.ExpandableBottomBarScrollableBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

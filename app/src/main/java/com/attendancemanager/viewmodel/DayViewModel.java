@@ -1,21 +1,15 @@
 package com.attendancemanager.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.repositories.DayRepository;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class DayViewModel extends AndroidViewModel {
 
