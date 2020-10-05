@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.attendancemanager.AlertReceiver;
+import com.attendancemanager.AlarmReceiver;
 import com.attendancemanager.NotificationHelper;
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
@@ -325,7 +324,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
             int sliderValue = (int) slider.getValue();
             settingsPref.edit().putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, sliderValue).apply();
-            Log.i(TAG, "buildAttendanceCriteriaSelector: " + sliderValue);
             dialog.dismiss();
         });
 
@@ -513,14 +511,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             return;
         }
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent = new Intent(getContext(), AlertReceiver.class);
+        Intent notificationIntent = new Intent(getContext(), AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
 
-        Log.i(TAG, "updateNotificationSettings: " + hour + " " + minute);
         if (calendar.before(Calendar.getInstance()))
             calendar.add(Calendar.DATE, 1);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
@@ -528,7 +525,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     private void cancelNotification() {
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent = new Intent(getContext(), AlertReceiver.class);
+        Intent notificationIntent = new Intent(getContext(), AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, notificationIntent, 0);
 
         alarmManager.cancel(pendingIntent);
