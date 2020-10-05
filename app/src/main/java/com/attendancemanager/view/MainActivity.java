@@ -24,6 +24,7 @@ import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    public static final String SHARED_PREFS_SETTINGS_FILE_KEY = "extra_settings";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
 
