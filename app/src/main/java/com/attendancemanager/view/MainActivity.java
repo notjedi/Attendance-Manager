@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     public static final String SHARED_PREFS_SETTINGS_FILE_KEY = "extra_settings";
+    public static final String SHARED_PREFS_ATTENDANCE_CRITERIA = "attendance_criteria";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
 

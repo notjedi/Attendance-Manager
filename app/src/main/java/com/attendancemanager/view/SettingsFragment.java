@@ -281,6 +281,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         /* TODO Set default value to current value */
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
+        SharedPreferences settingsPref = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
         dialogBuilder.setTitle("Set attendance criteria");
         View view = LayoutInflater.from(getContext()).inflate(R.layout.attendance_criteria_slider,
                 (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
@@ -290,8 +291,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         ProgressBar progressBar = view.findViewById(R.id.attendance_criteria_progress_bar);
         dialogBuilder.setView(view);
 
-        progressBar.setProgress(75);
-        attendancePercentage.setText("75%");
+        int percentage = settingsPref.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
+        progressBar.setProgress(percentage);
+        slider.setValue((float) percentage);
+        attendancePercentage.setText(percentage + "%");
 
         slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             int sliderValue;
@@ -321,6 +324,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
 
             int sliderValue = (int) slider.getValue();
+            settingsPref.edit().putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, sliderValue).apply();
             Log.i(TAG, "buildAttendanceCriteriaSelector: " + sliderValue);
             dialog.dismiss();
         });
