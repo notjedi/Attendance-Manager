@@ -55,7 +55,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     public SubjectListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.subject_list_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_subject_list, parent, false);
         return new SubjectListViewHolder(view, mItemClickListener);
     }
 

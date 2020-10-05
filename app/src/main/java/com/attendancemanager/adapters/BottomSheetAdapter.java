@@ -41,7 +41,7 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
     @Override
     public BottomSheetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bottom_sheet_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bottom_sheet, parent, false);
         return new BottomSheetViewHolder(view, mListener);
     }
 

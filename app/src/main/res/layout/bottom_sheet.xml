@@ -17,6 +17,6 @@
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
-        tools:listitem="@layout/bottom_sheet_item" />
+        tools:listitem="@layout/item_bottom_sheet" />
 
 </LinearLayout>

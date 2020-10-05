@@ -11,6 +11,6 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="32dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/time_table_item" />
+        tools:listitem="@layout/item_time_table" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
