@@ -226,6 +226,9 @@ public class TimeTableFragment extends Fragment {
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView,
                                       @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
+                    // i'd have a separate field in the table that designates the order of the items so that i can sort by it
+                    // but the idea was the same. i was using in-memory list, ordered them around, then user pressed "save" and that's when i saved the changes to db
                     return false;
                 }
 

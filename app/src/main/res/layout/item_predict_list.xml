@@ -52,11 +52,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:indeterminateOnly="false"
+            android:progress="50"
             android:progressDrawable="@drawable/circular_progress_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:progress="50" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/predict_subject_progressbar_percentage"

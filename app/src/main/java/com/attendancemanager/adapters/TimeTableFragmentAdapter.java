@@ -40,7 +40,7 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
     @NonNull
     @Override
     public TimeTableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_table_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_time_table, parent, false);
         return new TimeTableViewHolder(view);
     }
 

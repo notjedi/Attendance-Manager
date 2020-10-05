@@ -47,7 +47,7 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
     @NonNull
     @Override
     public PredictViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.predict_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_predict_list, parent, false);
         return new PredictViewHolder(view);
     }
 
