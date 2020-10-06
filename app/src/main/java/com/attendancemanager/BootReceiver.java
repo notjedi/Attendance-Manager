@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
@@ -20,7 +21,7 @@ public class BootReceiver extends BroadcastReceiver {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
-        
+
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsFragment.NOTIFICATION, true)) {
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
