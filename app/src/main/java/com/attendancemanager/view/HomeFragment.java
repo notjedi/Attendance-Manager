@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class HomeFragment extends Fragment {
     private ExpandableBottomBar bottomNavBar;
 
     private String day;
+    private boolean vibrate;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
     private SharedPreferences defaultPrefs;
@@ -123,9 +125,27 @@ public class HomeFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance();
         StringBuilder date = new StringBuilder();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd", Locale.US);
-        date.append(simpleDateFormat.format(calendar.getTime()));
-        date.append(" ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d", Locale.US);
+        String dateNumber = simpleDateFormat.format(calendar.getTime());
+        date.append(dateNumber);
+        switch (dateNumber) {
+            case "1":
+            case "21":
+            case "31":
+                date.append("st ");
+                break;
+            case "2":
+            case "22":
+                date.append("nd ");
+                break;
+            case "3":
+            case "23":
+                date.append("rd ");
+                break;
+            default:
+                date.append("th ");
+                break;
+        }
         simpleDateFormat.applyPattern("MMMM");
         date.append(simpleDateFormat.format(calendar.getTime()));
         mDate.setText(date.toString());
@@ -168,7 +188,6 @@ public class HomeFragment extends Fragment {
 
         homeFragmentListAdapter = new HomeFragmentListAdapter(getContext());
         homeFragmentListAdapter.setItemClickListener(new HomeFragmentListAdapter.OnItemClickListener() {
-            boolean vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
 
             @Override
             public void onAttendButtonClick() {
@@ -278,6 +297,16 @@ public class HomeFragment extends Fragment {
                 //deprecated in API 26
                 vibrator.vibrate(70);
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (SettingsFragment.DATA_CHANGED == 1) {
+            String name = defaultPrefs.getString(SettingsFragment.NAME, null);
+            vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
+            mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
         }
     }
 

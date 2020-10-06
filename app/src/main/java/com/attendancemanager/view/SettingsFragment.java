@@ -28,9 +28,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.AlarmReceiver;
@@ -87,6 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final int FILE_CHOOSER_ACTIVITY_REQUEST = 1;
     public static final String BACKUP_FILE_NAME = "attendance-manager";
     private static final String TAG = "SettingsFragment";
+    public static int DATA_CHANGED = 0;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
 
@@ -125,9 +128,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        EditTextPreference name = findPreference(NAME);
         Preference attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);
         Preference editSubject = findPreference(EDIT_SUBJECTS);
         Preference predict = findPreference(PREDICT);
+        SwitchPreference vibrate = findPreference(VIBRATE);
         Preference isNotificationEnabled = findPreference(NOTIFICATION);
         Preference notificationTimePicker = findPreference(NOTIFICATION_TIME);
         Preference resetDatabase = findPreference(RESET_DATABASE);
@@ -140,7 +145,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Preference about = findPreference(ABOUT);
         Preference developedBy = findPreference(DEVELOPED_BY);
 
+        name.setOnPreferenceClickListener(this);
         attendanceCriteriaSelector.setOnPreferenceClickListener(this);
+        vibrate.setOnPreferenceClickListener(this);
         editSubject.setOnPreferenceClickListener(this);
         predict.setOnPreferenceClickListener(this);
         isNotificationEnabled.setOnPreferenceClickListener(this);
@@ -161,6 +168,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public boolean onPreferenceClick(Preference preference) {
 
         switch (preference.getKey()) {
+
+            case NAME:
+            case VIBRATE:
+                DATA_CHANGED = 1;
+                break;
 
             case ATTENDANCE_CRITERIA_SELECTOR:
                 buildAttendanceCriteriaSelector();
@@ -611,5 +623,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         shareAppIntent.putExtra(Intent.EXTRA_TEXT, shareText.toString());
         Intent.createChooser(shareAppIntent, "Share via");
         startActivity(shareAppIntent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DATA_CHANGED = 0;
     }
 }
