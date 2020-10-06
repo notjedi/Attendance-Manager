@@ -80,7 +80,6 @@ public class DayRepository {
 
     private void runOperation(SubjectMinimal subjectMinimal, int operation) {
         /* https://stackoverflow.com/questions/50946488/java-instanceof-vs-class-name-switch-performance */
-        /* TODO try to migrate parameters to a new SubjectMinimal class */
 
         if (operation == DELETE_ALL_SUBJECTS) {
             new Thread(new MondayOperations(mondayDao, null, operation)).start();

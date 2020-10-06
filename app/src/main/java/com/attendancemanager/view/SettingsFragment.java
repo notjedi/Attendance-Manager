@@ -176,6 +176,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
             case ATTENDANCE_CRITERIA_SELECTOR:
                 buildAttendanceCriteriaSelector();
+                DATA_CHANGED = 1;
                 break;
 
             case EDIT_SUBJECTS:

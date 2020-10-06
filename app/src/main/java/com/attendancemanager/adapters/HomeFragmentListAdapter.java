@@ -2,6 +2,7 @@ package com.attendancemanager.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,11 +83,11 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     }
 
     public interface OnItemClickListener {
-        void onAttendButtonClick();
+        void onAttendButtonClick(int position);
 
-        void onBunkButtonClick();
+        void onBunkButtonClick(int position);
 
-        void onCancelledButtonClick();
+        void onCancelledButtonClick(int position);
     }
 
     public static class SubjectListViewHolder extends RecyclerView.ViewHolder {
@@ -96,7 +97,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         private static final float cancelledAlpha = 0.5f;
         private static final float visibleAlpha = 1.0f;
         private TextView mSubjectName;
-        private TextView mTotalClassesAttended;
+        public TextView mTotalClassesAttended;
         private TextView mStatusInfo;
         private TextView mAttendanceStatus;
         private ProgressBar mSubjectAttendanceProgressBar;
@@ -124,19 +125,19 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
                 mAttended.setAlpha(visibleAlpha);
                 mBunked.setAlpha(bunkedAlpha);
                 mCancelled.setAlpha(cancelledAlpha);
-                itemClickListener.onAttendButtonClick();
+                itemClickListener.onAttendButtonClick(getAdapterPosition());
             });
             mBunked.setOnClickListener(view -> {
                 mAttended.setAlpha(attendedAlpha);
                 mBunked.setAlpha(visibleAlpha);
                 mCancelled.setAlpha(cancelledAlpha);
-                itemClickListener.onBunkButtonClick();
+                itemClickListener.onBunkButtonClick(getAdapterPosition());
             });
             mCancelled.setOnClickListener(view -> {
                 mAttended.setAlpha(attendedAlpha);
                 mBunked.setAlpha(bunkedAlpha);
                 mCancelled.setAlpha(visibleAlpha);
-                itemClickListener.onCancelledButtonClick();
+                itemClickListener.onCancelledButtonClick(getAdapterPosition());
             });
         }
 

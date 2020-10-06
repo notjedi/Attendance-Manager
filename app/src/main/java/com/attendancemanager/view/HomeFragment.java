@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
@@ -155,6 +155,7 @@ public class HomeFragment extends Fragment {
         mDay.setText(simpleDateFormat.format(calendar.getTime()));
         String name = defaultPrefs.getString(SettingsFragment.NAME, null);
         mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
+        vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
     }
 
     private void setProgressBar() {
@@ -190,26 +191,38 @@ public class HomeFragment extends Fragment {
         homeFragmentListAdapter.setItemClickListener(new HomeFragmentListAdapter.OnItemClickListener() {
 
             @Override
-            public void onAttendButtonClick() {
+            public void onAttendButtonClick(int position) {
+                /* For some reason updating the same same subject */
                 vibrateOnTouch(vibrate);
-                Toast.makeText(getContext(), "Attended Button Clicked", Toast.LENGTH_SHORT).show();
+                Subject subject = homeFragmentListAdapter.getSubjectAt(position);
+                subject.incrementAttendedClasses();
+                subject.incrementTotalClasses();
+                subjectViewModel.update(subject);
+                homeFragmentListAdapter.notifyItemChanged(position);
             }
 
             @Override
-            public void onBunkButtonClick() {
+            public void onBunkButtonClick(int position) {
                 vibrateOnTouch(vibrate);
-                Toast.makeText(getContext(), "Bunked Button Clicked", Toast.LENGTH_SHORT).show();
+                Subject subject = homeFragmentListAdapter.getSubjectAt(position);
+                subject.incrementTotalClasses();
+                subjectViewModel.update(subject);
+                homeFragmentListAdapter.notifyItemChanged(position);
             }
 
             @Override
-            public void onCancelledButtonClick() {
+            public void onCancelledButtonClick(int position) {
                 vibrateOnTouch(vibrate);
-                Toast.makeText(getContext(), "Cancelled Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
         mRecyclerView.setAdapter(homeFragmentListAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+        /* disable flash animation while notifyItemChanged() is called
+        https://stackoverflow.com/a/36571561 */
+        mRecyclerView.getItemAnimator().setChangeDuration(0);
+        // the below one works too
+        //  ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
