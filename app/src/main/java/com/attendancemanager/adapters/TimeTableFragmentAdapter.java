@@ -6,35 +6,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFragmentAdapter.TimeTableViewHolder> {
+public class TimeTableFragmentAdapter extends RecyclerView.Adapter<TimeTableFragmentAdapter.TimeTableViewHolder> {
 
-    private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
-        /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
-
-        @Override
-        public boolean areItemsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
-            return oldItem.getId() == newItem.getId();
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
-            /* No need to check if attended classes and total classes are same */
-            /* TODO check if attendance is getting updated */
-            return oldItem.getSubjectName().equals(newItem.getSubjectName());
-        }
-    };
+    private List<Subject> subjectList;
 
     public TimeTableFragmentAdapter() {
-        super(DIFF_CALLBACK);
+        this.subjectList = new ArrayList<>();
     }
 
     @NonNull
@@ -47,7 +33,7 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
     @Override
     public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
 
-        Subject subject = getItem(position);
+        Subject subject = subjectList.get(position);
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
                 (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
@@ -56,8 +42,18 @@ public class TimeTableFragmentAdapter extends ListAdapter<Subject, TimeTableFrag
         holder.mAttendancePercentage.setText(String.format(Locale.US, "%d%%", percentage));
     }
 
-    public Subject getSubjectAt(int position) {
-        return getItem(position);
+    @Override
+    public int getItemCount() {
+        return subjectList.size();
+    }
+
+    public List<Subject> getSubjectList() {
+        return subjectList;
+    }
+
+    public void setSubjectList(List<Subject> subjectList) {
+        this.subjectList = subjectList;
+        notifyDataSetChanged();
     }
 
     public static class TimeTableViewHolder extends RecyclerView.ViewHolder {

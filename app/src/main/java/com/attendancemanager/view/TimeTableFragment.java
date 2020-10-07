@@ -2,6 +2,7 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,6 +238,7 @@ public class TimeTableFragment extends Fragment {
                     int position = viewHolder.getAdapterPosition();
                     SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(getArgDayName).get(position);
                     subjectMinimal.setDay(getArgDayName);
+                    Log.i("TAG", "onSwiped: " + position);
                     dayViewModel.delete(subjectMinimal);
                 }
             }).attachToRecyclerView(timeTableRecyclerView);
@@ -249,7 +251,7 @@ public class TimeTableFragment extends Fragment {
                         subjectList.add(subject);
                     }
                 }
-                timeTableAdapter.submitList(subjectList);
+                timeTableAdapter.setSubjectList(subjectList);
             });
         }
     }
