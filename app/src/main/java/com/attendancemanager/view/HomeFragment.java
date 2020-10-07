@@ -180,8 +180,8 @@ public class HomeFragment extends Fragment {
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             List<Subject> subjectList = new ArrayList<>();
             mTodaySubjectList.clear();
-            for (SubjectMinimal subjectMinimal: dayViewModel.getSubjectList(day)) {
-                for (Subject subject: subjects) {
+            for (SubjectMinimal subjectMinimal : dayViewModel.getSubjectList(day)) {
+                for (Subject subject : subjects) {
                     if (subject.getSubjectName().equals(subjectMinimal.getSubjectName())) {
                         subject.setStatus(subjectMinimal.getStatus());
                         subjectList.add(subject);
@@ -191,6 +191,7 @@ public class HomeFragment extends Fragment {
             }
             mTodaySubjectList.addAll(subjectList);
             homeFragmentListAdapter.submitList(subjectList);
+            updateMainProgressBar(subjectList);
         });
 
         dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
@@ -204,6 +205,7 @@ public class HomeFragment extends Fragment {
             }
             /* https://stackoverflow.com/a/50031492 */
             homeFragmentListAdapter.submitList(new ArrayList<>(mTodaySubjectList));
+            updateMainProgressBar(mTodaySubjectList);
         });
     }
 
@@ -364,6 +366,22 @@ public class HomeFragment extends Fragment {
             v.onTouchEvent(event);
             return true;
         });
+    }
+
+    private void updateMainProgressBar(List<Subject> subjectList) {
+        int totalClasses = 0;
+        int attendedClasses = 0;
+        int attendancePercentage;
+        for (Subject subject : subjectList) {
+            totalClasses += subject.getTotalClasses();
+            attendedClasses += subject.getAttendedClasses();
+        }
+        if (totalClasses != 0)
+            attendancePercentage = Math.round(((float) attendedClasses / (float) totalClasses) * 100);
+        else
+            attendancePercentage = 0;
+        mProgressBar.setProgress(attendancePercentage);
+        mProgressPercentage.setText(String.format(Locale.US, "%d%%", attendancePercentage));
     }
 
     private void vibrateOnTouch(boolean vibrate) {
