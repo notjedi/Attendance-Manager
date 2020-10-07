@@ -177,10 +177,11 @@ public class HomeFragment extends Fragment {
 
         mTodaySubjectList = new ArrayList<>();
 
-        /* having this set causes a weird bug while marking attendance */
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
+            updateMainProgressBar(subjects);
+            if (EditSubjectActivity.CHANGED != 1)
+                return;
             List<Subject> subjectList = new ArrayList<>();
-            mTodaySubjectList.clear();
             for (SubjectMinimal subjectMinimal : dayViewModel.getSubjectList(day)) {
                 for (Subject subject : subjects) {
                     if (subject.getSubjectName().equals(subjectMinimal.getSubjectName())) {
@@ -190,9 +191,8 @@ public class HomeFragment extends Fragment {
                     }
                 }
             }
-            mTodaySubjectList.addAll(subjectList);
             homeFragmentListAdapter.submitList(subjectList);
-            updateMainProgressBar(subjects);
+            EditSubjectActivity.setChanged();
         });
 
         dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {

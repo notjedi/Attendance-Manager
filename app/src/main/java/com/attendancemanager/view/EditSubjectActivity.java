@@ -32,15 +32,18 @@ import java.util.List;
 public class EditSubjectActivity extends AppCompatActivity {
 
     private static final String TAG = "EditSubjectActivity";
-
+    public static int CHANGED = 0;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private ExtendedFloatingActionButton extendedFab;
-
     private SubjectViewModel subjectViewModel;
     private EditSubjectActivityAdapter editSubjectAdapter;
     private List<Subject> subjectList;
     private Subject deletedSubject;
+
+    public static void setChanged() {
+        CHANGED = 0;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,8 +198,11 @@ public class EditSubjectActivity extends AppCompatActivity {
                 Subject updatedSubject = new Subject(subjectName, attendClass, totalClass);
                 updatedSubject.setId(subject.getId());
                 updateSubject(updatedSubject);
-            } else
+                CHANGED = 1;
+            } else {
                 insertSubject(subjectName, attendClass, totalClass);
+                CHANGED = 1;
+            }
 
             dialog.dismiss();
         });
