@@ -206,6 +206,11 @@ public class HomeFragment extends Fragment {
                     subject.decrementTotalClasses();
                     subject.decrementAttendedClasses();
                     subjectMinimal.setStatus(DayViewModel.NONE);
+                } else if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
+                    subject.decrementTotalClasses();
+                    subject.incrementTotalClasses();
+                    subject.incrementAttendedClasses();
+                    subjectMinimal.setStatus(DayViewModel.ATTENDED);
                 } else {
                     subject.incrementTotalClasses();
                     subject.incrementAttendedClasses();
@@ -226,6 +231,11 @@ public class HomeFragment extends Fragment {
                 if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
                     subject.decrementTotalClasses();
                     subjectMinimal.setStatus(DayViewModel.NONE);
+                } else if (subjectMinimal.getStatus() == DayViewModel.ATTENDED) {
+                    subject.decrementTotalClasses();
+                    subject.decrementAttendedClasses();
+                    subject.incrementTotalClasses();
+                    subjectMinimal.setStatus(DayViewModel.BUNKED);
                 } else {
                     subject.incrementTotalClasses();
                     subjectMinimal.setStatus(DayViewModel.BUNKED);
@@ -242,11 +252,15 @@ public class HomeFragment extends Fragment {
             public void onCancelledButtonClick(int position) {
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
                 SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
-                if (subjectMinimal.getStatus() == DayViewModel.CANCELLED) {
-                    subjectMinimal.setStatus(DayViewModel.NONE);
-                } else {
+                if (subjectMinimal.getStatus() == DayViewModel.ATTENDED) {
+                    subject.decrementAttendedClasses();
+                    subject.decrementTotalClasses();
                     subjectMinimal.setStatus(DayViewModel.CANCELLED);
-                }
+                } else if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
+                    subject.decrementTotalClasses();
+                    subjectMinimal.setStatus(DayViewModel.CANCELLED);
+                } else
+                    subjectMinimal.setStatus(DayViewModel.NONE);
                 vibrateOnTouch(vibrate);
                 subjectMinimal.setDay(day);
                 subjectViewModel.update(subject);
