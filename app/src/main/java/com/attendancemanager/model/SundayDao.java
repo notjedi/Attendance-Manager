@@ -24,6 +24,9 @@ public interface SundayDao {
     @Query("DELETE FROM sunday_table")
     void deleteAllSubjects();
 
+    @Query("UPDATE sunday_table SET status = -1")
+    void resetStatus();
+
     @Query("SELECT * FROM sunday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();
 

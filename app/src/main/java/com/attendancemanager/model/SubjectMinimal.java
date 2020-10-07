@@ -10,6 +10,8 @@ public class SubjectMinimal {
     protected int id;
     @Expose
     protected String subjectName;
+    @Expose
+    protected int status;
     @Ignore
     protected String day;
 
@@ -45,5 +47,13 @@ public class SubjectMinimal {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

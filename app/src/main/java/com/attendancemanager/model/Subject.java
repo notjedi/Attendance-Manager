@@ -20,7 +20,7 @@ public class Subject {
     private int totalClasses;
     @Expose
     private int attendedClasses;
-    @Expose
+    @Ignore
     private int status;
 
     public Subject(String subjectName, int attendedClasses, int totalClasses) {

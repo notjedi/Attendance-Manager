@@ -53,6 +53,10 @@ public class DayViewModel extends AndroidViewModel {
         dayRepository.delete(subjectMinimal);
     }
 
+    public void resetStatus(String day) {
+        dayRepository.resetStatus(day);
+    }
+
     public void deleteAllSubjects() {
         dayRepository.deleteAllSubjects();
     }

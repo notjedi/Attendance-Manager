@@ -2,6 +2,7 @@ package com.attendancemanager.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
             return oldItem.getSubjectName().equals(newItem.getSubjectName()) &&
                     oldItem.getAttendedClasses() == newItem.getAttendedClasses() &&
-                    oldItem.getTotalClasses() == newItem.getTotalClasses();
+                    oldItem.getTotalClasses() == newItem.getTotalClasses() &&
+                    oldItem.getStatus() == newItem.getStatus();
         }
     };
     private OnItemClickListener mItemClickListener;

@@ -165,6 +165,7 @@ public class TimeTableFragment extends Fragment {
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             SubjectMinimal subject = new SubjectMinimal(mAllSubjectList.get(position).getSubjectName(),
                     pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
+            subject.setStatus(DayViewModel.NONE);
             dayViewModel.insert(subject);
         });
 
@@ -238,7 +239,6 @@ public class TimeTableFragment extends Fragment {
                     int position = viewHolder.getAdapterPosition();
                     SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(getArgDayName).get(position);
                     subjectMinimal.setDay(getArgDayName);
-                    Log.i("TAG", "onSwiped: " + position);
                     dayViewModel.delete(subjectMinimal);
                 }
             }).attachToRecyclerView(timeTableRecyclerView);
