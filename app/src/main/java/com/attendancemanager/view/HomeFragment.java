@@ -177,6 +177,7 @@ public class HomeFragment extends Fragment {
 
         mTodaySubjectList = new ArrayList<>();
 
+        /* having this set causes a weird bug while marking attendance */
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             List<Subject> subjectList = new ArrayList<>();
             mTodaySubjectList.clear();
@@ -191,7 +192,7 @@ public class HomeFragment extends Fragment {
             }
             mTodaySubjectList.addAll(subjectList);
             homeFragmentListAdapter.submitList(subjectList);
-            updateMainProgressBar(subjectList);
+            updateMainProgressBar(subjects);
         });
 
         dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
@@ -205,7 +206,6 @@ public class HomeFragment extends Fragment {
             }
             /* https://stackoverflow.com/a/50031492 */
             homeFragmentListAdapter.submitList(new ArrayList<>(mTodaySubjectList));
-            updateMainProgressBar(mTodaySubjectList);
         });
     }
 
@@ -277,7 +277,9 @@ public class HomeFragment extends Fragment {
                 } else if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
                     subject.decrementTotalClasses();
                     subjectMinimal.setStatus(DayViewModel.CANCELLED);
-                } else
+                } else if (subjectMinimal.getStatus() == DayViewModel.NONE)
+                    subjectMinimal.setStatus(DayViewModel.CANCELLED);
+                else
                     subjectMinimal.setStatus(DayViewModel.NONE);
                 vibrateOnTouch(vibrate);
                 subjectMinimal.setDay(day);
