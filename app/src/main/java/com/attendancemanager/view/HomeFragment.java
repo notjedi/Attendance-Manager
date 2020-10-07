@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
@@ -182,6 +182,19 @@ public class HomeFragment extends Fragment {
             /* https://stackoverflow.com/a/50031492 */
             homeFragmentListAdapter.submitList(subjectList);
         });
+
+//        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
+//            mTodaySubjectList.clear();
+//            for (Subject oldSubject: homeFragmentListAdapter.getCurrentList()) {
+//                for (Subject newSubject: subjects) {
+//                    if (newSubject.getSubjectName().equals(oldSubject.getSubjectName())) {
+//                        mTodaySubjectList.add(newSubject);
+//                        break;
+//                    }
+//                }
+//            }
+//            homeFragmentListAdapter.submitList(new ArrayList<>(mTodaySubjectList));
+//        });
     }
 
     private void buildRecyclerView() {
@@ -192,12 +205,14 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onAttendButtonClick(int position) {
-                /* For some reason updating the same same subject */
+                /* For some reason notifyItemChanged is not working as expected, it resets the button alpha on first click */
                 vibrateOnTouch(vibrate);
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
                 subject.incrementAttendedClasses();
                 subject.incrementTotalClasses();
                 subjectViewModel.update(subject);
+                Log.i(TAG, "onAttendButtonClick: ");
+                HomeFragmentListAdapter.setDataChangedUpdate(true);
                 homeFragmentListAdapter.notifyItemChanged(position);
             }
 
@@ -220,7 +235,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
         /* disable flash animation while notifyItemChanged() is called
         https://stackoverflow.com/a/36571561 */
-        mRecyclerView.getItemAnimator().setChangeDuration(0);
+//        mRecyclerView.getItemAnimator().setChangeDuration(0);
         // the below one works too
         //  ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 

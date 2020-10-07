@@ -38,13 +38,20 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
                     oldItem.getTotalClasses() == newItem.getTotalClasses();
         }
     };
-
+    public static int DATA_CHANGED_UPDATE = 0;
     private OnItemClickListener mItemClickListener;
     private Context mContext;
 
     public HomeFragmentListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
         this.mContext = mContext;
+    }
+
+    public static void setDataChangedUpdate(boolean state) {
+        if (state)
+            DATA_CHANGED_UPDATE = 1;
+        else
+            DATA_CHANGED_UPDATE = 0;
     }
 
     public void setItemClickListener(OnItemClickListener mItemClickListener) {
@@ -71,6 +78,14 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
                 (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
+        if (DATA_CHANGED_UPDATE == 1) {
+            Log.i(TAG, "onBindViewHolder: ");
+            holder.mAttended.setAlpha(1.0f);
+            holder.mBunked.setAlpha(0.4f);
+            holder.mCancelled.setAlpha(0.4f);
+            setDataChangedUpdate(false);
+        }
+
         holder.mSubjectName.setText(subject.getSubjectName());
         holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template),
                 subject.getAttendedClasses(), subject.getTotalClasses()));
@@ -96,8 +111,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         private static final float bunkedAlpha = 0.3f;
         private static final float cancelledAlpha = 0.5f;
         private static final float visibleAlpha = 1.0f;
-        private TextView mSubjectName;
         public TextView mTotalClassesAttended;
+        private TextView mSubjectName;
         private TextView mStatusInfo;
         private TextView mAttendanceStatus;
         private ProgressBar mSubjectAttendanceProgressBar;
@@ -122,22 +137,19 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             mCancelled = itemView.findViewById(R.id.cancelled_button);
 
             mAttended.setOnClickListener(view -> {
-                mAttended.setAlpha(visibleAlpha);
-                mBunked.setAlpha(bunkedAlpha);
-                mCancelled.setAlpha(cancelledAlpha);
                 itemClickListener.onAttendButtonClick(getAdapterPosition());
             });
             mBunked.setOnClickListener(view -> {
+                itemClickListener.onBunkButtonClick(getAdapterPosition());
                 mAttended.setAlpha(attendedAlpha);
                 mBunked.setAlpha(visibleAlpha);
                 mCancelled.setAlpha(cancelledAlpha);
-                itemClickListener.onBunkButtonClick(getAdapterPosition());
             });
             mCancelled.setOnClickListener(view -> {
+                itemClickListener.onCancelledButtonClick(getAdapterPosition());
                 mAttended.setAlpha(attendedAlpha);
                 mBunked.setAlpha(bunkedAlpha);
                 mCancelled.setAlpha(visibleAlpha);
-                itemClickListener.onCancelledButtonClick(getAdapterPosition());
             });
         }
 
