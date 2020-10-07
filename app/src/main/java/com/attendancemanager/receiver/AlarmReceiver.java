@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

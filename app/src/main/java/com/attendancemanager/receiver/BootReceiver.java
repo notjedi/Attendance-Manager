@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.receiver;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
