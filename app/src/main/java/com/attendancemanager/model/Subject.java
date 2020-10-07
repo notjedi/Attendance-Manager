@@ -20,6 +20,8 @@ public class Subject {
     private int totalClasses;
     @Expose
     private int attendedClasses;
+    @Expose
+    private int status;
 
     public Subject(String subjectName, int attendedClasses, int totalClasses) {
         this.subjectName = subjectName;
@@ -80,6 +82,14 @@ public class Subject {
     public void decrementAttendedClasses() {
         this.attendedClasses--;
         this.attendedClasses = this.attendedClasses == -1 ? 0 : this.attendedClasses;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @NonNull

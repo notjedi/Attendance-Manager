@@ -13,6 +13,11 @@ import java.util.List;
 
 public class DayViewModel extends AndroidViewModel {
 
+    public static final int NONE = -1;
+    public static final int CANCELLED = 0;
+    public static final int BUNKED = 1;
+    public static final int ATTENDED = 2;
+
     private DayRepository dayRepository;
     private LiveData<List<SubjectMinimal>> mondayList;
     private LiveData<List<SubjectMinimal>> tuesdayList;

@@ -9,7 +9,6 @@ public class Sunday {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String subjectName;
-    private int status;
 
     public Sunday(String subjectName) {
         this.subjectName = subjectName;
