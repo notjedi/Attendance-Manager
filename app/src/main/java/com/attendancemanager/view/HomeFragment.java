@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,19 +176,34 @@ public class HomeFragment extends Fragment {
         /* Gets all the subjects for the current day for corresponding table */
 
         mTodaySubjectList = new ArrayList<>();
-        dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
+
+        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             List<Subject> subjectList = new ArrayList<>();
+            mTodaySubjectList.clear();
+            for (SubjectMinimal subjectMinimal: dayViewModel.getSubjectList(day)) {
+                for (Subject subject: subjects) {
+                    if (subject.getSubjectName().equals(subjectMinimal.getSubjectName())) {
+                        subject.setStatus(subjectMinimal.getStatus());
+                        subjectList.add(subject);
+                        break;
+                    }
+                }
+            }
+            mTodaySubjectList.addAll(subjectList);
+            homeFragmentListAdapter.submitList(subjectList);
+        });
+
+        dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
             mTodaySubjectList.clear();
             for (SubjectMinimal subjectMinimal : subjectMinimalList) {
                 Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                 if (subject != null) {
                     subject.setStatus(subjectMinimal.getStatus());
-                    subjectList.add(subject);
                     mTodaySubjectList.add(subject);
                 }
             }
             /* https://stackoverflow.com/a/50031492 */
-            homeFragmentListAdapter.submitList(subjectList);
+            homeFragmentListAdapter.submitList(new ArrayList<>(mTodaySubjectList));
         });
     }
 
