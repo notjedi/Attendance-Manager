@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,10 +56,12 @@ public class HomeFragment extends Fragment {
     private ExpandableBottomBar bottomNavBar;
 
     private String day;
+    private String todayDate;
     private boolean vibrate;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
     private SharedPreferences defaultPrefs;
+    private SharedPreferences sharedPrefs;
     private List<Subject> mAllSubjectList;
     private List<Subject> mTodaySubjectList;
     private BottomSheetAdapter mBottomSheetAdapter;
@@ -79,6 +80,7 @@ public class HomeFragment extends Fragment {
         mBottomSheetAdapter = new BottomSheetAdapter();
         mAllSubjectList = new ArrayList<>();
         defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
     }
@@ -114,6 +116,8 @@ public class HomeFragment extends Fragment {
 
         setDayAndDate();
         setProgressBar();
+        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
+            subjectViewModel.resetStatus();
         getTodayTimeTable();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
@@ -155,6 +159,8 @@ public class HomeFragment extends Fragment {
         mDay.setText(simpleDateFormat.format(calendar.getTime()));
         String name = defaultPrefs.getString(SettingsFragment.NAME, null);
         mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
+        simpleDateFormat.applyPattern("dMM");
+        todayDate = simpleDateFormat.format(calendar.getTime());
         vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
     }
 
@@ -206,6 +212,7 @@ public class HomeFragment extends Fragment {
                 vibrateOnTouch(vibrate);
                 subjectViewModel.update(subject);
                 homeFragmentListAdapter.notifyItemChanged(position);
+                setLastUpdated();
             }
 
             @Override
@@ -221,13 +228,21 @@ public class HomeFragment extends Fragment {
                 vibrateOnTouch(vibrate);
                 subjectViewModel.update(subject);
                 homeFragmentListAdapter.notifyItemChanged(position);
+                setLastUpdated();
             }
 
             @Override
             public void onCancelledButtonClick(int position) {
+                Subject subject = homeFragmentListAdapter.getSubjectAt(position);
+                if (subject.getStatus() == DayViewModel.CANCELLED) {
+                    subject.setStatus(DayViewModel.NONE);
+                } else {
+                    subject.setStatus(DayViewModel.CANCELLED);
+                }
                 vibrateOnTouch(vibrate);
-                // subject.setStatus(DayViewModel.CANCELLED);
-
+                subjectViewModel.update(subject);
+                homeFragmentListAdapter.notifyItemChanged(position);
+                setLastUpdated();
             }
         });
         mRecyclerView.setAdapter(homeFragmentListAdapter);
@@ -235,7 +250,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
         /* disable flash animation while notifyItemChanged() is called
         https://stackoverflow.com/a/36571561 */
-//        mRecyclerView.getItemAnimator().setChangeDuration(0);
+        mRecyclerView.getItemAnimator().setChangeDuration(0);
         // the below one works too
         //  ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
@@ -326,6 +341,12 @@ public class HomeFragment extends Fragment {
                 vibrator.vibrate(70);
             }
         }
+    }
+
+    private void setLastUpdated() {
+        SharedPreferences.Editor shEditor = sharedPrefs.edit();
+        shEditor.putString(MainActivity.SHARED_PREFS_LAST_UPDATED, todayDate);
+        shEditor.apply();
     }
 
     @Override

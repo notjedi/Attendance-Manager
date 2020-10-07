@@ -47,6 +47,10 @@ public class SubjectRepository {
         new Thread(new UpdateSubjectRunnable(subjectDao, subject)).start();
     }
 
+    public void resetStatus() {
+        subjectDao.resetStatus();
+    }
+
     public boolean containsSubject(String subjectName) {
         /* Executing method in background and using
         Callable<Subject> instead of Runnable to get a return value */
