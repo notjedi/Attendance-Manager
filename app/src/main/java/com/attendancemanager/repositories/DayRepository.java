@@ -1,6 +1,7 @@
 package com.attendancemanager.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +31,8 @@ public class DayRepository {
     public static final int INSERT = 0;
     public static final int UPDATE = 1;
     public static final int DELETE = 2;
-    public static final int DELETE_ALL_SUBJECTS = 3;
+    public static final int RESET_STATUS = 3;
+    public static final int DELETE_ALL_SUBJECTS = 4;
 
     private static DayRepository instance;
 
@@ -72,6 +74,11 @@ public class DayRepository {
 
     public void delete(SubjectMinimal subjectMinimal) {
         runOperation(subjectMinimal, DELETE);
+    }
+
+    public void resetStatus(String day) {
+        SubjectMinimal subjectMinimal = new SubjectMinimal("null", day);
+        runOperation(subjectMinimal, RESET_STATUS);
     }
 
     public void deleteAllSubjects() {
@@ -187,17 +194,20 @@ public class DayRepository {
             Monday monday;
             switch (operation) {
                 case INSERT:
-                    mondayDao.insert(new Monday(subjectMinimal.getSubjectName()));
+                    mondayDao.insert(new Monday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
                     break;
                 case UPDATE:
-                    monday = new Monday(subjectMinimal.getSubjectName());
+                    monday = new Monday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     monday.setId(subjectMinimal.getId());
                     mondayDao.update(monday);
                     break;
                 case DELETE:
-                    monday = new Monday(subjectMinimal.getSubjectName());
+                    monday = new Monday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     monday.setId(subjectMinimal.getId());
                     mondayDao.delete(monday);
+                    break;
+                case RESET_STATUS:
+                    mondayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     mondayDao.deleteAllSubjects();
@@ -225,17 +235,20 @@ public class DayRepository {
             Tuesday tuesday;
             switch (operation) {
                 case INSERT:
-                    tuesdayDao.insert(new Tuesday(subjectMinimal.getSubjectName()));
+                    tuesdayDao.insert(new Tuesday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
                     break;
                 case UPDATE:
-                    tuesday = new Tuesday(subjectMinimal.getSubjectName());
+                    tuesday = new Tuesday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     tuesday.setId(subjectMinimal.getId());
                     tuesdayDao.update(tuesday);
                     break;
                 case DELETE:
-                    tuesday = new Tuesday(subjectMinimal.getSubjectName());
+                    tuesday = new Tuesday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     tuesday.setId(subjectMinimal.getId());
                     tuesdayDao.delete(tuesday);
+                    break;
+                case RESET_STATUS:
+                    tuesdayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     tuesdayDao.deleteAllSubjects();
@@ -260,14 +273,23 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Wednesday wednesday;
             switch (operation) {
                 case INSERT:
-                    wednesdayDao.insert(new Wednesday(subjectMinimal.getSubjectName()));
+                    wednesdayDao.insert(new Wednesday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
+                    break;
+                case UPDATE:
+                    wednesday = new Wednesday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
+                    wednesday.setId(subjectMinimal.getId());
+                    wednesdayDao.update(wednesday);
                     break;
                 case DELETE:
-                    Wednesday wednesday = new Wednesday(subjectMinimal.getSubjectName());
+                    wednesday = new Wednesday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     wednesday.setId(subjectMinimal.getId());
                     wednesdayDao.delete(wednesday);
+                    break;
+                case RESET_STATUS:
+                    wednesdayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     wednesdayDao.deleteAllSubjects();
@@ -292,14 +314,23 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Thursday thursday;
             switch (operation) {
                 case INSERT:
-                    thursdayDao.insert(new Thursday(subjectMinimal.getSubjectName()));
+                    thursdayDao.insert(new Thursday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
+                    break;
+                case UPDATE:
+                    thursday = new Thursday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
+                    thursday.setId(subjectMinimal.getId());
+                    thursdayDao.update(thursday);
                     break;
                 case DELETE:
-                    Thursday thursday = new Thursday(subjectMinimal.getSubjectName());
+                    thursday = new Thursday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     thursday.setId(subjectMinimal.getId());
                     thursdayDao.delete(thursday);
+                    break;
+                case RESET_STATUS:
+                    thursdayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     thursdayDao.deleteAllSubjects();
@@ -324,14 +355,23 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Friday friday;
             switch (operation) {
                 case INSERT:
-                    fridayDao.insert(new Friday(subjectMinimal.getSubjectName()));
+                    fridayDao.insert(new Friday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
+                    break;
+                case UPDATE:
+                    friday = new Friday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
+                    friday.setId(subjectMinimal.getId());
+                    fridayDao.update(friday);
                     break;
                 case DELETE:
-                    Friday friday = new Friday(subjectMinimal.getSubjectName());
+                    friday = new Friday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     friday.setId(subjectMinimal.getId());
                     fridayDao.delete(friday);
+                    break;
+                case RESET_STATUS:
+                    fridayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     fridayDao.deleteAllSubjects();
@@ -356,14 +396,23 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Saturday saturday;
             switch (operation) {
                 case INSERT:
-                    saturdayDao.insert(new Saturday(subjectMinimal.getSubjectName()));
+                    saturdayDao.insert(new Saturday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
+                    break;
+                case UPDATE:
+                    saturday = new Saturday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
+                    saturday.setId(subjectMinimal.getId());
+                    saturdayDao.update(saturday);
                     break;
                 case DELETE:
-                    Saturday saturday = new Saturday(subjectMinimal.getSubjectName());
+                    saturday = new Saturday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     saturday.setId(subjectMinimal.getId());
                     saturdayDao.delete(saturday);
+                    break;
+                case RESET_STATUS:
+                    saturdayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     saturdayDao.deleteAllSubjects();
@@ -388,14 +437,23 @@ public class DayRepository {
 
         @Override
         public void run() {
+            Sunday sunday;
             switch (operation) {
                 case INSERT:
-                    sundayDao.insert(new Sunday(subjectMinimal.getSubjectName()));
+                    sundayDao.insert(new Sunday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus()));
+                    break;
+                case UPDATE:
+                    sunday = new Sunday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
+                    sunday.setId(subjectMinimal.getId());
+                    sundayDao.update(sunday);
                     break;
                 case DELETE:
-                    Sunday sunday = new Sunday(subjectMinimal.getSubjectName());
+                    sunday = new Sunday(subjectMinimal.getSubjectName(), subjectMinimal.getStatus());
                     sunday.setId(subjectMinimal.getId());
                     sundayDao.delete(sunday);
+                    break;
+                case RESET_STATUS:
+                    sundayDao.resetStatus();
                     break;
                 case DELETE_ALL_SUBJECTS:
                     sundayDao.deleteAllSubjects();

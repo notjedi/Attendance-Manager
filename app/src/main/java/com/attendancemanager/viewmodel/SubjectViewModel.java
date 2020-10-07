@@ -35,10 +35,6 @@ public class SubjectViewModel extends AndroidViewModel {
         subjectRepository.updateSubject(subject);
     }
 
-    public void resetStatus() {
-        subjectRepository.resetStatus();
-    }
-
     public boolean containsSubject(String subjectName) {
         return subjectRepository.containsSubject(subjectName);
     }

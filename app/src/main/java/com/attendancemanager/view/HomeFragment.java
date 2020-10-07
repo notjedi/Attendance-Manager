@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,7 +118,7 @@ public class HomeFragment extends Fragment {
         setDayAndDate();
         setProgressBar();
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
-            subjectViewModel.resetStatus();
+            dayViewModel.resetStatus(day);
         getTodayTimeTable();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
@@ -181,6 +182,7 @@ public class HomeFragment extends Fragment {
             for (SubjectMinimal subjectMinimal : subjectMinimalList) {
                 Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                 if (subject != null) {
+                    subject.setStatus(subjectMinimal.getStatus());
                     subjectList.add(subject);
                     mTodaySubjectList.add(subject);
                 }
@@ -200,17 +202,20 @@ public class HomeFragment extends Fragment {
             public void onAttendButtonClick(int position) {
                 /* For some reason notifyItemChanged is not working as expected, it resets the button alpha on first click */
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                if (subject.getStatus() == DayViewModel.ATTENDED) {
+                SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
+                if (subjectMinimal.getStatus() == DayViewModel.ATTENDED) {
                     subject.decrementTotalClasses();
                     subject.decrementAttendedClasses();
-                    subject.setStatus(DayViewModel.NONE);
+                    subjectMinimal.setStatus(DayViewModel.NONE);
                 } else {
                     subject.incrementTotalClasses();
                     subject.incrementAttendedClasses();
-                    subject.setStatus(DayViewModel.ATTENDED);
+                    subjectMinimal.setStatus(DayViewModel.ATTENDED);
                 }
                 vibrateOnTouch(vibrate);
+                subjectMinimal.setDay(day);
                 subjectViewModel.update(subject);
+                dayViewModel.update(subjectMinimal);
                 homeFragmentListAdapter.notifyItemChanged(position);
                 setLastUpdated();
             }
@@ -218,15 +223,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onBunkButtonClick(int position) {
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                if (subject.getStatus() == DayViewModel.BUNKED) {
+                SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
+                if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
                     subject.decrementTotalClasses();
-                    subject.setStatus(DayViewModel.NONE);
+                    subjectMinimal.setStatus(DayViewModel.NONE);
                 } else {
                     subject.incrementTotalClasses();
-                    subject.setStatus(DayViewModel.BUNKED);
+                    subjectMinimal.setStatus(DayViewModel.BUNKED);
                 }
                 vibrateOnTouch(vibrate);
+                subjectMinimal.setDay(day);
                 subjectViewModel.update(subject);
+                dayViewModel.update(subjectMinimal);
                 homeFragmentListAdapter.notifyItemChanged(position);
                 setLastUpdated();
             }
@@ -234,13 +242,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelledButtonClick(int position) {
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                if (subject.getStatus() == DayViewModel.CANCELLED) {
-                    subject.setStatus(DayViewModel.NONE);
+                SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
+                if (subjectMinimal.getStatus() == DayViewModel.CANCELLED) {
+                    subjectMinimal.setStatus(DayViewModel.NONE);
                 } else {
-                    subject.setStatus(DayViewModel.CANCELLED);
+                    subjectMinimal.setStatus(DayViewModel.CANCELLED);
                 }
                 vibrateOnTouch(vibrate);
+                subjectMinimal.setDay(day);
                 subjectViewModel.update(subject);
+                dayViewModel.update(subjectMinimal);
                 homeFragmentListAdapter.notifyItemChanged(position);
                 setLastUpdated();
             }

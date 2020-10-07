@@ -9,9 +9,11 @@ public class Friday {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String subjectName;
+    private int status;
 
-    public Friday(String subjectName) {
+    public Friday(String subjectName, int status) {
         this.subjectName = subjectName;
+        this.status = status;
     }
 
     public int getId() {
@@ -28,5 +30,13 @@ public class Friday {
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
