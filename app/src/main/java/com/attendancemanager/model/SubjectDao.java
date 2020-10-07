@@ -30,6 +30,9 @@ public interface SubjectDao {
     @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
     Subject getSubject(String subjectName);
 
+    @Query("UPDATE subject_details_table SET status = -1")
+    void resetStatus();
+
     @Query("SELECT * FROM subject_details_table")
     LiveData<List<Subject>> getAllSubjects();
 }
