@@ -1,4 +1,4 @@
-package com.attendancemanager;
+package com.attendancemanager.receiver;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,6 +10,8 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+
+import com.attendancemanager.R;
 
 public class NotificationHelper extends ContextWrapper {
 

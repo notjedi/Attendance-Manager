@@ -38,9 +38,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".receiver.AlarmReceiver" />
         <receiver
-            android:name=".BootReceiver"
+            android:name=".receiver.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
