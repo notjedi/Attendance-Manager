@@ -182,19 +182,6 @@ public class HomeFragment extends Fragment {
             /* https://stackoverflow.com/a/50031492 */
             homeFragmentListAdapter.submitList(subjectList);
         });
-
-//        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
-//            mTodaySubjectList.clear();
-//            for (Subject oldSubject: homeFragmentListAdapter.getCurrentList()) {
-//                for (Subject newSubject: subjects) {
-//                    if (newSubject.getSubjectName().equals(oldSubject.getSubjectName())) {
-//                        mTodaySubjectList.add(newSubject);
-//                        break;
-//                    }
-//                }
-//            }
-//            homeFragmentListAdapter.submitList(new ArrayList<>(mTodaySubjectList));
-//        });
     }
 
     private void buildRecyclerView() {
@@ -206,21 +193,32 @@ public class HomeFragment extends Fragment {
             @Override
             public void onAttendButtonClick(int position) {
                 /* For some reason notifyItemChanged is not working as expected, it resets the button alpha on first click */
-                vibrateOnTouch(vibrate);
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                subject.incrementAttendedClasses();
-                subject.incrementTotalClasses();
+                if (subject.getStatus() == DayViewModel.ATTENDED) {
+                    subject.decrementTotalClasses();
+                    subject.decrementAttendedClasses();
+                    subject.setStatus(DayViewModel.NONE);
+                } else {
+                    subject.incrementTotalClasses();
+                    subject.incrementAttendedClasses();
+                    subject.setStatus(DayViewModel.ATTENDED);
+                }
+                vibrateOnTouch(vibrate);
                 subjectViewModel.update(subject);
-                Log.i(TAG, "onAttendButtonClick: ");
-                HomeFragmentListAdapter.setDataChangedUpdate(true);
                 homeFragmentListAdapter.notifyItemChanged(position);
             }
 
             @Override
             public void onBunkButtonClick(int position) {
-                vibrateOnTouch(vibrate);
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                subject.incrementTotalClasses();
+                if (subject.getStatus() == DayViewModel.BUNKED) {
+                    subject.decrementTotalClasses();
+                    subject.setStatus(DayViewModel.NONE);
+                } else {
+                    subject.incrementTotalClasses();
+                    subject.setStatus(DayViewModel.BUNKED);
+                }
+                vibrateOnTouch(vibrate);
                 subjectViewModel.update(subject);
                 homeFragmentListAdapter.notifyItemChanged(position);
             }
@@ -228,6 +226,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelledButtonClick(int position) {
                 vibrateOnTouch(vibrate);
+                // subject.setStatus(DayViewModel.CANCELLED);
+
             }
         });
         mRecyclerView.setAdapter(homeFragmentListAdapter);

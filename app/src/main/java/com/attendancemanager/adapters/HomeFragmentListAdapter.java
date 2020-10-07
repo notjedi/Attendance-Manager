@@ -2,7 +2,6 @@ package com.attendancemanager.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.viewmodel.DayViewModel;
 
 import java.util.Locale;
 
 public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentListAdapter.SubjectListViewHolder> {
 
+    private static final float VISIBLE_ALPHA = 1.0f;
+    private static final float ATTENDED_ALPHA = 0.4f;
+    private static final float BUNKED_ALPHA = 0.3f;
+    private static final float CANCELLED_ALPHA = 0.5f;
     private static final String TAG = "SubjectListAdapter";
     private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
         /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
@@ -38,20 +42,12 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
                     oldItem.getTotalClasses() == newItem.getTotalClasses();
         }
     };
-    public static int DATA_CHANGED_UPDATE = 0;
     private OnItemClickListener mItemClickListener;
     private Context mContext;
 
     public HomeFragmentListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
         this.mContext = mContext;
-    }
-
-    public static void setDataChangedUpdate(boolean state) {
-        if (state)
-            DATA_CHANGED_UPDATE = 1;
-        else
-            DATA_CHANGED_UPDATE = 0;
     }
 
     public void setItemClickListener(OnItemClickListener mItemClickListener) {
@@ -78,19 +74,32 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
                 (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
-        if (DATA_CHANGED_UPDATE == 1) {
-            Log.i(TAG, "onBindViewHolder: ");
-            holder.mAttended.setAlpha(1.0f);
-            holder.mBunked.setAlpha(0.4f);
-            holder.mCancelled.setAlpha(0.4f);
-            setDataChangedUpdate(false);
-        }
-
         holder.mSubjectName.setText(subject.getSubjectName());
         holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template),
                 subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
+
+        switch (subject.getStatus()) {
+            case DayViewModel.NONE:
+                setAlpha(holder, VISIBLE_ALPHA, VISIBLE_ALPHA, VISIBLE_ALPHA);
+                break;
+            case DayViewModel.CANCELLED:
+                setAlpha(holder, ATTENDED_ALPHA, BUNKED_ALPHA, VISIBLE_ALPHA);
+                break;
+            case DayViewModel.BUNKED:
+                setAlpha(holder, ATTENDED_ALPHA, VISIBLE_ALPHA, CANCELLED_ALPHA);
+                break;
+            case DayViewModel.ATTENDED:
+                setAlpha(holder, VISIBLE_ALPHA, BUNKED_ALPHA, CANCELLED_ALPHA);
+                break;
+        }
+    }
+
+    private void setAlpha(SubjectListViewHolder holder, float attendedAlpha, float bunkedAlpha, float cancelledAlpha) {
+        holder.mAttended.setAlpha(attendedAlpha);
+        holder.mBunked.setAlpha(bunkedAlpha);
+        holder.mCancelled.setAlpha(cancelledAlpha);
     }
 
     public Subject getSubjectAt(int position) {
@@ -107,10 +116,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 
     public static class SubjectListViewHolder extends RecyclerView.ViewHolder {
 
-        private static final float attendedAlpha = 0.4f;
-        private static final float bunkedAlpha = 0.3f;
-        private static final float cancelledAlpha = 0.5f;
-        private static final float visibleAlpha = 1.0f;
         public TextView mTotalClassesAttended;
         private TextView mSubjectName;
         private TextView mStatusInfo;
@@ -136,21 +141,9 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             mBunked = itemView.findViewById(R.id.bunked_button);
             mCancelled = itemView.findViewById(R.id.cancelled_button);
 
-            mAttended.setOnClickListener(view -> {
-                itemClickListener.onAttendButtonClick(getAdapterPosition());
-            });
-            mBunked.setOnClickListener(view -> {
-                itemClickListener.onBunkButtonClick(getAdapterPosition());
-                mAttended.setAlpha(attendedAlpha);
-                mBunked.setAlpha(visibleAlpha);
-                mCancelled.setAlpha(cancelledAlpha);
-            });
-            mCancelled.setOnClickListener(view -> {
-                itemClickListener.onCancelledButtonClick(getAdapterPosition());
-                mAttended.setAlpha(attendedAlpha);
-                mBunked.setAlpha(bunkedAlpha);
-                mCancelled.setAlpha(visibleAlpha);
-            });
+            mAttended.setOnClickListener(view -> itemClickListener.onAttendButtonClick(getAdapterPosition()));
+            mBunked.setOnClickListener(view -> itemClickListener.onBunkButtonClick(getAdapterPosition()));
+            mCancelled.setOnClickListener(view -> itemClickListener.onCancelledButtonClick(getAdapterPosition()));
         }
 
     }
