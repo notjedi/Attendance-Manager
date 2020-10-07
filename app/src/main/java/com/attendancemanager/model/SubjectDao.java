@@ -25,9 +25,6 @@ public interface SubjectDao {
     void deleteAllSubjects();
 
     @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
-    Subject containsSubject(String subjectName);
-
-    @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
     Subject getSubject(String subjectName);
 
     @Query("SELECT * FROM subject_details_table")
