@@ -55,6 +55,10 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
         this.mListener = mListener;
     }
 
+    public Subject getSubjectAt(int position) {
+        return getItem(position);
+    }
+
     public interface OnAddButtonClickListener {
         void addButton(int position);
     }
