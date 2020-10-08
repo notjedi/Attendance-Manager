@@ -48,7 +48,6 @@ public class TimeTableFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private RecyclerView mBottomSheetRecyclerView;
     private LinearLayout mBottomSheetLayout;
-    private List<Subject> mAllSubjectList;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
     private TimeTableViewPagerAdapter pagerAdapter;
@@ -65,7 +64,6 @@ public class TimeTableFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mBottomSheetAdapter = new BottomSheetAdapter();
-        mAllSubjectList = new ArrayList<>();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
     }
@@ -91,8 +89,6 @@ public class TimeTableFragment extends Fragment {
 
 
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
-            mAllSubjectList.clear();
-            mAllSubjectList.addAll(subjects);
             mBottomSheetAdapter.submitList(subjects);
         });
 
@@ -162,7 +158,7 @@ public class TimeTableFragment extends Fragment {
         });
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
-            SubjectMinimal subject = new SubjectMinimal(mAllSubjectList.get(position).getSubjectName(),
+            SubjectMinimal subject = new SubjectMinimal(mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
                     pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
             subject.setStatus(DayViewModel.NONE);
             dayViewModel.insert(subject);

@@ -38,7 +38,6 @@ public class EditSubjectActivity extends AppCompatActivity {
     private ExtendedFloatingActionButton extendedFab;
     private SubjectViewModel subjectViewModel;
     private EditSubjectActivityAdapter editSubjectAdapter;
-    private List<Subject> subjectList;
     private Subject deletedSubject;
 
     public static void setChanged() {
@@ -50,11 +49,9 @@ public class EditSubjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_subject);
 
-        subjectList = new ArrayList<>();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         subjectViewModel.getAllSubjects().observe(this, subjects -> {
             editSubjectAdapter.submitList(subjects);
-            subjectList = subjects;
         });
 
         initialSetup();
@@ -298,7 +295,7 @@ public class EditSubjectActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (subjectList.contains(new Subject(s.toString().trim())) && subject == null) {
+                if (editSubjectAdapter.getCurrentList().contains(new Subject(s.toString().trim())) && subject == null) {
                     /* Throwing this error only if the user is adding a new subject */
                     positiveButton.setEnabled(false);
                     subjectNameEditText.setError("Subject already exists");

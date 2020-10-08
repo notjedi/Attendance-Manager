@@ -62,8 +62,6 @@ public class HomeFragment extends Fragment {
     private DayViewModel dayViewModel;
     private SharedPreferences defaultPrefs;
     private SharedPreferences sharedPrefs;
-    private List<Subject> mAllSubjectList;
-    private List<Subject> mTodaySubjectList;
     private BottomSheetAdapter mBottomSheetAdapter;
     private HomeFragmentListAdapter homeFragmentListAdapter;
     @SuppressWarnings("rawtypes")
@@ -78,7 +76,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mBottomSheetAdapter = new BottomSheetAdapter();
-        mAllSubjectList = new ArrayList<>();
         defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
@@ -107,12 +104,6 @@ public class HomeFragment extends Fragment {
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
         bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
-
-        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
-            mAllSubjectList.clear();
-            mAllSubjectList.addAll(subjects);
-            mBottomSheetAdapter.submitList(subjects);
-        });
 
         setDayAndDate();
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
@@ -166,10 +157,10 @@ public class HomeFragment extends Fragment {
     private void getTodayTimeTable() {
         /* Gets all the subjects for the current day for corresponding table */
 
-        mTodaySubjectList = new ArrayList<>();
 
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             updateMainProgressBar(subjects);
+            mBottomSheetAdapter.submitList(subjects);
             if (EditSubjectActivity.CHANGED != 1)
                 return;
             List<Subject> subjectList = new ArrayList<>();
@@ -187,16 +178,16 @@ public class HomeFragment extends Fragment {
         });
 
         dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
-            mTodaySubjectList.clear();
+            List<Subject> subjectList = new ArrayList<>();
             for (SubjectMinimal subjectMinimal : subjectMinimalList) {
                 Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                 if (subject != null) {
                     subject.setStatus(subjectMinimal.getStatus());
-                    mTodaySubjectList.add(subject);
+                    subjectList.add(subject);
                 }
             }
             /* https://stackoverflow.com/a/50031492 */
-            homeFragmentListAdapter.submitList(new ArrayList<>(mTodaySubjectList));
+            homeFragmentListAdapter.submitList(new ArrayList<>(subjectList));
         });
     }
 
@@ -346,8 +337,8 @@ public class HomeFragment extends Fragment {
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             /* TODO: add subject to cache table */
-            mTodaySubjectList.add(mAllSubjectList.get(position));
-            homeFragmentListAdapter.notifyItemInserted(mTodaySubjectList.size() - 1);
+            homeFragmentListAdapter.getCurrentList().add(mBottomSheetAdapter.getSubjectAt(position));
+            homeFragmentListAdapter.notifyItemInserted(homeFragmentListAdapter.getItemCount() - 1);
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
