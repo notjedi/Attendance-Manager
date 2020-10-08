@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,8 +79,13 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         holder.mSubjectName.setText(subject.getSubjectName());
         holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template),
                 subject.getAttendedClasses(), subject.getTotalClasses()));
-        holder.mSubjectAttendanceProgressBar.setProgress(percentage);
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
+
+        if (percentage < 75)
+            holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
+        else
+            holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
+        holder.mSubjectAttendanceProgressBar.setProgress(percentage);
 
         switch (subject.getStatus()) {
             case DayViewModel.NONE:

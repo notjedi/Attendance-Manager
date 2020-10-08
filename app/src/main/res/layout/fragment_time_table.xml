@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Time Table"
-        app:titleTextColor="@color/light_black" />
+        app:titleTextColor="@color/lightBlack" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
@@ -44,11 +44,11 @@
         android:backgroundTint="@color/colorPinkPrimaryDark"
         android:fontFamily="@font/raleway_semibold"
         android:text="@string/add"
-        android:textColor="@color/light_brown"
+        android:textColor="@color/lightBrown"
         android:textSize="14sp"
         android:visibility="invisible"
         app:icon="@drawable/ic_add"
-        app:iconTint="@color/light_brown"
+        app:iconTint="@color/lightBrown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

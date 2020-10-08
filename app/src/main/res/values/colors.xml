@@ -6,8 +6,12 @@
     <color name="colorPinkPrimaryDark">#FEDBD0</color>
     <color name="white">#FFFFFF</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="light_brown">#332424</color>
-    <color name="light_black">#756B6A</color>
+    <color name="lightBrown">#332424</color>
+    <color name="lightBlack">#756B6A</color>
+    <color name="orange">#F69E5B</color>
+    <color name="green">#32F38F</color>
+    <color name="red">#F62300</color>
+    <color name="lightRed">#B2F44336</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

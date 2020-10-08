@@ -53,7 +53,7 @@
             android:layout_marginBottom="16dp"
             android:indeterminateOnly="false"
             android:progress="50"
-            android:progressDrawable="@drawable/circular_progress_bar"
+            android:progressDrawable="@drawable/progress_bar_green"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

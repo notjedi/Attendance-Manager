@@ -81,7 +81,7 @@ public class EditSubjectActivity extends AppCompatActivity {
         toolbar.setTitle("Subjects");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.light_black));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.lightBlack));
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPinkPrimaryDark));
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
