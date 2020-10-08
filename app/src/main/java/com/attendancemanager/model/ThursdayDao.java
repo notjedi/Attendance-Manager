@@ -27,6 +27,9 @@ public interface ThursdayDao {
     @Query("UPDATE thursday_table SET status = -1")
     void resetStatus();
 
+    @Query("DELETE FROM thursday_table where subjectName = :subjectName")
+    void deleteSubject(String subjectName);
+
     @Query("SELECT * FROM thursday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();
 

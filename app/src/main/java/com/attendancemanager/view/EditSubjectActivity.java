@@ -3,6 +3,7 @@ package com.attendancemanager.view;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +26,6 @@ import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditSubjectActivity extends AppCompatActivity {
 
@@ -131,6 +129,16 @@ public class EditSubjectActivity extends AppCompatActivity {
                 Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " +
                         deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
                 snackbar.setAction("Undo", v -> subjectViewModel.insert(deletedSubject));
+                snackbar.addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        if (subjectViewModel.containsSubject(deletedSubject.getSubjectName()))
+                            return;
+                        DayViewModel dayViewModel = new ViewModelProvider(EditSubjectActivity.this).get(DayViewModel.class);
+                        dayViewModel.deleteSubject(deletedSubject.getSubjectName());
+                    }
+                });
                 snackbar.show();
             }
         };

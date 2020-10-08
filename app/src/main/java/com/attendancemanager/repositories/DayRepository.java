@@ -80,6 +80,16 @@ public class DayRepository {
         runOperation(subjectMinimal, RESET_STATUS);
     }
 
+    public void deleteSubject(String subjectName) {
+        mondayDao.deleteSubject(subjectName);
+        tuesdayDao.deleteSubject(subjectName);
+        wednesdayDao.deleteSubject(subjectName);
+        thursdayDao.deleteSubject(subjectName);
+        fridayDao.deleteSubject(subjectName);
+        saturdayDao.deleteSubject(subjectName);
+        sundayDao.deleteSubject(subjectName);
+    }
+
     public void deleteAllSubjects() {
         runOperation(null, DELETE_ALL_SUBJECTS);
     }
