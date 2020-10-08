@@ -117,8 +117,7 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     @SuppressWarnings("ConstantConditions")
     private void calculateAttendance(String day, boolean isChecked) {
         List<Integer> indexList = new ArrayList<>();
-        List<SubjectMinimal> subjectMinimalList = new ArrayList<>();
-        subjectMinimalList.addAll(getDaySubject(day));
+        List<SubjectMinimal> subjectMinimalList = new ArrayList<>(getDaySubject(day));
 
         for (SubjectMinimal subjectMinimal : subjectMinimalList) {
             indexList.addAll(indexOf(subjectMinimal));

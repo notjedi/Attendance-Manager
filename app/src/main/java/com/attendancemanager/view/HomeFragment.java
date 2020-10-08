@@ -115,7 +115,6 @@ public class HomeFragment extends Fragment {
         });
 
         setDayAndDate();
-        setProgressBar();
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
             dayViewModel.resetStatus(day);
         getTodayTimeTable();
@@ -162,13 +161,6 @@ public class HomeFragment extends Fragment {
         simpleDateFormat.applyPattern("dMM");
         todayDate = simpleDateFormat.format(calendar.getTime());
         vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
-    }
-
-    private void setProgressBar() {
-        /* Sets main progress bar progress */
-
-        mProgressBar.setProgress(60);
-        mProgressPercentage.setText("60%");
     }
 
     private void getTodayTimeTable() {
@@ -385,6 +377,7 @@ public class HomeFragment extends Fragment {
         mProgressPercentage.setText(String.format(Locale.US, "%d%%", attendancePercentage));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void vibrateOnTouch(boolean vibrate) {
 
         Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
