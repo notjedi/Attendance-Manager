@@ -459,7 +459,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         if (jsonString == null) {
-            Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_LONG).show();
             return;
         }
         try {
@@ -510,11 +509,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             }
             fileReader.close();
         } catch (IOException e) {
-            e.printStackTrace();
             Toast.makeText(getContext(), "Unable to read file", Toast.LENGTH_LONG).show();
             return null;
+        } catch (OutOfMemoryError e) {
+            Toast.makeText(getContext(), "File size is too big. Choose a valid file", Toast.LENGTH_LONG).show();
         }
-        return new String(Base64.decode(jsonString.toString(), Base64.DEFAULT));
+        try {
+            return new String(Base64.decode(jsonString.toString(), Base64.DEFAULT));
+        } catch (IllegalArgumentException | OutOfMemoryError e) {
+            Toast.makeText(getContext(), "Choose a valid file", Toast.LENGTH_LONG).show();
+            return null;
+        }
     }
 
     private void updateNotificationSettings(boolean isNotificationEnabled, int hour, int minute) {
