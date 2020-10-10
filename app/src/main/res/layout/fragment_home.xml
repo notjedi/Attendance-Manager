@@ -23,59 +23,67 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:padding="16dp"
             app:layout_scrollFlags="scroll|snap|enterAlways">
 
-            <LinearLayout
-                android:layout_width="245dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/date_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/raleway_semibold"
                     android:textSize="32sp"
                     android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="24th September" />
 
                 <TextView
                     android:id="@+id/day_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/raleway_semibold"
                     android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/date_text_view"
                     tools:text="Monday" />
 
                 <TextView
                     android:id="@+id/greet_text_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/raleway_semibold"
                     android:maxLines="1"
+                    android:paddingBottom="16dp"
                     android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/overall_attendance_percentage"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/day_text_view"
                     tools:text="Hey there, Krithic" />
-
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_weight="1">
 
                 <ProgressBar
                     android:id="@+id/overall_attendance_percentage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:indeterminateOnly="false"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:progressDrawable="@drawable/progress_bar_green"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/date_text_view"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:progress="75" />
 

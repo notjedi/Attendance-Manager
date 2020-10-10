@@ -121,7 +121,6 @@ public class EditSubjectActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-                /* TODO Delete subject form dayViewModel */
                 int position = viewHolder.getAdapterPosition();
                 deletedSubject = editSubjectAdapter.getSubjectAt(position);
                 subjectViewModel.delete(editSubjectAdapter.getSubjectAt(position));
@@ -133,6 +132,8 @@ public class EditSubjectActivity extends AppCompatActivity {
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
+                        /* Deleting subject from all time tables too if the subject is not present
+                        in subject_details_table, i.e if "Undo" is not pressed */
                         if (subjectViewModel.containsSubject(deletedSubject.getSubjectName()))
                             return;
                         DayViewModel dayViewModel = new ViewModelProvider(EditSubjectActivity.this).get(DayViewModel.class);

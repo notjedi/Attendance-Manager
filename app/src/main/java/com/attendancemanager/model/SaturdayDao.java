@@ -27,8 +27,11 @@ public interface SaturdayDao {
     @Query("UPDATE saturday_table SET status = -1")
     void resetStatus();
 
-    @Query("DELETE FROM saturday_table where subjectName = :subjectName")
+    @Query("DELETE FROM saturday_table WHERE subjectName = :subjectName")
     void deleteSubject(String subjectName);
+
+    @Query("DELETE FROM saturday_table WHERE id IN (SELECT id FROM saturday_table ORDER BY id DESC limit :limit)")
+    void deleteLimited(int limit);
 
     @Query("SELECT * FROM saturday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();

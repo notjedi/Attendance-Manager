@@ -27,8 +27,11 @@ public interface MondayDao {
     @Query("UPDATE monday_table SET status = -1")
     void resetStatus();
 
-    @Query("DELETE FROM monday_table where subjectName = :subjectName")
+    @Query("DELETE FROM monday_table WHERE subjectName = :subjectName")
     void deleteSubject(String subjectName);
+
+    @Query("DELETE FROM monday_table WHERE id IN (SELECT id FROM monday_table ORDER BY id DESC limit :limit)")
+    void deleteLimited(int limit);
 
     @Query("SELECT * FROM monday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();

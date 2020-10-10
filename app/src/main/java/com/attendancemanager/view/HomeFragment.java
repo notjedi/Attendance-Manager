@@ -108,10 +108,24 @@ public class HomeFragment extends Fragment {
         setDayAndDate();
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
             dayViewModel.resetStatus(day);
+        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").equals(todayDate) &&
+                !sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").isEmpty()) {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+            String dayAdded = sharedPreferences.getString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
+            int extraAdded = sharedPreferences.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
+
+            if (!dayAdded.isEmpty() && extraAdded != 0) {
+                dayViewModel.deleteLimited(dayAdded, extraAdded);
+                SharedPreferences.Editor sEditor = sharedPreferences.edit();
+                sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "");
+                sEditor.putInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
+                sEditor.putString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
+                sEditor.apply();
+            }
+        }
         getTodayTimeTable();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
-
     }
 
     private void setDayAndDate() {
@@ -187,7 +201,7 @@ public class HomeFragment extends Fragment {
                 }
             }
             /* https://stackoverflow.com/a/50031492 */
-            homeFragmentListAdapter.submitList(new ArrayList<>(subjectList));
+            homeFragmentListAdapter.submitList(subjectList);
         });
     }
 
@@ -317,7 +331,6 @@ public class HomeFragment extends Fragment {
             bottomNavBar.setVisibility(View.GONE);
         });
 
-        /* TODO do not display bottom bar if list of subjects is empty */
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         mBottomSheetBehavior.setDraggable(true);
         mBottomSheetBehavior.setPeekHeight(0);
@@ -336,9 +349,17 @@ public class HomeFragment extends Fragment {
         });
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
-            /* TODO: add subject to cache table */
-            homeFragmentListAdapter.getCurrentList().add(mBottomSheetAdapter.getSubjectAt(position));
-            homeFragmentListAdapter.notifyItemInserted(homeFragmentListAdapter.getItemCount() - 1);
+            Subject subject = mBottomSheetAdapter.getSubjectAt(position);
+            SubjectMinimal subjectMinimal = new SubjectMinimal(subject.getSubjectName(), day);
+            subjectMinimal.setStatus(DayViewModel.NONE);
+            dayViewModel.insert(subjectMinimal);
+            int extraSubjectAdded = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
+
+            SharedPreferences.Editor sEditor = sharedPrefs.edit();
+            sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, todayDate);
+            sEditor.putString(MainActivity.SHARED_PREFS_DAY_ADDED, day);
+            sEditor.putInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, extraSubjectAdded + 1);
+            sEditor.apply();
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);

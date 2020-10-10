@@ -181,6 +181,25 @@ public class DayRepository {
         return null;
     }
 
+    public void deleteLimited(String day, int limit) {
+        switch (day.toLowerCase()) {
+            case "monday":
+                mondayDao.deleteLimited(limit);
+            case "tuesday":
+                tuesdayDao.deleteLimited(limit);
+            case "wednesday":
+                wednesdayDao.deleteLimited(limit);
+            case "thursday":
+                thursdayDao.deleteLimited(limit);
+            case "friday":
+                fridayDao.deleteLimited(limit);
+            case "saturday":
+                saturdayDao.deleteLimited(limit);
+            case "sunday":
+                sundayDao.deleteLimited(limit);
+        }
+    }
+
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();

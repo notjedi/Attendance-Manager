@@ -117,6 +117,10 @@ public class DayViewModel extends AndroidViewModel {
         return dayRepository.getSubjectList(dayName);
     }
 
+    public void deleteLimited(String day, int limit) {
+        dayRepository.deleteLimited(day, limit);
+    }
+
     public void closeDB() {
         dayRepository.closeDB();
     }
