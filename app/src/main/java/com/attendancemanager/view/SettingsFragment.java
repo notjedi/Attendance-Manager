@@ -436,6 +436,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 JSONArray dayListJsonArray = new JSONArray(dayListString);
                 jsonObject.put(dayName.toLowerCase(), dayListJsonArray);
             }
+            SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+            int attendanceCriteria = sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
+            int totalSubjectsAdded = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
+            String lastUpdated = sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "");
+            String lastAdded = sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "");
+            String dayAdded = sharedPrefs.getString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
+
+            jsonObject.put("attendanceCriteria", attendanceCriteria);
+            jsonObject.put("totalSubjectsAdded", totalSubjectsAdded);
+            jsonObject.put("lastUpdated", lastUpdated);
+            jsonObject.put("lastAdded", lastAdded);
+            jsonObject.put("dayAdded", dayAdded);
 
             File file = new File(getContext().getExternalFilesDir(null), bakFileName);
             FileWriter fileWriter = new FileWriter(file);
@@ -481,10 +493,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     dayViewModel.insert(subjectMinimal);
                 }
             }
+            int attendanceCriteria = jsonObject.getInt("attendanceCriteria");
+            int totalSubjectsAdded = jsonObject.getInt("totalSubjectsAdded");
+            String lastUpdated = jsonObject.getString("lastUpdated");
+            String lastAdded = jsonObject.getString("lastAdded");
+            String dayAdded = jsonObject.getString("dayAdded");
+
+            SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+            SharedPreferences.Editor sEditor = sharedPrefs.edit();
+            sEditor.putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, attendanceCriteria);
+            sEditor.putInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, totalSubjectsAdded);
+            sEditor.putString(MainActivity.SHARED_PREFS_LAST_UPDATED, lastUpdated);
+            sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, lastAdded);
+            sEditor.putString(MainActivity.SHARED_PREFS_DAY_ADDED, dayAdded);
+            sEditor.apply();
+
             Toast.makeText(getContext(), "Restored successfully", Toast.LENGTH_LONG).show();
 
         } catch (JSONException e) {
-            e.printStackTrace();
             Toast.makeText(getContext(), "Recovery failed. Choose a valid file", Toast.LENGTH_LONG).show();
         }
     }
@@ -496,7 +522,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         try {
             fileReader = new BufferedReader(new InputStreamReader(getContext().getContentResolver().openInputStream(uri)));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             Toast.makeText(getContext(), "File not found", Toast.LENGTH_LONG).show();
             return null;
         }
