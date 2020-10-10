@@ -11,6 +11,7 @@
 - Time Table view to edit you time table
 
 ## Roadmap
+- [ ] Migrate to ViewPager2
 - [ ] Dark Theme
 - [ ] Timeline support
 - [ ] Implement [themes](themes/)

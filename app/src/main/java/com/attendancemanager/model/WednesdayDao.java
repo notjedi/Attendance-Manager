@@ -27,8 +27,11 @@ public interface WednesdayDao {
     @Query("UPDATE wednesday_table SET status = -1")
     void resetStatus();
 
-    @Query("DELETE FROM wednesday_table where subjectName = :subjectName")
+    @Query("DELETE FROM wednesday_table WHERE subjectName = :subjectName")
     void deleteSubject(String subjectName);
+
+    @Query("DELETE FROM wednesday_table WHERE id IN (SELECT id FROM wednesday_table ORDER BY id DESC limit :limit)")
+    void deleteLimited(int limit);
 
     @Query("SELECT * FROM wednesday_table")
     LiveData<List<SubjectMinimal>> getAllSubjects();

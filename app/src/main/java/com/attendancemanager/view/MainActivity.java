@@ -25,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS_SETTINGS_FILE_KEY = "extra_settings";
     public static final String SHARED_PREFS_ATTENDANCE_CRITERIA = "attendance_criteria";
-    public static final String SHARED_PREFS_LAST_UPDATED = "last_updated";
+    public static final String SHARED_PREFS_LAST_UPDATED = "last_updated";  // for status
+    public static final String SHARED_PREFS_EXTRA_LAST_ADDED = "extra_subject_last_added"; //date added
+    public static final String SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED = "total_subjects_added"; // total subjects added
+    public static final String SHARED_PREFS_DAY_ADDED = "day_added"; // day added
     private static final String TAG = "MainActivity";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;

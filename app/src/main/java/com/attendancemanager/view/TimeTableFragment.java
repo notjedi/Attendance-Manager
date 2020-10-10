@@ -1,6 +1,8 @@
 package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -240,10 +242,17 @@ public class TimeTableFragment extends Fragment {
 
             dayViewModel.getDaySubjectList(getArgDayName).observe(getViewLifecycleOwner(), subjectMinimalList -> {
                 List<Subject> subjectList = new ArrayList<>();
+                SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+                String lastDay = sharedPrefs.getString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
+                int extraSubjects = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
+                int index = 0;
                 for (SubjectMinimal subjectMinimal : subjectMinimalList) {
+                    if (index == subjectMinimalList.size() - extraSubjects && getArgDayName.equals(lastDay))
+                        break;
                     Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
                     if (subject != null) {
                         subjectList.add(subject);
+                        index++;
                     }
                 }
                 timeTableAdapter.setSubjectList(subjectList);
