@@ -39,7 +39,7 @@ public class EditSubjectActivity extends AppCompatActivity {
     private EditSubjectActivityAdapter editSubjectAdapter;
     private Subject deletedSubject;
 
-    public static void setChanged() {
+    public static void resetChanged() {
         CHANGED = 0;
     }
 

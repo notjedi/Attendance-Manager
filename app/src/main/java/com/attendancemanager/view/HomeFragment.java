@@ -188,7 +188,7 @@ public class HomeFragment extends Fragment {
                 }
             }
             homeFragmentListAdapter.submitList(subjectList);
-            EditSubjectActivity.setChanged();
+            EditSubjectActivity.resetChanged();
         });
 
         dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
@@ -421,6 +421,12 @@ public class HomeFragment extends Fragment {
             String name = defaultPrefs.getString(SettingsFragment.NAME, null);
             vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
             mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
+            int criteria = sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
+            if (homeFragmentListAdapter.getCriteria() != criteria) {
+                homeFragmentListAdapter.setAttendanceCriteria(criteria);
+                homeFragmentListAdapter.notifyDataSetChanged();
+            }
+            SettingsFragment.resetDataChanged();
         }
     }
 

@@ -95,6 +95,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     /* TODO: change font for the settings page */
 
+    public static void resetDataChanged() {
+        DATA_CHANGED = 0;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -337,6 +341,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
             int sliderValue = (int) slider.getValue();
             settingsPref.edit().putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, sliderValue).apply();
+            DATA_CHANGED = 1;
             dialog.dismiss();
         });
 
