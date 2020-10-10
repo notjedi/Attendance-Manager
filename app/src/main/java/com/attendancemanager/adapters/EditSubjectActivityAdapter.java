@@ -36,8 +36,9 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
                     oldItem.getSubjectName().equals(newItem.getSubjectName());
         }
     };
-    private Context mContext;
     private ItemClickListener mItemClickListener;
+    private Context mContext;
+    private int criteria;
 
     public EditSubjectActivityAdapter(Context context) {
         super(DIFF_CALLBACK);
@@ -46,6 +47,10 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
 
     public void setItemClickListener(EditSubjectActivityAdapter.ItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    public void setCriteria(int criteria) {
+        this.criteria = criteria;
     }
 
     @NonNull
@@ -69,7 +74,7 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
                 .getString(R.string.attended_info_template), subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mProgressPercentage.setText(String.format(Locale.US, "%d%%", percentage));
 
-        if (percentage < 75)
+        if (percentage < criteria)
             holder.mProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
         else
             holder.mProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
