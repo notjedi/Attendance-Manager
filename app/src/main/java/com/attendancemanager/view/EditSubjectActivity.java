@@ -1,5 +1,6 @@
 package com.attendancemanager.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -85,6 +86,8 @@ public class EditSubjectActivity extends AppCompatActivity {
         /* Initializing recycler view related stuff */
 
         editSubjectAdapter = new EditSubjectActivityAdapter(this);
+        SharedPreferences sharedPrefs = getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, MODE_PRIVATE);
+        editSubjectAdapter.setCriteria(sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75));
         /* Overriding interface click listener */
         editSubjectAdapter.setItemClickListener(position -> buildDialog(
                 editSubjectAdapter.getSubjectAt(position)));

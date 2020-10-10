@@ -209,6 +209,7 @@ public class HomeFragment extends Fragment {
         /* Builds the recycler view */
 
         homeFragmentListAdapter = new HomeFragmentListAdapter(getContext());
+        homeFragmentListAdapter.setAttendanceCriteria(sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75));
         homeFragmentListAdapter.setItemClickListener(new HomeFragmentListAdapter.OnItemClickListener() {
 
             @Override

@@ -46,6 +46,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     };
     private OnItemClickListener mItemClickListener;
     private Context mContext;
+    private int criteria;
 
     public HomeFragmentListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
@@ -54,6 +55,10 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 
     public void setItemClickListener(OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    public void setAttendanceCriteria(int criteria) {
+        this.criteria = criteria;
     }
 
     @NonNull
@@ -81,7 +86,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
                 subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
 
-        if (percentage < 75)
+        if (percentage < criteria)
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
         else
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
