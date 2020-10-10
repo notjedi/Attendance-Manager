@@ -70,6 +70,10 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         return new SubjectListViewHolder(view, mItemClickListener);
     }
 
+    public int getCriteria() {
+        return criteria;
+    }
+
     @SuppressLint("StringFormatMatches")
     @Override
     public void onBindViewHolder(@NonNull SubjectListViewHolder holder, int position) {
