@@ -37,7 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.SubjectMinimal;
+import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.receiver.AlarmReceiver;
 import com.attendancemanager.receiver.NotificationHelper;
 import com.attendancemanager.viewmodel.DayViewModel;
@@ -431,7 +431,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             /* Adding time table data */
             for (String dayName : TimeTableFragment.DAY_NAMES) {
                 /* Serializing array data to JSON format */
-                String dayListString = gson.toJson(dayViewModel.getSubjectList(dayName));
+                String dayListString = gson.toJson(dayViewModel.getSubjectsOfDay(dayName));
                 /* Creating a JsonArray object out of the string */
                 JSONArray dayListJsonArray = new JSONArray(dayListString);
                 jsonObject.put(dayName.toLowerCase(), dayListJsonArray);
@@ -494,7 +494,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             jsonObject = new JSONObject(jsonString);
             Type subjectType = new TypeToken<List<Subject>>() {
             }.getType();
-            Type subjectMinimalType = new TypeToken<List<SubjectMinimal>>() {
+            Type subjectMinimalType = new TypeToken<List<TimeTableSubject>>() {
             }.getType();
             subjectViewModel.deleteAllSubjects();
             dayViewModel.deleteAllSubjects();
@@ -504,10 +504,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 subjectViewModel.insert(subject);
 
             for (String dayName : TimeTableFragment.DAY_NAMES) {
-                List<SubjectMinimal> subjectMinimalList = gson.fromJson(jsonObject.get(dayName.toLowerCase()).toString(), subjectMinimalType);
-                for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                    subjectMinimal.setDay(dayName);
-                    dayViewModel.insert(subjectMinimal);
+                List<TimeTableSubject> timeTableSubjectList = gson.fromJson(jsonObject.get(dayName.toLowerCase()).toString(), subjectMinimalType);
+                for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
+                    timeTableSubject.setDay(dayName);
+                    dayViewModel.insert(timeTableSubject);
                 }
             }
             int attendanceCriteria = jsonObject.getInt("attendanceCriteria");

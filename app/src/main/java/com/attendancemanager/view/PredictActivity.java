@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.PredictAdapter;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.SubjectMinimal;
+import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.chip.Chip;
@@ -32,13 +32,13 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     private RecyclerView recyclerView;
 
     private PredictAdapter predictAdapter;
-    private List<SubjectMinimal> mondayList;
-    private List<SubjectMinimal> tuesdayList;
-    private List<SubjectMinimal> wednesdayList;
-    private List<SubjectMinimal> thursdayList;
-    private List<SubjectMinimal> fridayList;
-    private List<SubjectMinimal> saturdayList;
-    private List<SubjectMinimal> sundayList;
+    private List<TimeTableSubject> mondayList;
+    private List<TimeTableSubject> tuesdayList;
+    private List<TimeTableSubject> wednesdayList;
+    private List<TimeTableSubject> thursdayList;
+    private List<TimeTableSubject> fridayList;
+    private List<TimeTableSubject> saturdayList;
+    private List<TimeTableSubject> sundayList;
 
 
     @Override
@@ -60,13 +60,13 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         DayViewModel dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
 
         subjectViewModel.getAllSubjects().observe(this, subjects -> predictAdapter.submitList(subjects));
-        mondayList = dayViewModel.getSubjectList("monday");
-        tuesdayList = dayViewModel.getSubjectList("tuesday");
-        wednesdayList = dayViewModel.getSubjectList("wednesday");
-        thursdayList = dayViewModel.getSubjectList("thursday");
-        fridayList = dayViewModel.getSubjectList("friday");
-        saturdayList = dayViewModel.getSubjectList("saturday");
-        sundayList = dayViewModel.getSubjectList("sunday");
+        mondayList = dayViewModel.getSubjectsOfDay("monday");
+        tuesdayList = dayViewModel.getSubjectsOfDay("tuesday");
+        wednesdayList = dayViewModel.getSubjectsOfDay("wednesday");
+        thursdayList = dayViewModel.getSubjectsOfDay("thursday");
+        fridayList = dayViewModel.getSubjectsOfDay("friday");
+        saturdayList = dayViewModel.getSubjectsOfDay("saturday");
+        sundayList = dayViewModel.getSubjectsOfDay("sunday");
 
         setChipText();
         buildRecyclerView();
@@ -117,10 +117,10 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     @SuppressWarnings("ConstantConditions")
     private void calculateAttendance(String day, boolean isChecked) {
         List<Integer> indexList = new ArrayList<>();
-        List<SubjectMinimal> subjectMinimalList = new ArrayList<>(getDaySubject(day));
+        List<TimeTableSubject> timeTableSubjectList = new ArrayList<>(getDaySubject(day));
 
-        for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-            indexList.addAll(indexOf(subjectMinimal));
+        for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
+            indexList.addAll(indexOf(timeTableSubject));
             for (Integer index : indexList) {
                 Subject subject = predictAdapter.getSubjectAt(index);
                 if (isChecked) {
@@ -134,7 +134,7 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         }
     }
 
-    private List<SubjectMinimal> getDaySubject(String dayName) {
+    private List<TimeTableSubject> getDaySubject(String dayName) {
         switch (dayName.toLowerCase()) {
             case "monday":
                 return mondayList;
@@ -154,11 +154,11 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         return null;
     }
 
-    private List<Integer> indexOf(SubjectMinimal subjectMinimal) {
+    private List<Integer> indexOf(TimeTableSubject timeTableSubject) {
         List<Integer> indexList = new ArrayList<>();
         for (int i = 0; i < predictAdapter.getItemCount(); i++) {
             if (predictAdapter.getSubjectAt(i).getSubjectName()
-                    .equals(subjectMinimal.getSubjectName())) {
+                    .equals(timeTableSubject.getSubjectName())) {
                 indexList.add(i);
             }
         }

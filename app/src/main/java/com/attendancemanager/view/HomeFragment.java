@@ -9,6 +9,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.HomeFragmentListAdapter;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.SubjectMinimal;
+import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -181,17 +182,17 @@ public class HomeFragment extends Fragment {
     private void getTodayTimeTable() {
         /* Gets all the subjects for the current day for corresponding table */
 
-
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             updateMainProgressBar(subjects);
             mBottomSheetAdapter.submitList(subjects);
             if (EditSubjectActivity.CHANGED != 1)
                 return;
+
             List<Subject> subjectList = new ArrayList<>();
-            for (SubjectMinimal subjectMinimal : dayViewModel.getSubjectList(day)) {
+            for (TimeTableSubject timeTableSubject : dayViewModel.getSubjectsOfDay(day)) {
                 for (Subject subject : subjects) {
-                    if (subject.getSubjectName().equals(subjectMinimal.getSubjectName())) {
-                        subject.setStatus(subjectMinimal.getStatus());
+                    if (subject.getSubjectName().equals(timeTableSubject.getSubjectName())) {
+                        subject.setStatus(timeTableSubject.getStatus());
                         subjectList.add(subject);
                         break;
                     }
@@ -201,12 +202,12 @@ public class HomeFragment extends Fragment {
             EditSubjectActivity.resetChanged();
         });
 
-        dayViewModel.getDaySubjectList(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
+        dayViewModel.getSubjectsOfDayLiveData(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
             List<Subject> subjectList = new ArrayList<>();
-            for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
+            for (TimeTableSubject timeTableSubject : subjectMinimalList) {
+                Subject subject = subjectViewModel.getSubject(timeTableSubject.getSubjectName());
                 if (subject != null) {
-                    subject.setStatus(subjectMinimal.getStatus());
+                    subject.setStatus(timeTableSubject.getStatus());
                     subjectList.add(subject);
                 }
             }
@@ -226,25 +227,25 @@ public class HomeFragment extends Fragment {
             public void onAttendButtonClick(int position) {
                 /* For some reason notifyItemChanged is not working as expected, it resets the button alpha on first click */
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
-                if (subjectMinimal.getStatus() == DayViewModel.ATTENDED) {
+                TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
+                if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
                     subject.decrementTotalClasses();
                     subject.decrementAttendedClasses();
-                    subjectMinimal.setStatus(DayViewModel.NONE);
-                } else if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
+                    timeTableSubject.setStatus(DayViewModel.NONE);
+                } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
                     subject.decrementTotalClasses();
                     subject.incrementTotalClasses();
                     subject.incrementAttendedClasses();
-                    subjectMinimal.setStatus(DayViewModel.ATTENDED);
+                    timeTableSubject.setStatus(DayViewModel.ATTENDED);
                 } else {
                     subject.incrementTotalClasses();
                     subject.incrementAttendedClasses();
-                    subjectMinimal.setStatus(DayViewModel.ATTENDED);
+                    timeTableSubject.setStatus(DayViewModel.ATTENDED);
                 }
                 vibrateOnTouch(vibrate);
-                subjectMinimal.setDay(day);
+                timeTableSubject.setDay(day);
                 subjectViewModel.update(subject);
-                dayViewModel.update(subjectMinimal);
+                dayViewModel.update(timeTableSubject);
                 homeFragmentListAdapter.notifyItemChanged(position);
                 setLastUpdated();
             }
@@ -252,23 +253,23 @@ public class HomeFragment extends Fragment {
             @Override
             public void onBunkButtonClick(int position) {
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
-                if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
+                TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
+                if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
                     subject.decrementTotalClasses();
-                    subjectMinimal.setStatus(DayViewModel.NONE);
-                } else if (subjectMinimal.getStatus() == DayViewModel.ATTENDED) {
+                    timeTableSubject.setStatus(DayViewModel.NONE);
+                } else if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
                     subject.decrementTotalClasses();
                     subject.decrementAttendedClasses();
                     subject.incrementTotalClasses();
-                    subjectMinimal.setStatus(DayViewModel.BUNKED);
+                    timeTableSubject.setStatus(DayViewModel.BUNKED);
                 } else {
                     subject.incrementTotalClasses();
-                    subjectMinimal.setStatus(DayViewModel.BUNKED);
+                    timeTableSubject.setStatus(DayViewModel.BUNKED);
                 }
                 vibrateOnTouch(vibrate);
-                subjectMinimal.setDay(day);
+                timeTableSubject.setDay(day);
                 subjectViewModel.update(subject);
-                dayViewModel.update(subjectMinimal);
+                dayViewModel.update(timeTableSubject);
                 homeFragmentListAdapter.notifyItemChanged(position);
                 setLastUpdated();
             }
@@ -276,22 +277,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelledButtonClick(int position) {
                 Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(day).get(position);
-                if (subjectMinimal.getStatus() == DayViewModel.ATTENDED) {
+                TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
+                if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
                     subject.decrementAttendedClasses();
                     subject.decrementTotalClasses();
-                    subjectMinimal.setStatus(DayViewModel.CANCELLED);
-                } else if (subjectMinimal.getStatus() == DayViewModel.BUNKED) {
+                    timeTableSubject.setStatus(DayViewModel.CANCELLED);
+                } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
                     subject.decrementTotalClasses();
-                    subjectMinimal.setStatus(DayViewModel.CANCELLED);
-                } else if (subjectMinimal.getStatus() == DayViewModel.NONE)
-                    subjectMinimal.setStatus(DayViewModel.CANCELLED);
+                    timeTableSubject.setStatus(DayViewModel.CANCELLED);
+                } else if (timeTableSubject.getStatus() == DayViewModel.NONE)
+                    timeTableSubject.setStatus(DayViewModel.CANCELLED);
                 else
-                    subjectMinimal.setStatus(DayViewModel.NONE);
+                    timeTableSubject.setStatus(DayViewModel.NONE);
                 vibrateOnTouch(vibrate);
-                subjectMinimal.setDay(day);
+                timeTableSubject.setDay(day);
                 subjectViewModel.update(subject);
-                dayViewModel.update(subjectMinimal);
+                dayViewModel.update(timeTableSubject);
                 homeFragmentListAdapter.notifyItemChanged(position);
                 setLastUpdated();
             }
@@ -361,9 +362,9 @@ public class HomeFragment extends Fragment {
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             Subject subject = mBottomSheetAdapter.getSubjectAt(position);
-            SubjectMinimal subjectMinimal = new SubjectMinimal(subject.getSubjectName(), day);
-            subjectMinimal.setStatus(DayViewModel.NONE);
-            dayViewModel.insert(subjectMinimal);
+            TimeTableSubject timeTableSubject = new TimeTableSubject(subject.getSubjectName(), day);
+            timeTableSubject.setStatus(DayViewModel.NONE);
+            dayViewModel.insert(timeTableSubject);
             int extraSubjectAdded = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
 
             SharedPreferences.Editor sEditor = sharedPrefs.edit();

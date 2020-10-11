@@ -8,8 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Subject.class, Monday.class, Tuesday.class, Wednesday.class,
-        Thursday.class, Friday.class, Saturday.class, Sunday.class}, version = 1, exportSchema = false)
+@Database(entities = {Subject.class, TimeTableSubject.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
@@ -43,19 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract SubjectDao subjectDao();
 
-    public abstract MondayDao mondayDao();
-
-    public abstract TuesdayDao tuesdayDao();
-
-    public abstract WednesdayDao wednesdayDao();
-
-    public abstract ThursdayDao thursdayDao();
-
-    public abstract FridayDao fridayDao();
-
-    public abstract SaturdayDao saturdayDao();
-
-    public abstract SundayDao sundayDao();
+    public abstract TimeTableDao timeTableDao();
 
     private static class PrePopulateDatabase implements Runnable {
 

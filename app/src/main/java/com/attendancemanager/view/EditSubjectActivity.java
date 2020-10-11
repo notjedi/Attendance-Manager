@@ -137,7 +137,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                         if (subjectViewModel.containsSubject(deletedSubject.getSubjectName()))
                             return;
                         DayViewModel dayViewModel = new ViewModelProvider(EditSubjectActivity.this).get(DayViewModel.class);
-                        dayViewModel.deleteSubject(deletedSubject.getSubjectName());
+                        dayViewModel.deleteSubjectByName(deletedSubject.getSubjectName());
                     }
                 });
                 snackbar.show();

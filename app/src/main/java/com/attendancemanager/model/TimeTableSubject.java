@@ -1,27 +1,38 @@
 package com.attendancemanager.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
-public class SubjectMinimal {
+@Entity(tableName = "time_table")
+public class TimeTableSubject {
 
+    @PrimaryKey(autoGenerate = true)
     @Expose
     protected int id;
     @Expose
     protected String subjectName;
     @Expose
     protected int status;
-    @Ignore
+    @Expose
     protected String day;
 
-    public SubjectMinimal(String subjectName) {
-        this.subjectName = subjectName;
+    @Ignore
+    public TimeTableSubject(String subjectName) {
+        this(subjectName, -1, "null");
     }
 
     @Ignore
-    public SubjectMinimal(String subjectName, String day) {
+    public TimeTableSubject(String subjectName, String day) {
+        this(subjectName, -1, day);
+    }
+
+    public TimeTableSubject(String subjectName, int status, String day) {
         this.subjectName = subjectName;
+        this.status = status;
         this.day = day.toLowerCase();
     }
 
@@ -41,12 +52,20 @@ public class SubjectMinimal {
         this.subjectName = subjectName;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return subjectName + " " +
+                day + " " +
+                status;
+    }
+
     public String getDay() {
         return day;
     }
 
     public void setDay(String day) {
-        this.day = day;
+        this.day = day.toLowerCase();
     }
 
     public int getStatus() {

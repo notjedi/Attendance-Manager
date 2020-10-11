@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.attendancemanager.model.SubjectMinimal;
+import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.repositories.DayRepository;
 
 import java.util.List;
@@ -19,106 +19,78 @@ public class DayViewModel extends AndroidViewModel {
     public static final int ATTENDED = 2;
 
     private DayRepository dayRepository;
-    private LiveData<List<SubjectMinimal>> mondayList;
-    private LiveData<List<SubjectMinimal>> tuesdayList;
-    private LiveData<List<SubjectMinimal>> wednesdayList;
-    private LiveData<List<SubjectMinimal>> thursdayList;
-    private LiveData<List<SubjectMinimal>> fridayList;
-    private LiveData<List<SubjectMinimal>> saturdayList;
-    private LiveData<List<SubjectMinimal>> sundayList;
+    private LiveData<List<TimeTableSubject>> mondayList;
+    private LiveData<List<TimeTableSubject>> tuesdayList;
+    private LiveData<List<TimeTableSubject>> wednesdayList;
+    private LiveData<List<TimeTableSubject>> thursdayList;
+    private LiveData<List<TimeTableSubject>> fridayList;
+    private LiveData<List<TimeTableSubject>> saturdayList;
+    private LiveData<List<TimeTableSubject>> sundayList;
 
 
     public DayViewModel(@NonNull Application application) {
         super(application);
 
         dayRepository = DayRepository.getInstance(application);
-        mondayList = dayRepository.getMondayList();
-        tuesdayList = dayRepository.getTuesdayList();
-        wednesdayList = dayRepository.getWednesdayList();
-        thursdayList = dayRepository.getThursdayList();
-        fridayList = dayRepository.getFridayList();
-        saturdayList = dayRepository.getSaturdayList();
-        sundayList = dayRepository.getSundayList();
+        mondayList = dayRepository.getSubjectsOfDayLiveData("monday");
+        tuesdayList = dayRepository.getSubjectsOfDayLiveData("tuesday");
+        wednesdayList = dayRepository.getSubjectsOfDayLiveData("wednesday");
+        thursdayList = dayRepository.getSubjectsOfDayLiveData("thursday");
+        fridayList = dayRepository.getSubjectsOfDayLiveData("friday");
+        saturdayList = dayRepository.getSubjectsOfDayLiveData("saturday");
+        sundayList = dayRepository.getSubjectsOfDayLiveData("sunday");
     }
 
-    public void insert(SubjectMinimal subjectMinimal) {
-        dayRepository.insert(subjectMinimal);
+    public void insert(TimeTableSubject timeTableSubject) {
+        dayRepository.insert(timeTableSubject);
     }
 
-    public void update(SubjectMinimal subjectMinimal) {
-        dayRepository.update(subjectMinimal);
+    public void update(TimeTableSubject timeTableSubject) {
+        dayRepository.update(timeTableSubject);
     }
 
-    public void delete(SubjectMinimal subjectMinimal) {
-        dayRepository.delete(subjectMinimal);
+    public void delete(TimeTableSubject timeTableSubject) {
+        dayRepository.delete(timeTableSubject);
     }
 
     public void resetStatus(String day) {
         dayRepository.resetStatus(day);
     }
 
-    public void deleteSubject(String subjectName) {
-        dayRepository.deleteSubject(subjectName);
+    public void deleteLimited(String day, int limit) {
+        dayRepository.deleteLimited(day, limit);
+    }
+
+    public void deleteSubjectByName(String subjectName) {
+        dayRepository.deleteSubjectByName(subjectName);
     }
 
     public void deleteAllSubjects() {
         dayRepository.deleteAllSubjects();
     }
 
-    public LiveData<List<SubjectMinimal>> getMondayList() {
-        return mondayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getTuesdayList() {
-        return tuesdayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getWednesdayList() {
-        return wednesdayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getThursdayList() {
-        return thursdayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getFridayList() {
-        return fridayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getSaturdayList() {
-        return saturdayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getSundayList() {
-        return sundayList;
-    }
-
-    public LiveData<List<SubjectMinimal>> getDaySubjectList(String dayName) {
-        switch (dayName.toLowerCase()) {
+    public LiveData<List<TimeTableSubject>> getSubjectsOfDayLiveData(String day) {
+        switch (day.toLowerCase()) {
             case "monday":
-                return getMondayList();
+                return mondayList;
             case "tuesday":
-                return getTuesdayList();
+                return tuesdayList;
             case "wednesday":
-                return getWednesdayList();
+                return wednesdayList;
             case "thursday":
-                return getThursdayList();
+                return thursdayList;
             case "friday":
-                return getFridayList();
+                return fridayList;
             case "saturday":
-                return getSaturdayList();
+                return saturdayList;
             case "sunday":
-                return getSundayList();
+                return sundayList;
         }
         return null;
     }
 
-    public List<SubjectMinimal> getSubjectList(String dayName) {
-        return dayRepository.getSubjectList(dayName);
-    }
-
-    public void deleteLimited(String day, int limit) {
-        dayRepository.deleteLimited(day, limit);
+    public List<TimeTableSubject> getSubjectsOfDay(String dayName) {
+        return dayRepository.getSubjectsOfDay(dayName);
     }
 
     public void closeDB() {
