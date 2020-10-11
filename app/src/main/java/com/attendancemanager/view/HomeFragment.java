@@ -185,7 +185,7 @@ public class HomeFragment extends Fragment {
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
             updateMainProgressBar(subjects);
             mBottomSheetAdapter.submitList(subjects);
-            if (EditSubjectActivity.CHANGED != 1)
+            if (EditSubjectActivity.CHANGED != 1 && SettingsFragment.DATA_CHANGED != 1)
                 return;
 
             List<Subject> subjectList = new ArrayList<>();
@@ -200,6 +200,7 @@ public class HomeFragment extends Fragment {
             }
             homeFragmentListAdapter.submitList(subjectList);
             EditSubjectActivity.resetChanged();
+            SettingsFragment.resetDataChanged();
         });
 
         dayViewModel.getSubjectsOfDayLiveData(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {

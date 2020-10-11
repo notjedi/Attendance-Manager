@@ -394,6 +394,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 subjectViewModel.update(subject);
             }
         }
+        DATA_CHANGED = 1;
     }
 
     private void clearDatabase() {
