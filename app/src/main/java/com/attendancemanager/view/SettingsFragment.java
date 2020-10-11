@@ -221,9 +221,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
             case RESTORE_DATABASE:
                 if (checkPermissions("read")) {
-                    Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    fileChooserIntent.setType("*/*");
-                    startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
+                    showRestoreAlertDialog();
                 } else
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
                 break;
@@ -264,15 +262,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     backupDatabase();
                 else
-                    Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Permission denied. Backup failed", Toast.LENGTH_SHORT).show();
                 break;
             case READ_PERMISSION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    fileChooserIntent.setType("*/*");
-                    startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
+                    showRestoreAlertDialog();
                 } else
-                    Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Permission denied. Recovery failed", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -464,7 +460,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             e.printStackTrace();
             Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
         }
+    }
 
+    private void showRestoreAlertDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme)
+                .setTitle("Restore")
+                .setMessage("This action will wipe your database and cannot be undone. Are you sure you want to continue?")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    Intent fileChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    fileChooserIntent.setType("*/*");
+                    startActivityForResult(fileChooserIntent, FILE_CHOOSER_ACTIVITY_REQUEST);
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                .create();
+
+        alertDialog.show();
+        TextView messageText = alertDialog.findViewById(android.R.id.message);
+        messageText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway));
     }
 
     private void restoreDatabase(Uri uri) {
