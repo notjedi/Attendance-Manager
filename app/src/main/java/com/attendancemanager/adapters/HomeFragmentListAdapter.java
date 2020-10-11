@@ -78,7 +78,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     @Override
     public void onBindViewHolder(@NonNull SubjectListViewHolder holder, int position) {
 
-//        TODO: set progress bar color based on attendance
 //        TODO: set status
 
         Subject subject = getItem(position);
@@ -135,7 +134,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         public TextView mTotalClassesAttended;
         private TextView mSubjectName;
         private TextView mStatusInfo;
-        private TextView mAttendanceStatus;
         private ProgressBar mSubjectAttendanceProgressBar;
         private TextView mSubjectProgressBarPercentage;
         private ImageButton mAttended;
@@ -148,7 +146,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             mSubjectName = itemView.findViewById(R.id.subject_name);
             mTotalClassesAttended = itemView.findViewById(R.id.total_classes_attended);
             mStatusInfo = itemView.findViewById(R.id.status_info);
-            mAttendanceStatus = itemView.findViewById(R.id.attendance_status);
 
             mSubjectAttendanceProgressBar = itemView.findViewById(R.id.subject_attendance_progressbar);
             mSubjectProgressBarPercentage = itemView.findViewById(R.id.subject_progressbar_percentage);

@@ -53,12 +53,7 @@ public class AboutActivity extends AppCompatActivity {
     };
 
     private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
+    private final Runnable mHideRunnable = this::hide;
 
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
@@ -77,12 +72,7 @@ public class AboutActivity extends AppCompatActivity {
         mContentView = findViewById(R.id.fullscreen_content);
 
         // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+        mContentView.setOnClickListener(view -> toggle());
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away

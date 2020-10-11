@@ -90,9 +90,7 @@ public class TimeTableFragment extends Fragment {
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
 
 
-        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
-            mBottomSheetAdapter.submitList(subjects);
-        });
+        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> mBottomSheetAdapter.submitList(subjects));
 
         toolbar.setTitleTextAppearance(getContext(), R.style.RubixFontStyle);
 
