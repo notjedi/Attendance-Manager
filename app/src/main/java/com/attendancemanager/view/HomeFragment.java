@@ -7,9 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
@@ -31,6 +35,7 @@ import com.attendancemanager.model.SubjectMinimal;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -126,6 +131,11 @@ public class HomeFragment extends Fragment {
         getTodayTimeTable();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
+
+        if (sharedPrefs.getBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, true)) {
+            buildFirstTimeDialog();
+            sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, false).apply();
+        }
     }
 
     private void setDayAndDate() {
@@ -161,7 +171,7 @@ public class HomeFragment extends Fragment {
         simpleDateFormat.applyPattern("EEEE");
         day = simpleDateFormat.format(calendar.getTime());
         mDay.setText(simpleDateFormat.format(calendar.getTime()));
-        String name = defaultPrefs.getString(SettingsFragment.NAME, null);
+        String name = defaultPrefs.getString(SettingsFragment.NAME, "");
         mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
         simpleDateFormat.applyPattern("dMM");
         todayDate = simpleDateFormat.format(calendar.getTime());
@@ -371,6 +381,49 @@ public class HomeFragment extends Fragment {
             v.getParent().requestDisallowInterceptTouchEvent(true);
             v.onTouchEvent(event);
             return true;
+        });
+    }
+
+    private void buildFirstTimeDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
+        dialogBuilder.setTitle("Name");
+
+        View nameView = LayoutInflater.from(getContext()).inflate(R.layout.name_edit_text, (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
+        TextInputEditText nameTextView = nameView.findViewById(R.id.edit_name);
+        dialogBuilder.setView(nameView);
+
+        dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
+            String name = nameTextView.getText().toString().trim();
+            SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+            defaultPrefs.edit().putString(SettingsFragment.NAME, name).apply();
+            mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
+            dialog.dismiss();
+        });
+        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        Button negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        negativeButton.setEnabled(false);
+        positiveButton.setEnabled(false);
+
+        nameTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty())
+                    positiveButton.setEnabled(false);
+                else
+                    positiveButton.setEnabled(true);
+            }
         });
     }
 
