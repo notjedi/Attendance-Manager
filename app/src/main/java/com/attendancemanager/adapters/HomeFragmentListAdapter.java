@@ -78,8 +78,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     @Override
     public void onBindViewHolder(@NonNull SubjectListViewHolder holder, int position) {
 
-//        TODO: set status
-
         Subject subject = getItem(position);
         int due;
         int attended = subject.getAttendedClasses();
@@ -93,14 +91,16 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
 
         if (percentage < criteria) {
+            /* Should have to attend more classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
             due = (int) ((criteria * total) - (attended * 100)) / (100 - criteria);
             holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Attend %d more classes", due));
         } else {
+            /* On track or can bunk a few classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
             if (percentage != criteria) {
                 due = (int) ((attended * 100) - (total * criteria)) / criteria;
-                holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can leave %d more classes", due));
+                holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can bunk %d more classes", due));
             } else
                 holder.mStatusInfo.setText(R.string.on_track_text);
         }

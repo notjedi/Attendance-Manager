@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS_EXTRA_LAST_ADDED = "extra_subject_last_added"; //date added
     public static final String SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED = "total_subjects_added"; // total subjects added
     public static final String SHARED_PREFS_DAY_ADDED = "day_added"; // day added
+    public static final String SHARED_PREFS_FIRST_TIME = "isFirstTime";
     private static final String TAG = "MainActivity";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
