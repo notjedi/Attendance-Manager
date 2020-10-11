@@ -25,7 +25,7 @@ import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
 import com.attendancemanager.adapters.TimeTableFragmentAdapter;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.model.SubjectMinimal;
+import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -158,7 +158,7 @@ public class TimeTableFragment extends Fragment {
         });
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
-            SubjectMinimal subject = new SubjectMinimal(mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
+            TimeTableSubject subject = new TimeTableSubject(mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
                     pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
             subject.setStatus(DayViewModel.NONE);
             dayViewModel.insert(subject);
@@ -181,7 +181,7 @@ public class TimeTableFragment extends Fragment {
         private TimeTableFragmentAdapter timeTableAdapter;
         private DayViewModel dayViewModel;
         private SubjectViewModel subjectViewModel;
-        private String getArgDayName;
+        private String argDay;
 
         public static DayFragment newInstance(String day) {
             /* Create new instance with the ARG_DAY_NAME */
@@ -196,7 +196,7 @@ public class TimeTableFragment extends Fragment {
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            getArgDayName = getArguments().getString(ARG_DAY_NAME);
+            argDay = getArguments().getString(ARG_DAY_NAME);
         }
 
         @Nullable
@@ -232,22 +232,22 @@ public class TimeTableFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     int position = viewHolder.getAdapterPosition();
-                    SubjectMinimal subjectMinimal = dayViewModel.getSubjectList(getArgDayName).get(position);
-                    subjectMinimal.setDay(getArgDayName);
-                    dayViewModel.delete(subjectMinimal);
+                    TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(argDay).get(position);
+                    dayViewModel.delete(timeTableSubject);
                 }
             }).attachToRecyclerView(timeTableRecyclerView);
 
-            dayViewModel.getDaySubjectList(getArgDayName).observe(getViewLifecycleOwner(), subjectMinimalList -> {
+            dayViewModel.getSubjectsOfDayLiveData(argDay).observe(getViewLifecycleOwner(), subjectMinimalList -> {
                 List<Subject> subjectList = new ArrayList<>();
                 SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
                 String lastDay = sharedPrefs.getString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
                 int extraSubjects = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
                 int index = 0;
-                for (SubjectMinimal subjectMinimal : subjectMinimalList) {
-                    if (index == subjectMinimalList.size() - extraSubjects && getArgDayName.equals(lastDay))
+
+                for (TimeTableSubject timeTableSubject : subjectMinimalList) {
+                    if (index == subjectMinimalList.size() - extraSubjects && argDay.equals(lastDay))
                         break;
-                    Subject subject = subjectViewModel.getSubject(subjectMinimal.getSubjectName());
+                    Subject subject = subjectViewModel.getSubject(timeTableSubject.getSubjectName());
                     if (subject != null) {
                         subjectList.add(subject);
                         index++;
