@@ -81,18 +81,29 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 //        TODO: set status
 
         Subject subject = getItem(position);
-        int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
-                (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
+        int due;
+        int attended = subject.getAttendedClasses();
+        int total = subject.getTotalClasses();
+        int percentage = total == 0 ? 0 : Math.round((
+                (float) attended / (float) total) * 100);
 
         holder.mSubjectName.setText(subject.getSubjectName());
         holder.mTotalClassesAttended.setText(String.format(mContext.getResources().getString(R.string.attended_info_template),
                 subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
 
-        if (percentage < criteria)
+        if (percentage < criteria) {
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
-        else
+            due = (int) ((criteria * total) - (attended * 100)) / (100 - criteria);
+            holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Attend %d more classes", due));
+        } else {
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
+            if (percentage != criteria) {
+                due = (int) ((attended * 100) - (total * criteria)) / criteria;
+                holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can leave %d more classes", due));
+            } else
+                holder.mStatusInfo.setText(R.string.on_track_text);
+        }
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
 
         switch (subject.getStatus()) {
