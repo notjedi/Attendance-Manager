@@ -49,24 +49,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:fontFamily="@font/roboto"
-            app:layout_constraintBottom_toTopOf="@+id/attendance_status"
             app:layout_constraintEnd_toStartOf="@+id/cancelled_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/total_classes_attended"
             tools:text="On Track" />
-
-        <TextView
-            android:id="@+id/attendance_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/roboto"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Attended" />
 
         <ProgressBar
             android:id="@+id/subject_attendance_progressbar"

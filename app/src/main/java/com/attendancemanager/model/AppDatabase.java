@@ -14,7 +14,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
     private static AppDatabase instance;
-    private static RoomDatabase.Callback prePopulateCallback = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback prePopulateCallback = new RoomDatabase.Callback() {
 
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -59,7 +59,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static class PrePopulateDatabase implements Runnable {
 
-        private SubjectDao subjectDao;
+        private final SubjectDao subjectDao;
 
         PrePopulateDatabase(AppDatabase dataBase) {
             subjectDao = dataBase.subjectDao();

@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +48,7 @@ public class EditSubjectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_subject);
 
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
-        subjectViewModel.getAllSubjects().observe(this, subjects -> {
-            editSubjectAdapter.submitList(subjects);
-        });
+        subjectViewModel.getAllSubjects().observe(this, subjects -> editSubjectAdapter.submitList(subjects));
 
         initialSetup();
         setupToolbar();
@@ -207,11 +204,10 @@ public class EditSubjectActivity extends AppCompatActivity {
                 Subject updatedSubject = new Subject(subjectName, attendClass, totalClass);
                 updatedSubject.setId(subject.getId());
                 updateSubject(updatedSubject);
-                CHANGED = 1;
             } else {
                 insertSubject(subjectName, attendClass, totalClass);
-                CHANGED = 1;
             }
+            CHANGED = 1;
 
             dialog.dismiss();
         });
