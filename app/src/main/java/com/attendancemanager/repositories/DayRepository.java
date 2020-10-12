@@ -76,8 +76,4 @@ public class DayRepository {
         timeTableDao.deleteTempSubjects();
     }
 
-    public void closeDB() {
-        if (dataBase.isOpen())
-            dataBase.close();
-    }
 }

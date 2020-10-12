@@ -79,11 +79,6 @@ public class SubjectRepository {
         return allSubjects;
     }
 
-    public void closeDB() {
-        if (dataBase.isOpen())
-            dataBase.closeDB();
-    }
-
     private static class InsertSubjectRunnable implements Runnable {
 
         private SubjectDao subjectDao;

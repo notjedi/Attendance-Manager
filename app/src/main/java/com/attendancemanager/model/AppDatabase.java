@@ -35,11 +35,6 @@ public abstract class AppDatabase extends RoomDatabase {
         return instance;
     }
 
-    public void closeDB() {
-        instance.close();
-        instance = null;
-    }
-
     public abstract SubjectDao subjectDao();
 
     public abstract TimeTableDao timeTableDao();
