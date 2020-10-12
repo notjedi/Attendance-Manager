@@ -2,6 +2,7 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -236,13 +237,9 @@ public class TimeTableFragment extends Fragment {
                 }
             }).attachToRecyclerView(timeTableRecyclerView);
 
-            dayViewModel.getSubjectsOfDayLiveData(argDay).observe(getViewLifecycleOwner(), timeTableSubjectList -> {
+            dayViewModel.getSubjectsOfDayWithoutTemp(argDay).observe(getViewLifecycleOwner(), timeTableSubjectList -> {
                 List<Subject> subjectList = new ArrayList<>();
                 for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
-                    if (timeTableSubject.isTemp())
-                        /* User may have added more subjects after adding extra subjects so we
-                        use continue instead of break */
-                        continue;
                     Subject subject = subjectViewModel.getSubject(timeTableSubject.getSubjectName());
                     if (subject != null) {
                         subjectList.add(subject);
