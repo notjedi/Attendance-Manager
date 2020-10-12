@@ -96,8 +96,4 @@ public class DayViewModel extends AndroidViewModel {
     public List<TimeTableSubject> getSubjectsOfDay(String dayName) {
         return dayRepository.getSubjectsOfDay(dayName);
     }
-
-    public void closeDB() {
-        dayRepository.closeDB();
-    }
 }

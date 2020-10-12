@@ -51,8 +51,4 @@ public class SubjectViewModel extends AndroidViewModel {
         return allSubjects;
     }
 
-    public void closeDB() {
-        subjectRepository.closeDB();
-    }
-
 }
