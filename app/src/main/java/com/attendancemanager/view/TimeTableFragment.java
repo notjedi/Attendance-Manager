@@ -2,7 +2,6 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +42,7 @@ public class TimeTableFragment extends Fragment {
     public static final String[] DAY_NAMES = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday",
             "Friday", "Saturday", "Sunday"};
     private static final String TAG = "TimeTableFragment";
-
+    public static MutableLiveData<Boolean> isEditable = new MutableLiveData<>(false);
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ExtendedFloatingActionButton addButtonFab;
@@ -88,18 +88,21 @@ public class TimeTableFragment extends Fragment {
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
 
-
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> mBottomSheetAdapter.submitList(subjects));
 
         toolbar.setTitleTextAppearance(getContext(), R.style.RubixFontStyle);
 
         floatingActionButton.setOnClickListener(v -> {
             if (addButtonFab.getVisibility() == View.VISIBLE) {
+                /* not Editable */
                 addButtonFab.setVisibility(View.GONE);
                 floatingActionButton.setImageResource(R.drawable.ic_edit);
+                isEditable.setValue(false);
             } else {
+                /* Editable */
                 addButtonFab.setVisibility(View.VISIBLE);
                 floatingActionButton.setImageResource(R.drawable.ic_check);
+                isEditable.setValue(true);
             }
         });
 
@@ -218,7 +221,7 @@ public class TimeTableFragment extends Fragment {
             timeTableRecyclerView.setAdapter(timeTableAdapter);
             timeTableRecyclerView.setHasFixedSize(true);
 
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
 
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView,
@@ -235,7 +238,14 @@ public class TimeTableFragment extends Fragment {
                     TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(argDay).get(position);
                     dayViewModel.delete(timeTableSubject);
                 }
-            }).attachToRecyclerView(timeTableRecyclerView);
+            });
+
+            TimeTableFragment.isEditable.observe(getViewLifecycleOwner(), isEditable -> {
+                if (isEditable)
+                    itemTouchHelper.attachToRecyclerView(timeTableRecyclerView);
+                else
+                    itemTouchHelper.attachToRecyclerView(null);
+            });
 
             dayViewModel.getSubjectsOfDayWithoutTemp(argDay).observe(getViewLifecycleOwner(), timeTableSubjectList -> {
                 List<Subject> subjectList = new ArrayList<>();
