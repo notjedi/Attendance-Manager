@@ -29,7 +29,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class EditSubjectActivity extends AppCompatActivity {
 
-    private static final String TAG = "EditSubjectActivity";
     public static int CHANGED = 0;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
