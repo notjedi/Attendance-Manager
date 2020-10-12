@@ -1,130 +1,82 @@
 package com.attendancemanager.view;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.attendancemanager.R;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+import org.jetbrains.annotations.NotNull;
+
 public class AboutActivity extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
+    private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
+            /* Delayed removal of status and navigation bar */
+            /* https://developer.android.com/training/system-ui/immersive */
             mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
 
-    private boolean mVisible;
-    private final Runnable mHideRunnable = this::hide;
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_about);
 
-        mVisible = true;
         mContentView = findViewById(R.id.fullscreen_content);
+        TextView projectText = findViewById(R.id.about_project);
+        TextView iconCreditsText = findViewById(R.id.icon_credits_text);
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(view -> toggle());
+        /* Removing underline for projectText */
+        Spannable spannable = (Spannable) Html.fromHtml(getString(R.string.open_source_project), Html.FROM_HTML_MODE_LEGACY);
+        URLSpan urlSpan = spannable.getSpans(0, spannable.length(), URLSpan.class)[0];
+        spannable.setSpan(new UnderlineSpan() {
+            public void updateDrawState(@NotNull TextPaint textPaint) {
+                textPaint.setUnderlineText(false);
+            }
+        }, spannable.getSpanStart(urlSpan), spannable.getSpanEnd(urlSpan), 0);
+        projectText.setText(spannable);
+        projectText.setMovementMethod(LinkMovementMethod.getInstance());
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
+        /* Removing underline for iconCreditsText */
+        spannable = (Spannable) Html.fromHtml(getString(R.string.icon_credits), Html.FROM_HTML_MODE_LEGACY);
+        urlSpan = spannable.getSpans(0, spannable.length(), URLSpan.class)[0];
+        spannable.setSpan(new UnderlineSpan() {
+            public void updateDrawState(@NotNull TextPaint textPaint) {
+                textPaint.setUnderlineText(false);
+            }
+        }, spannable.getSpanStart(urlSpan), spannable.getSpanEnd(urlSpan), 0);
+        iconCreditsText.setText(spannable);
+        iconCreditsText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
+        delayedHide();
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-    }
-
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
+    private void delayedHide() {
         mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+        mHideHandler.postDelayed(mHideRunnable, 1000);
     }
 }
