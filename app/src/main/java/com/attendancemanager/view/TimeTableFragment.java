@@ -2,6 +2,7 @@ package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
+
 public class TimeTableFragment extends Fragment {
 
     public static final String[] DAY_NAMES = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday",
             "Friday", "Saturday", "Sunday"};
-    private static final String TAG = "TimeTableFragment";
     public static MutableLiveData<Boolean> isEditable = new MutableLiveData<>(false);
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -115,6 +117,7 @@ public class TimeTableFragment extends Fragment {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             addButtonFab.setVisibility(View.GONE);
             floatingActionButton.setVisibility(View.GONE);
+            getActivity().findViewById(R.id.bottom_bar).setVisibility(View.INVISIBLE);
         });
 
         setupViewPager();
@@ -151,6 +154,9 @@ public class TimeTableFragment extends Fragment {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     addButtonFab.setVisibility(View.VISIBLE);
                     floatingActionButton.setVisibility(View.VISIBLE);
+                    ExpandableBottomBar bottomBar = getActivity().findViewById(R.id.bottom_bar);
+                    bottomBar.setVisibility(View.VISIBLE);
+                    bottomBar.hide();
                 }
             }
 

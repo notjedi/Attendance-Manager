@@ -47,8 +47,6 @@ import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = "HomeFragment";
-
     private TextView mDate;
     private TextView mDay;
     private TextView mGreet;
@@ -199,9 +197,9 @@ public class HomeFragment extends Fragment {
             SettingsFragment.resetDataChanged();
         });
 
-        dayViewModel.getSubjectsOfDayLiveData(day).observe(getViewLifecycleOwner(), subjectMinimalList -> {
+        dayViewModel.getSubjectsOfDayLiveData(day).observe(getViewLifecycleOwner(), timeTableSubjectList -> {
             List<Subject> subjectList = new ArrayList<>();
-            for (TimeTableSubject timeTableSubject : subjectMinimalList) {
+            for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
                 Subject subject = subjectViewModel.getSubject(timeTableSubject.getSubjectName());
                 if (subject != null) {
                     subject.setStatus(timeTableSubject.getStatus());

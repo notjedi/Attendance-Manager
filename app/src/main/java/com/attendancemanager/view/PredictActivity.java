@@ -40,7 +40,6 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     private List<TimeTableSubject> saturdayList;
     private List<TimeTableSubject> sundayList;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

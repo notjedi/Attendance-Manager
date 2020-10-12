@@ -88,7 +88,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final int READ_PERMISSION_REQUEST = 2;
     public static final int FILE_CHOOSER_ACTIVITY_REQUEST = 1;
     public static final String BACKUP_FILE_NAME = "attendance-manager";
-    private static final String TAG = "SettingsFragment";
     public static int DATA_CHANGED = 0;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
