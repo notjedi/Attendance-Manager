@@ -8,14 +8,25 @@
     android:background="@color/white"
     tools:context=".view.AboutActivity">
 
+    <TextView
+        android:id="@+id/app_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/raleway_semibold"
+        android:text="@string/app_name_bold"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_icon" />
+
     <ImageButton
         android:id="@+id/app_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:background="@drawable/ic_launcher_background"
-        android:contentDescription="App Icon"
-        android:keepScreenOn="true"
+        android:contentDescription="@string/app_icon"
         android:src="@drawable/ic_launcher_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,25 +34,37 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/about_project"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/roboto"
-        android:text="Attendance Manager is an open source project"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/raleway"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/app_name_text"
+        tools:text="Attendance Manager is an open source project" />
 
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <TextView
+        android:id="@+id/icon_credits_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/raleway_semibold"
+        app:layout_constraintBottom_toTopOf="@+id/developer_credits_text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:text="Icon by Abner Wesley" />
 
-    </FrameLayout>
+    <TextView
+        android:id="@+id/developer_credits_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:fontFamily="@font/raleway_semibold"
+        android:text="@string/developer_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

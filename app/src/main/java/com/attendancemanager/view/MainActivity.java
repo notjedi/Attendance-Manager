@@ -144,13 +144,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SubjectViewModel subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
-        subjectViewModel.closeDB();
-    }
-
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
         public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {

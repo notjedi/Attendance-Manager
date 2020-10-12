@@ -472,12 +472,4 @@ public class HomeFragment extends Fragment {
             SettingsFragment.resetDataChanged();
         }
     }
-
-    @Override
-    public void onDestroy() {
-        /* Close the connection to the database although this method is not guaranteed to be called */
-        /* https://stackoverflow.com/questions/17195641/fragment-lifecycle-when-ondestroy-and-ondestroyview-are-not-called */
-
-        super.onDestroy();
-    }
 }
