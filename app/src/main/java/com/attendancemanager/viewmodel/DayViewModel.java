@@ -57,10 +57,6 @@ public class DayViewModel extends AndroidViewModel {
         dayRepository.resetStatus(day);
     }
 
-    public void deleteLimited(String day, int limit) {
-        dayRepository.deleteLimited(day, limit);
-    }
-
     public void deleteSubjectByName(String subjectName) {
         dayRepository.deleteSubjectByName(subjectName);
     }
@@ -91,6 +87,10 @@ public class DayViewModel extends AndroidViewModel {
                 return sundayList;
         }
         return null;
+    }
+
+    public LiveData<List<TimeTableSubject>> getSubjectsOfDayWithoutTemp(String day) {
+        return dayRepository.getSubjectsOfDayWithoutTemp(day);
     }
 
     public List<TimeTableSubject> getSubjectsOfDay(String dayName) {

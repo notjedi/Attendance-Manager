@@ -24,9 +24,6 @@ public interface TimeTableDao {
     @Query("DELETE FROM time_table")
     void deleteAllSubjects();
 
-    @Query("DELETE FROM time_table WHERE id IN (SELECT id FROM time_table WHERE day = :day ORDER BY id DESC LIMIT :limit)")
-    void deleteLimited(String day, int limit);
-
     @Query("DELETE FROM time_table WHERE subjectName = :subjectName")
     void deleteSubjectByName(String subjectName);
 
@@ -41,6 +38,9 @@ public interface TimeTableDao {
 
     @Query("SELECT * FROM time_table WHERE day = :day")
     LiveData<List<TimeTableSubject>> getSubjectsOfDayLiveData(String day);
+
+    @Query("SELECT * FROM time_table WHERE day = :day AND `temp` = 0")
+    LiveData<List<TimeTableSubject>> getSubjectsOfDayWithoutTemp(String day);
 
     @Query("SELECT * FROM time_table")
     LiveData<List<TimeTableSubject>> getAllSubjects();

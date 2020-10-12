@@ -64,12 +64,12 @@ public class DayRepository {
         return timeTableDao.getSubjectsOfDayLiveData(day.toLowerCase());
     }
 
-    public List<TimeTableSubject> getSubjectsOfDay(String day) {
-        return timeTableDao.getSubjectsOfDay(day.toLowerCase());
+    public LiveData<List<TimeTableSubject>> getSubjectsOfDayWithoutTemp(String day) {
+        return timeTableDao.getSubjectsOfDayWithoutTemp(day.toLowerCase());
     }
 
-    public void deleteLimited(String day, int limit) {
-        timeTableDao.deleteLimited(day, limit);
+    public List<TimeTableSubject> getSubjectsOfDay(String day) {
+        return timeTableDao.getSubjectsOfDay(day.toLowerCase());
     }
 
     public void deleteTempSubjects() {
