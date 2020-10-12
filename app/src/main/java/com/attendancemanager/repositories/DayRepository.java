@@ -72,6 +72,10 @@ public class DayRepository {
         timeTableDao.deleteLimited(day, limit);
     }
 
+    public void deleteTempSubjects() {
+        timeTableDao.deleteTempSubjects();
+    }
+
     public void closeDB() {
         if (dataBase.isOpen())
             dataBase.close();

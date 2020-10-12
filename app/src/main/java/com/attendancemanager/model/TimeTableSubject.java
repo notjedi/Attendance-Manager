@@ -2,7 +2,6 @@ package com.attendancemanager.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
@@ -19,21 +18,14 @@ public class TimeTableSubject {
     protected int status;
     @Expose
     protected String day;
-
-    @Ignore
-    public TimeTableSubject(String subjectName) {
-        this(subjectName, -1, "null");
-    }
-
-    @Ignore
-    public TimeTableSubject(String subjectName, String day) {
-        this(subjectName, -1, day);
-    }
+    @Expose
+    protected boolean temp;
 
     public TimeTableSubject(String subjectName, int status, String day) {
         this.subjectName = subjectName;
         this.status = status;
         this.day = day.toLowerCase();
+        this.temp = false;
     }
 
     public int getId() {
@@ -74,5 +66,13 @@ public class TimeTableSubject {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public boolean isTemp() {
+        return temp;
+    }
+
+    public void setTemp(boolean temp) {
+        this.temp = temp;
     }
 }

@@ -65,6 +65,10 @@ public class DayViewModel extends AndroidViewModel {
         dayRepository.deleteSubjectByName(subjectName);
     }
 
+    public void deleteTempSubjects() {
+        dayRepository.deleteTempSubjects();
+    }
+
     public void deleteAllSubjects() {
         dayRepository.deleteAllSubjects();
     }

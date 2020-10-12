@@ -3,7 +3,6 @@ package com.attendancemanager.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,10 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS_ATTENDANCE_CRITERIA = "attendance_criteria";
     public static final String SHARED_PREFS_LAST_UPDATED = "last_updated";  // for status
     public static final String SHARED_PREFS_EXTRA_LAST_ADDED = "extra_subject_last_added"; //date added
-    public static final String SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED = "total_subjects_added"; // total subjects added
-    public static final String SHARED_PREFS_DAY_ADDED = "day_added"; // day added
     public static final String SHARED_PREFS_FIRST_TIME = "isFirstTime";
-    private static final String TAG = "MainActivity";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
 
@@ -151,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         SubjectViewModel subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         subjectViewModel.closeDB();
-        Log.i(TAG, "onDestroy: ");
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
