@@ -9,7 +9,6 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +95,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -112,23 +110,7 @@ public class HomeFragment extends Fragment {
         bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
 
         setDayAndDate();
-        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
-            dayViewModel.resetStatus(day);
-        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").equals(todayDate) &&
-                !sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").isEmpty()) {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
-            String dayAdded = sharedPreferences.getString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
-            int extraAdded = sharedPreferences.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
-
-            if (!dayAdded.isEmpty() && extraAdded != 0) {
-                dayViewModel.deleteLimited(dayAdded, extraAdded);
-                SharedPreferences.Editor sEditor = sharedPreferences.edit();
-                sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "");
-                sEditor.putInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
-                sEditor.putString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
-                sEditor.apply();
-            }
-        }
+        checkPrefs();
         getTodayTimeTable();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
@@ -177,6 +159,20 @@ public class HomeFragment extends Fragment {
         simpleDateFormat.applyPattern("dMM");
         todayDate = simpleDateFormat.format(calendar.getTime());
         vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void checkPrefs() {
+
+        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
+            dayViewModel.resetStatus(day);
+
+        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").equals(todayDate) &&
+                !sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").isEmpty()) {
+
+            dayViewModel.deleteTempSubjects();
+            sharedPrefs.edit().putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").apply();
+        }
     }
 
     private void getTodayTimeTable() {
@@ -363,16 +359,10 @@ public class HomeFragment extends Fragment {
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             Subject subject = mBottomSheetAdapter.getSubjectAt(position);
-            TimeTableSubject timeTableSubject = new TimeTableSubject(subject.getSubjectName(), day);
-            timeTableSubject.setStatus(DayViewModel.NONE);
+            TimeTableSubject timeTableSubject = new TimeTableSubject(subject.getSubjectName(), DayViewModel.NONE, day);
+            timeTableSubject.setTemp(true);
             dayViewModel.insert(timeTableSubject);
-            int extraSubjectAdded = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
-
-            SharedPreferences.Editor sEditor = sharedPrefs.edit();
-            sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, todayDate);
-            sEditor.putString(MainActivity.SHARED_PREFS_DAY_ADDED, day);
-            sEditor.putInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, extraSubjectAdded + 1);
-            sEditor.apply();
+            sharedPrefs.edit().putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, todayDate).apply();
         });
 
         mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);

@@ -1,8 +1,6 @@
 package com.attendancemanager.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -158,9 +156,10 @@ public class TimeTableFragment extends Fragment {
         });
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
-            TimeTableSubject subject = new TimeTableSubject(mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
+            TimeTableSubject subject = new TimeTableSubject(
+                    mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
+                    DayViewModel.NONE,
                     pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
-            subject.setStatus(DayViewModel.NONE);
             dayViewModel.insert(subject);
         });
 
@@ -237,20 +236,16 @@ public class TimeTableFragment extends Fragment {
                 }
             }).attachToRecyclerView(timeTableRecyclerView);
 
-            dayViewModel.getSubjectsOfDayLiveData(argDay).observe(getViewLifecycleOwner(), subjectMinimalList -> {
+            dayViewModel.getSubjectsOfDayLiveData(argDay).observe(getViewLifecycleOwner(), timeTableSubjectList -> {
                 List<Subject> subjectList = new ArrayList<>();
-                SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
-                String lastDay = sharedPrefs.getString(MainActivity.SHARED_PREFS_DAY_ADDED, "");
-                int extraSubjects = sharedPrefs.getInt(MainActivity.SHARED_PREFS_TOTAL_EXTRA_SUBJECTS_ADDED, 0);
-                int index = 0;
-
-                for (TimeTableSubject timeTableSubject : subjectMinimalList) {
-                    if (index == subjectMinimalList.size() - extraSubjects && argDay.equals(lastDay))
-                        break;
+                for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
+                    if (timeTableSubject.isTemp())
+                        /* User may have added more subjects after adding extra subjects so we
+                        use continue instead of break */
+                        continue;
                     Subject subject = subjectViewModel.getSubject(timeTableSubject.getSubjectName());
                     if (subject != null) {
                         subjectList.add(subject);
-                        index++;
                     }
                 }
                 timeTableAdapter.setSubjectList(subjectList);

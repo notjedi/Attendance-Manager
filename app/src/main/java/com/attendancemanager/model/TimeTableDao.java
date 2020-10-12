@@ -30,6 +30,9 @@ public interface TimeTableDao {
     @Query("DELETE FROM time_table WHERE subjectName = :subjectName")
     void deleteSubjectByName(String subjectName);
 
+    @Query("DELETE FROM time_table WHERE `temp` = 1")
+    void deleteTempSubjects();
+
     @Query("UPDATE time_table SET status = -1 where day = :day")
     void resetStatus(String day);
 
