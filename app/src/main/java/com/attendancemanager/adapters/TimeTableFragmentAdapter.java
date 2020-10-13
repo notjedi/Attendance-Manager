@@ -58,9 +58,9 @@ public class TimeTableFragmentAdapter extends RecyclerView.Adapter<TimeTableFrag
 
     public static class TimeTableViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mPosition;
-        private TextView mSubjectName;
-        private TextView mAttendancePercentage;
+        private final TextView mPosition;
+        private final TextView mSubjectName;
+        private final TextView mAttendancePercentage;
 
         public TimeTableViewHolder(@NonNull View itemView) {
             super(itemView);

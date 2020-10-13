@@ -17,13 +17,12 @@ public class SubjectRepository {
 
     private static SubjectRepository instance;
 
-    private SubjectDao subjectDao;
-    private LiveData<List<Subject>> allSubjects;
-    private AppDatabase dataBase;
+    private final SubjectDao subjectDao;
+    private final LiveData<List<Subject>> allSubjects;
 
     public SubjectRepository(Application application) {
 
-        dataBase = AppDatabase.getInstance(application);
+        AppDatabase dataBase = AppDatabase.getInstance(application);
         subjectDao = dataBase.subjectDao();
         allSubjects = subjectDao.getAllSubjects();
     }
@@ -81,8 +80,8 @@ public class SubjectRepository {
 
     private static class InsertSubjectRunnable implements Runnable {
 
-        private SubjectDao subjectDao;
-        private Subject subject;
+        private final SubjectDao subjectDao;
+        private final Subject subject;
 
         InsertSubjectRunnable(SubjectDao subjectDao, Subject subject) {
             this.subjectDao = subjectDao;
@@ -97,8 +96,8 @@ public class SubjectRepository {
 
     private static class DeleteSubjectRunnable implements Runnable {
 
-        private SubjectDao subjectDao;
-        private Subject subject;
+        private final SubjectDao subjectDao;
+        private final Subject subject;
 
         DeleteSubjectRunnable(SubjectDao subjectDao, Subject subject) {
             this.subjectDao = subjectDao;
@@ -113,8 +112,8 @@ public class SubjectRepository {
 
     private static class UpdateSubjectRunnable implements Runnable {
 
-        private SubjectDao subjectDao;
-        private Subject subject;
+        private final SubjectDao subjectDao;
+        private final Subject subject;
 
         UpdateSubjectRunnable(SubjectDao subjectDao, Subject subject) {
             this.subjectDao = subjectDao;
@@ -129,7 +128,7 @@ public class SubjectRepository {
 
     private static class DeleteAllSubjectRunnable implements Runnable {
 
-        private SubjectDao subjectDao;
+        private final SubjectDao subjectDao;
 
         DeleteAllSubjectRunnable(SubjectDao subjectDao) {
             this.subjectDao = subjectDao;

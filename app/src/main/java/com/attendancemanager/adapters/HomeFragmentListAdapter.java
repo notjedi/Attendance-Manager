@@ -27,7 +27,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     private static final float ATTENDED_ALPHA = 0.4f;
     private static final float BUNKED_ALPHA = 0.3f;
     private static final float CANCELLED_ALPHA = 0.5f;
-    private static final String TAG = "SubjectListAdapter";
     private static final DiffUtil.ItemCallback<Subject> DIFF_CALLBACK = new DiffUtil.ItemCallback<Subject>() {
         /* Using RecyclerView.ListAdapter and DiffUtil to pass on data changes from LiveData to RecyclerView */
 
@@ -45,7 +44,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         }
     };
     private OnItemClickListener mItemClickListener;
-    private Context mContext;
+    private final Context mContext;
     private int criteria;
 
     public HomeFragmentListAdapter(Context mContext) {
@@ -143,13 +142,13 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     public static class SubjectListViewHolder extends RecyclerView.ViewHolder {
 
         public TextView mTotalClassesAttended;
-        private TextView mSubjectName;
-        private TextView mStatusInfo;
-        private ProgressBar mSubjectAttendanceProgressBar;
-        private TextView mSubjectProgressBarPercentage;
-        private ImageButton mAttended;
-        private ImageButton mBunked;
-        private ImageButton mCancelled;
+        private final TextView mSubjectName;
+        private final TextView mStatusInfo;
+        private final ProgressBar mSubjectAttendanceProgressBar;
+        private final TextView mSubjectProgressBarPercentage;
+        private final ImageButton mAttended;
+        private final ImageButton mBunked;
+        private final ImageButton mCancelled;
 
         public SubjectListViewHolder(@NonNull final View itemView, final OnItemClickListener itemClickListener) {
             super(itemView);

@@ -13,8 +13,8 @@ import java.util.List;
 
 public class SubjectViewModel extends AndroidViewModel {
 
-    private SubjectRepository subjectRepository;
-    private LiveData<List<Subject>> allSubjects;
+    private final SubjectRepository subjectRepository;
+    private final LiveData<List<Subject>> allSubjects;
 
     public SubjectViewModel(@NonNull Application application) {
         super(application);

@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -93,6 +94,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -159,7 +161,6 @@ public class HomeFragment extends Fragment {
         vibrate = defaultPrefs.getBoolean(SettingsFragment.VIBRATE, true);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void checkPrefs() {
 
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
@@ -211,6 +212,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void buildRecyclerView() {
         /* Builds the recycler view */
 
@@ -374,6 +376,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void buildFirstTimeDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
         dialogBuilder.setTitle("Name");
@@ -409,10 +412,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty())
-                    positiveButton.setEnabled(false);
-                else
-                    positiveButton.setEnabled(true);
+                positiveButton.setEnabled(!s.toString().isEmpty());
             }
         });
     }

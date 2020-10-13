@@ -65,7 +65,7 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
 
     public static class BottomSheetViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mSubjectName;
+        private final TextView mSubjectName;
 
         public BottomSheetViewHolder(@NonNull View itemView, OnAddButtonClickListener listener) {
             super(itemView);

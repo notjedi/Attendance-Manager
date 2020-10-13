@@ -37,7 +37,7 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
         }
     };
     private ItemClickListener mItemClickListener;
-    private Context mContext;
+    private final Context mContext;
     private int criteria;
 
     public EditSubjectActivityAdapter(Context context) {
@@ -91,8 +91,10 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
 
     public static class EditSubjectListViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mSubjectName, mProgressPercentage, mAttendedClasses;
-        private ProgressBar mProgressBar;
+        private final TextView mSubjectName;
+        private final TextView mProgressPercentage;
+        private final TextView mAttendedClasses;
+        private final ProgressBar mProgressBar;
         private EditSubjectActivityAdapter.ItemClickListener mListener;
 
         public EditSubjectListViewHolder(@NonNull View itemView, EditSubjectActivityAdapter.ItemClickListener mListener) {
