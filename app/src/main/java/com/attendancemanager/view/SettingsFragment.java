@@ -402,6 +402,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         dayViewModel.deleteAllSubjects();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean checkPermissions(String type) {
         /* https://developer.android.com/training/permissions/requesting */
         if (type.equals("write")) {
@@ -414,6 +415,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return false;
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
 
         JSONObject jsonObject = new JSONObject();
@@ -458,6 +460,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void showRestoreAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme)
                 .setTitle("Restore")
@@ -476,8 +479,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         messageText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void restoreDatabase(Uri uri) {
-        /* TODO display alert dialog that all data will be lost */
 
         String jsonString = readJsonFile(uri);
         JSONObject jsonObject;
@@ -524,6 +527,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private String readJsonFile(Uri uri) {
 
         StringBuilder jsonString = new StringBuilder();
@@ -556,6 +560,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void updateNotificationSettings(boolean isNotificationEnabled, int hour, int minute) {
 
         if (!isNotificationEnabled) {
@@ -575,6 +580,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void cancelNotification() {
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent notificationIntent = new Intent(getContext(), AlarmReceiver.class);
@@ -583,6 +589,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         alarmManager.cancel(pendingIntent);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void buildTimePicker() {
 
         SharedPreferences settingsPrefs = getActivity()

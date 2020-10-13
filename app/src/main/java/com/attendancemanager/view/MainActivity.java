@@ -1,5 +1,6 @@
 package com.attendancemanager.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ExpandableBottomBar bottomBar;
 
     private Handler handler;
-    private Runnable hideBottomBar = new Runnable() {
+    private final Runnable hideBottomBar = new Runnable() {
         @Override
         public void run() {
             bottomBar.hide();
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void setupViewPager() {
         /* Initializes the view pager */
 

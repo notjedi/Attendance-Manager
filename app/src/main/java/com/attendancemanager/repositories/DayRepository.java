@@ -12,20 +12,12 @@ import java.util.List;
 
 public class DayRepository {
 
-    public static final int INSERT = 0;
-    public static final int UPDATE = 1;
-    public static final int DELETE = 2;
-    public static final int RESET_STATUS = 3;
-    public static final int DELETE_ALL_SUBJECTS = 4;
-
     private static DayRepository instance;
-
-    private AppDatabase dataBase;
-    private TimeTableDao timeTableDao;
+    private final TimeTableDao timeTableDao;
 
     public DayRepository(Application application) {
 
-        dataBase = AppDatabase.getInstance(application);
+        AppDatabase dataBase = AppDatabase.getInstance(application);
         timeTableDao = dataBase.timeTableDao();
     }
 

@@ -33,7 +33,7 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
         }
     };
 
-    private Context mContext;
+    private final Context mContext;
 
     public PredictAdapter(Context mContext) {
         super(DIFF_CALLBACK);
@@ -68,8 +68,8 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
 
     public static class PredictViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mSubjectName, mProgressPercentage, mAttendedClasses;
-        private ProgressBar mProgressBar;
+        private final TextView mSubjectName, mProgressPercentage, mAttendedClasses;
+        private final ProgressBar mProgressBar;
 
         public PredictViewHolder(@NonNull View itemView) {
             super(itemView);

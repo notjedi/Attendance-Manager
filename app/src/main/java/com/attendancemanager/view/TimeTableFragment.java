@@ -78,6 +78,7 @@ public class TimeTableFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -133,7 +134,6 @@ public class TimeTableFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         Date date = new Date();
         calendar.setTime(date);
-        /* TODO make a static method in MainActivity that gets the day of week and use it in all occurrences */
         /* 0 represents SUNDAY in the Calender class so doing some calculations to make 0 as MONDAY */
         viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
         viewPager.setOffscreenPageLimit(1);
@@ -202,6 +202,7 @@ public class TimeTableFragment extends Fragment {
         }
 
         @Override
+        @SuppressWarnings("ConstantConditions")
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             argDay = getArguments().getString(ARG_DAY_NAME);
@@ -232,8 +233,6 @@ public class TimeTableFragment extends Fragment {
                 public boolean onMove(@NonNull RecyclerView recyclerView,
                                       @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
 
-                    // i'd have a separate field in the table that designates the order of the items so that i can sort by it
-                    // but the idea was the same. i was using in-memory list, ordered them around, then user pressed "save" and that's when i saved the changes to db
                     return false;
                 }
 

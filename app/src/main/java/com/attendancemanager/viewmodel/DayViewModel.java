@@ -18,14 +18,14 @@ public class DayViewModel extends AndroidViewModel {
     public static final int BUNKED = 1;
     public static final int ATTENDED = 2;
 
-    private DayRepository dayRepository;
-    private LiveData<List<TimeTableSubject>> mondayList;
-    private LiveData<List<TimeTableSubject>> tuesdayList;
-    private LiveData<List<TimeTableSubject>> wednesdayList;
-    private LiveData<List<TimeTableSubject>> thursdayList;
-    private LiveData<List<TimeTableSubject>> fridayList;
-    private LiveData<List<TimeTableSubject>> saturdayList;
-    private LiveData<List<TimeTableSubject>> sundayList;
+    private final DayRepository dayRepository;
+    private final LiveData<List<TimeTableSubject>> mondayList;
+    private final LiveData<List<TimeTableSubject>> tuesdayList;
+    private final LiveData<List<TimeTableSubject>> wednesdayList;
+    private final LiveData<List<TimeTableSubject>> thursdayList;
+    private final LiveData<List<TimeTableSubject>> fridayList;
+    private final LiveData<List<TimeTableSubject>> saturdayList;
+    private final LiveData<List<TimeTableSubject>> sundayList;
 
 
     public DayViewModel(@NonNull Application application) {
