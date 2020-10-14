@@ -23,11 +23,12 @@ public class NotificationHelper extends ContextWrapper {
     public static final String DAILY_REMAINDER_CHANNEL_NAME = "Daily remainder";
     public static final String SHARED_PREFS_HOUR_KEY = "notification_hour";
     public static final String SHARED_PREFS_MINUTES_KEY = "notification_minute";
-
+    private final Context mContext;
     private NotificationManager notificationManager;
 
     public NotificationHelper(Context base) {
         super(base);
+        mContext = base;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannels();
     }
@@ -48,10 +49,11 @@ public class NotificationHelper extends ContextWrapper {
         return notificationManager;
     }
 
-    public NotificationCompat.Builder getDailyNotification(Context context) {
-        Intent activityIntent = new Intent(context, MainActivity.class);
+    public NotificationCompat.Builder getDailyNotification() {
+
+        Intent activityIntent = new Intent(mContext, MainActivity.class);
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 1, activityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(mContext, 1, activityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         Uri ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         return new NotificationCompat.Builder(getApplicationContext(), DAILY_REMAINDER_CHANNEL_ID)
