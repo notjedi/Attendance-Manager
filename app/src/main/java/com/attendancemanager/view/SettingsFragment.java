@@ -36,10 +36,10 @@ import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
+import com.attendancemanager.helper.NotificationHelper;
 import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.receiver.AlarmReceiver;
-import com.attendancemanager.receiver.NotificationHelper;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
