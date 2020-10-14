@@ -92,17 +92,19 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         if (percentage < criteria) {
             /* Should have to attend more classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
-            due = (int) ((criteria * total) - (attended * 100)) / (100 - criteria);
+            due = ((criteria * total) - (attended * 100)) / (100 - criteria);
             holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Attend %d more classes", due));
         } else {
             /* On track or can bunk a few classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
             if (percentage != criteria) {
-                due = (int) ((attended * 100) - (total * criteria)) / criteria;
+                due = ((attended * 100) - (total * criteria)) / criteria;
                 holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can bunk %d more classes", due));
             } else
                 holder.mStatusInfo.setText(R.string.on_track_text);
         }
+        /* A weird bug causes the progress to be 0 but setting it to 0 and then updating the progress works, idk how, smh*/
+        holder.mSubjectAttendanceProgressBar.setProgress(0);
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
 
         switch (subject.getStatus()) {
