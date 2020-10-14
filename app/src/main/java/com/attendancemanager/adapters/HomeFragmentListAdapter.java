@@ -78,7 +78,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     public void onBindViewHolder(@NonNull SubjectListViewHolder holder, int position) {
 
         Subject subject = getItem(position);
-        int due;
+        int statusClasses;
         int attended = subject.getAttendedClasses();
         int total = subject.getTotalClasses();
         int percentage = total == 0 ? 0 : Math.round((
@@ -92,14 +92,14 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         if (percentage < criteria) {
             /* Should have to attend more classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
-            due = ((criteria * total) - (attended * 100)) / (100 - criteria);
-            holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Attend %d more classes", due));
+            statusClasses = ((criteria * total) - (attended * 100)) / (100 - criteria);
+            holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Attend %d more classes", statusClasses));
         } else {
             /* On track or can bunk a few classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
             if (percentage != criteria) {
-                due = ((attended * 100) - (total * criteria)) / criteria;
-                holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can bunk %d more classes", due));
+                statusClasses = ((attended * 100) - (total * criteria)) / criteria;
+                holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can bunk %d more classes", statusClasses));
             } else
                 holder.mStatusInfo.setText(R.string.on_track_text);
         }

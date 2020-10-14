@@ -13,7 +13,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationHelper notificationHelper = new NotificationHelper(context);
-        NotificationCompat.Builder nBuilder = notificationHelper.getDailyNotification(context);
+        NotificationCompat.Builder nBuilder = notificationHelper.getDailyNotification();
         notificationHelper.getManager().notify(1, nBuilder.build());
     }
 }

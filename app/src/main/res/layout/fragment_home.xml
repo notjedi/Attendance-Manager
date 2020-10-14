@@ -74,14 +74,13 @@
                 <ProgressBar
                     android:id="@+id/overall_attendance_percentage"
                     android:layout_width="140dp"
-                    android:layout_height="140dp"
+                    android:layout_height="120dp"
                     android:indeterminateOnly="false"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:progressDrawable="@drawable/progress_bar_green"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/date_text_view"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:progress="75" />
 
