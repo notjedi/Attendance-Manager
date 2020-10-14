@@ -93,13 +93,23 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             /* Should have to attend more classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
             statusClasses = ((criteria * total) - (attended * 100)) / (100 - criteria);
-            holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Attend %d more classes", statusClasses));
+            if (statusClasses == 0)
+                holder.mStatusInfo.setText(R.string.on_track_text);
+            else {
+                String message = "Attend %d more classes";
+                if (statusClasses == 1)
+                    message = "Attend %d more class";
+                holder.mStatusInfo.setText(String.format(Locale.getDefault(), message, statusClasses));
+            }
         } else {
             /* On track or can bunk a few classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
-            if (percentage != criteria) {
-                statusClasses = ((attended * 100) - (total * criteria)) / criteria;
-                holder.mStatusInfo.setText(String.format(Locale.getDefault(), "Can bunk %d more classes", statusClasses));
+            statusClasses = ((attended * 100) - (total * criteria)) / criteria;
+            if (percentage != criteria && statusClasses != 0) {
+                String message = "Can bunk %d more classes";
+                if (statusClasses == 1)
+                    message = "Can bunk %d more class";
+                holder.mStatusInfo.setText(String.format(Locale.getDefault(), message, statusClasses));
             } else
                 holder.mStatusInfo.setText(R.string.on_track_text);
         }

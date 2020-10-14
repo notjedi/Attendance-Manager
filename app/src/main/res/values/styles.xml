@@ -13,6 +13,10 @@
         <item name="tooltipStyle">@font/raleway</item>
     </style>
 
+    <style name="SplashScreen.Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
     <style name="AlertDialog.App.Theme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:textColor">@color/lightBrown</item>
         <item name="colorPrimary">@color/colorPrimary</item>
