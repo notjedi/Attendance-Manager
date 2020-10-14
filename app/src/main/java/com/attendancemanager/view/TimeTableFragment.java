@@ -78,7 +78,6 @@ public class TimeTableFragment extends Fragment {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -140,7 +139,6 @@ public class TimeTableFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    @SuppressWarnings("ConstantConditions")
     private void buildBottomSheet() {
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
@@ -202,7 +200,6 @@ public class TimeTableFragment extends Fragment {
         }
 
         @Override
-        @SuppressWarnings("ConstantConditions")
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             argDay = getArguments().getString(ARG_DAY_NAME);

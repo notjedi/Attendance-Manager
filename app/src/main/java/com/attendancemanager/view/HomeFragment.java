@@ -75,7 +75,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -94,7 +93,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -115,10 +113,8 @@ public class HomeFragment extends Fragment {
         buildRecyclerView();
         buildBottomSheetRecyclerView();
 
-        if (sharedPrefs.getBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, true)) {
+        if (sharedPrefs.getBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, true))
             buildFirstTimeDialog();
-            sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, false).apply();
-        }
     }
 
     private void setDayAndDate() {
@@ -212,7 +208,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void buildRecyclerView() {
         /* Builds the recycler view */
 
@@ -370,7 +365,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void buildFirstTimeDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
         dialogBuilder.setTitle("Name");
@@ -384,6 +378,7 @@ public class HomeFragment extends Fragment {
             SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
             defaultPrefs.edit().putString(SettingsFragment.NAME, name).apply();
             mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
+            sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, false).apply();
             dialog.dismiss();
         });
         dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -427,7 +422,6 @@ public class HomeFragment extends Fragment {
         mProgressPercentage.setText(String.format(Locale.US, "%d%%", attendancePercentage));
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void vibrateOnTouch(boolean vibrate) {
 
         Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
