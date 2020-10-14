@@ -30,14 +30,13 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS_FIRST_TIME = "isFirstTime";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
-
-    private Handler handler;
     private final Runnable hideBottomBar = new Runnable() {
         @Override
         public void run() {
             bottomBar.hide();
         }
     };
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

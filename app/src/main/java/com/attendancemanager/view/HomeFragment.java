@@ -239,11 +239,9 @@ public class HomeFragment extends Fragment {
                     subject.incrementAttendedClasses();
                     timeTableSubject.setStatus(DayViewModel.ATTENDED);
                 }
-                vibrateOnTouch(vibrate);
-                timeTableSubject.setDay(day);
                 subjectViewModel.update(subject);
                 dayViewModel.update(timeTableSubject);
-                homeFragmentListAdapter.notifyItemChanged(position);
+                vibrateOnTouch(vibrate);
                 setLastUpdated();
             }
 
@@ -263,11 +261,9 @@ public class HomeFragment extends Fragment {
                     subject.incrementTotalClasses();
                     timeTableSubject.setStatus(DayViewModel.BUNKED);
                 }
-                vibrateOnTouch(vibrate);
-                timeTableSubject.setDay(day);
                 subjectViewModel.update(subject);
                 dayViewModel.update(timeTableSubject);
-                homeFragmentListAdapter.notifyItemChanged(position);
+                vibrateOnTouch(vibrate);
                 setLastUpdated();
             }
 
@@ -286,11 +282,9 @@ public class HomeFragment extends Fragment {
                     timeTableSubject.setStatus(DayViewModel.CANCELLED);
                 else
                     timeTableSubject.setStatus(DayViewModel.NONE);
-                vibrateOnTouch(vibrate);
-                timeTableSubject.setDay(day);
                 subjectViewModel.update(subject);
                 dayViewModel.update(timeTableSubject);
-                homeFragmentListAdapter.notifyItemChanged(position);
+                vibrateOnTouch(vibrate);
                 setLastUpdated();
             }
         });

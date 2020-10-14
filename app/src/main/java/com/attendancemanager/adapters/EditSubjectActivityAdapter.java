@@ -36,8 +36,8 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
                     oldItem.getSubjectName().equals(newItem.getSubjectName());
         }
     };
-    private ItemClickListener mItemClickListener;
     private final Context mContext;
+    private ItemClickListener mItemClickListener;
     private int criteria;
 
     public EditSubjectActivityAdapter(Context context) {
