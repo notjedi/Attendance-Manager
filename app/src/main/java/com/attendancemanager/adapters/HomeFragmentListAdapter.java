@@ -103,7 +103,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             } else
                 holder.mStatusInfo.setText(R.string.on_track_text);
         }
-        /* A weird bug causes the progress to be 0 but setting it to 0 and then updating the progress works, idk how, smh*/
+        /* A weird bug causes the progress to be 0 percent while updating the percentage. But
+        setting the progress to 0 and then updating the progress again works, idk how, smh */
         holder.mSubjectAttendanceProgressBar.setProgress(0);
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
 

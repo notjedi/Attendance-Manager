@@ -1,4 +1,4 @@
-package com.attendancemanager.receiver;
+package com.attendancemanager.helper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -16,8 +16,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.attendancemanager.R;
 import com.attendancemanager.view.MainActivity;
-
-import java.util.Calendar;
 
 public class NotificationHelper extends ContextWrapper {
 
