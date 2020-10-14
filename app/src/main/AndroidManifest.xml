@@ -38,7 +38,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receiver.AlarmReceiver" />
+        <receiver android:name=".receiver.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".receiver.BootReceiver"
             android:enabled="true"

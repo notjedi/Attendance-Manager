@@ -3,15 +3,21 @@ package com.attendancemanager.receiver;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.attendancemanager.R;
+import com.attendancemanager.view.MainActivity;
+
+import java.util.Calendar;
 
 public class NotificationHelper extends ContextWrapper {
 
@@ -35,22 +41,27 @@ public class NotificationHelper extends ContextWrapper {
         dailyNotificationChannel.enableLights(true);
         dailyNotificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
-        Log.i("TAG", "createNotificationChannels: ");
         getManager().createNotificationChannel(dailyNotificationChannel);
     }
 
     public NotificationManager getManager() {
         if (notificationManager == null)
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Log.i("TAG", "getManager: ");
         return notificationManager;
     }
 
-    public NotificationCompat.Builder getDailyNotification() {
-        Log.i("TAG", "getDailyNotification: ");
+    public NotificationCompat.Builder getDailyNotification(Context context) {
+        Intent activityIntent = new Intent(context, MainActivity.class);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 1, activityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        Uri ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         return new NotificationCompat.Builder(getApplicationContext(), DAILY_REMAINDER_CHANNEL_ID)
                 .setContentTitle("Attendance Manager")
                 .setContentText("Don't forget to mark your attendance")
-                .setSmallIcon(R.drawable.ic_check);
+                .setSmallIcon(R.drawable.ic_check)
+                .setContentIntent(activityPendingIntent)
+                .setAutoCancel(true)
+                .setSound(ringToneUri);
     }
 }

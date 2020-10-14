@@ -43,8 +43,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
                     oldItem.getStatus() == newItem.getStatus();
         }
     };
-    private OnItemClickListener mItemClickListener;
     private final Context mContext;
+    private OnItemClickListener mItemClickListener;
     private int criteria;
 
     public HomeFragmentListAdapter(Context mContext) {
@@ -141,7 +141,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 
     public static class SubjectListViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mTotalClassesAttended;
         private final TextView mSubjectName;
         private final TextView mStatusInfo;
         private final ProgressBar mSubjectAttendanceProgressBar;
@@ -149,6 +148,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         private final ImageButton mAttended;
         private final ImageButton mBunked;
         private final ImageButton mCancelled;
+        public TextView mTotalClassesAttended;
 
         public SubjectListViewHolder(@NonNull final View itemView, final OnItemClickListener itemClickListener) {
             super(itemView);
