@@ -18,6 +18,7 @@ android {
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionNameSuffix releaseVersionNameSuffix
     }
 
     buildTypes {
@@ -26,10 +27,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix releaseVersionNameSuffix
         }
+        debug {
+            versionNameSuffix releaseVersionNameSuffix
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dependenciesInfo {
+        includeInApk false
     }
 }
 
@@ -46,8 +53,8 @@ dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    testImplementation 'junit:junit:4.13'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
