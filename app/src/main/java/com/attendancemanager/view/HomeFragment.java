@@ -336,9 +336,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED)
                     bottomNavBar.setVisibility(View.VISIBLE);
-                }
             }
 
             @Override

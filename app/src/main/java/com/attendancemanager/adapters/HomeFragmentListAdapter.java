@@ -183,5 +183,4 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         }
 
     }
-
 }

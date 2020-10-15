@@ -24,5 +24,5 @@ task clean(type: Delete) {
 }
 
 ext {
-    releaseVersionNameSuffix = "0.5.0-beta-02"
+    releaseVersionNameSuffix = "0.9.0-beta02"
 }

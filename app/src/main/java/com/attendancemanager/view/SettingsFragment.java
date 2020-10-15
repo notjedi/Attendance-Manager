@@ -193,10 +193,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 break;
 
             case NOTIFICATION:
-                SharedPreferences settingsPrefs = getActivity().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+                SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
                 updateNotificationSettings(PreferenceManager.getDefaultSharedPreferences(getContext())
-                                .getBoolean(NOTIFICATION, true), settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, 17),
-                        settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, 30));
+                                .getBoolean(NOTIFICATION, true), sharedPrefs.getInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, 17),
+                        sharedPrefs.getInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, 30));
                 break;
 
             case NOTIFICATION_TIME:
@@ -291,7 +291,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private void buildAttendanceCriteriaSelector() {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
-        SharedPreferences settingsPref = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
+        SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
         dialogBuilder.setTitle("Set attendance criteria");
         View view = LayoutInflater.from(getContext()).inflate(R.layout.attendance_criteria_slider,
                 (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
@@ -301,7 +301,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         ProgressBar progressBar = view.findViewById(R.id.attendance_criteria_progress_bar);
         dialogBuilder.setView(view);
 
-        int percentage = settingsPref.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
+        int percentage = sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
         progressBar.setProgress(percentage);
         slider.setValue((float) percentage);
         attendancePercentage.setText(percentage + "%");
@@ -334,7 +334,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
 
             int sliderValue = (int) slider.getValue();
-            settingsPref.edit().putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, sliderValue).apply();
+            sharedPrefs.edit().putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, sliderValue).apply();
             DATA_CHANGED = 1;
             dialog.dismiss();
         });
@@ -592,23 +592,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @SuppressWarnings("ConstantConditions")
     private void buildTimePicker() {
 
-        SharedPreferences settingsPrefs = getActivity()
+        SharedPreferences sharedPrefs = getContext()
                 .getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, 17))
-                .setMinute(settingsPrefs.getInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, 30))
+                .setHour(sharedPrefs.getInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, 17))
+                .setMinute(sharedPrefs.getInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, 30))
                 .build();
         timePicker.show(getChildFragmentManager(), "time_picker");
 
         timePicker.addOnPositiveButtonClickListener(dialog -> {
             int hour = timePicker.getHour();
             int minute = timePicker.getMinute();
-            SharedPreferences.Editor settingsPrefEditor = settingsPrefs.edit();
+            SharedPreferences.Editor settingsPrefEditor = sharedPrefs.edit();
             settingsPrefEditor.putInt(NotificationHelper.SHARED_PREFS_HOUR_KEY, hour);
             settingsPrefEditor.putInt(NotificationHelper.SHARED_PREFS_MINUTES_KEY, minute);
             settingsPrefEditor.apply();
-            updateNotificationSettings(settingsPrefs.getBoolean(NOTIFICATION, true), hour, minute);
+            updateNotificationSettings(sharedPrefs.getBoolean(NOTIFICATION, true), hour, minute);
         });
     }
 
@@ -670,11 +670,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         shareAppIntent.putExtra(Intent.EXTRA_TEXT, shareText.toString());
         Intent.createChooser(shareAppIntent, "Share via");
         startActivity(shareAppIntent);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        DATA_CHANGED = 0;
     }
 }
