@@ -16,14 +16,14 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".view.PredictActivity"
-            android:label="@string/title_activity_predict" />
-        <activity
             android:name=".view.AboutActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".view.PredictActivity"
+            android:label="@string/title_activity_predict" />
         <activity
             android:name=".view.EditSubjectActivity"
             android:screenOrientation="portrait"
@@ -31,9 +31,15 @@
         <activity
             android:name=".view.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".view.SplashScreen"
+            android:theme="@style/SplashScreen.Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

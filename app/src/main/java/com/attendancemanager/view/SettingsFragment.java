@@ -84,10 +84,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public static final String BUG_REPORT = "key_bug_report";
     public static final String ABOUT = "key_about";
     public static final String DEVELOPED_BY = "key_developed_by";
+    public static final String BACKUP_FILE_NAME = "attendance-manager";
     public static final int WRITE_PERMISSION_REQUEST = 1;
     public static final int READ_PERMISSION_REQUEST = 2;
     public static final int FILE_CHOOSER_ACTIVITY_REQUEST = 1;
-    public static final String BACKUP_FILE_NAME = "attendance-manager";
     public static int DATA_CHANGED = 0;
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
@@ -118,8 +118,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
-    public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+    public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent,
+                                             Bundle savedInstanceState) {
 
         RecyclerView recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState);
         recyclerView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -127,7 +127,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -164,7 +163,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         bugReport.setOnPreferenceClickListener(this);
         about.setOnPreferenceClickListener(this);
         developedBy.setOnPreferenceClickListener(this);
-
     }
 
     @Override
@@ -219,9 +217,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 break;
 
             case RESTORE_DATABASE:
-                if (checkPermissions("read")) {
+                if (checkPermissions("read"))
                     showRestoreAlertDialog();
-                } else
+                else
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
                 break;
 
@@ -250,7 +248,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             default:
                 throw new IllegalStateException("Unexpected preference key" + preference.getKey());
         }
-
         return true;
     }
 
@@ -264,9 +261,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     Toast.makeText(getContext(), "Permission denied. Backup failed", Toast.LENGTH_SHORT).show();
                 break;
             case READ_PERMISSION_REQUEST:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     showRestoreAlertDialog();
-                } else
+                else
                     Toast.makeText(getContext(), "Permission denied. Recovery failed", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -287,7 +284,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     @SuppressLint("SetTextI18n")
-    @SuppressWarnings("ConstantConditions")
     private void buildAttendanceCriteriaSelector() {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
@@ -349,7 +345,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void buildAlertDialog(String key) {
         /* Alert dialog for clearing database and resetting attendance based on @param key*/
 
@@ -402,7 +397,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         dayViewModel.deleteAllSubjects();
     }
 
-    @SuppressWarnings("ConstantConditions")
     private boolean checkPermissions(String type) {
         /* https://developer.android.com/training/permissions/requesting */
         if (type.equals("write")) {
@@ -415,7 +409,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return false;
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void backupDatabase() {
 
         JSONObject jsonObject = new JSONObject();
@@ -455,12 +448,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             Toast.makeText(getContext(), "Backup successfully created in Android/data/com.attendancemanager/files", Toast.LENGTH_LONG).show();
 
         } catch (JSONException | IOException e) {
-            e.printStackTrace();
             Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void showRestoreAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme)
                 .setTitle("Restore")
@@ -479,7 +470,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         messageText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway));
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void restoreDatabase(Uri uri) {
 
         String jsonString = readJsonFile(uri);
@@ -527,7 +517,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private String readJsonFile(Uri uri) {
 
         StringBuilder jsonString = new StringBuilder();
@@ -560,7 +549,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void updateNotificationSettings(boolean isNotificationEnabled, int hour, int minute) {
 
         if (!isNotificationEnabled) {
@@ -580,7 +568,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void cancelNotification() {
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent notificationIntent = new Intent(getContext(), AlarmReceiver.class);
@@ -589,7 +576,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         alarmManager.cancel(pendingIntent);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void buildTimePicker() {
 
         SharedPreferences sharedPrefs = getContext()
@@ -623,7 +609,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void bugReport() {
 
         String appVersion;
