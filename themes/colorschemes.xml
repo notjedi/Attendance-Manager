@@ -28,4 +28,3 @@
             android:color="#B9E4C9"/> for title drawable
             android:textColor="#37966F" for title drawable text
             android:background="#B9E4C9" for recycler view background
-<!--suppress SyntaxError -->
