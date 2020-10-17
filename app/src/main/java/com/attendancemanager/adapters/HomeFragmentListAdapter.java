@@ -45,7 +45,7 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     };
     private final Context mContext;
     private OnItemClickListener mItemClickListener;
-    private int criteria;
+    private int mCriteria;
 
     public HomeFragmentListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
@@ -54,10 +54,6 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
 
     public void setItemClickListener(OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
-    }
-
-    public void setAttendanceCriteria(int criteria) {
-        this.criteria = criteria;
     }
 
     @NonNull
@@ -70,7 +66,11 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
     }
 
     public int getCriteria() {
-        return criteria;
+        return mCriteria;
+    }
+
+    public void setCriteria(int mCriteria) {
+        this.mCriteria = mCriteria;
     }
 
     @SuppressLint("StringFormatMatches")
@@ -89,10 +89,10 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
                 subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mSubjectProgressBarPercentage.setText(String.format(Locale.US, "%d%%", percentage));
 
-        if (percentage < criteria) {
+        if (percentage < mCriteria) {
             /* Should have to attend more classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
-            statusClasses = ((criteria * total) - (attended * 100)) / (100 - criteria);
+            statusClasses = ((mCriteria * total) - (attended * 100)) / (100 - mCriteria);
             if (statusClasses == 0)
                 holder.mStatusInfo.setText(R.string.on_track_text);
             else {
@@ -104,8 +104,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         } else {
             /* On track or can bunk a few classes */
             holder.mSubjectAttendanceProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
-            statusClasses = ((attended * 100) - (total * criteria)) / criteria;
-            if (percentage != criteria && statusClasses != 0) {
+            statusClasses = ((attended * 100) - (total * mCriteria)) / mCriteria;
+            if (percentage != mCriteria && statusClasses != 0) {
                 String message = "Can bunk %d more classes";
                 if (statusClasses == 1)
                     message = "Can bunk %d more class";

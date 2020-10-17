@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +35,7 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
     };
 
     private final Context mContext;
+    private int mCriteria;
 
     public PredictAdapter(Context mContext) {
         super(DIFF_CALLBACK);
@@ -42,6 +44,10 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
 
     public Subject getSubjectAt(int index) {
         return getItem(index);
+    }
+
+    public void setCriteria(int mCriteria) {
+        this.mCriteria = mCriteria;
     }
 
     @NonNull
@@ -59,11 +65,17 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
         int percentage = subject.getTotalClasses() == 0 ? 0 : Math.round((
                 (float) subject.getAttendedClasses() / (float) subject.getTotalClasses()) * 100);
 
-        holder.mProgressBar.setProgress(percentage);
         holder.mSubjectName.setText(subject.getSubjectName());
         holder.mAttendedClasses.setText(String.format(mContext.getResources()
                 .getString(R.string.attended_info_template), subject.getAttendedClasses(), subject.getTotalClasses()));
         holder.mProgressPercentage.setText(String.format(Locale.US, "%d%%", percentage));
+
+        if (percentage < mCriteria)
+            holder.mProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
+        else
+            holder.mProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
+        holder.mProgressBar.setProgress(0);
+        holder.mProgressBar.setProgress(percentage);
     }
 
     public static class PredictViewHolder extends RecyclerView.ViewHolder {

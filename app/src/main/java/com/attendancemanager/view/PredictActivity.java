@@ -55,6 +55,8 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         recyclerView = findViewById(R.id.predict_recycler_view);
 
         predictAdapter = new PredictAdapter(this);
+        predictAdapter.setCriteria(getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, MODE_PRIVATE)
+                .getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75));
         SubjectViewModel subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         DayViewModel dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
 
@@ -113,7 +115,6 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         recyclerView.setHasFixedSize(true);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void calculateAttendance(String day, boolean isChecked) {
         List<Integer> indexList = new ArrayList<>();
         List<TimeTableSubject> timeTableSubjectList = new ArrayList<>(getDaySubject(day));
