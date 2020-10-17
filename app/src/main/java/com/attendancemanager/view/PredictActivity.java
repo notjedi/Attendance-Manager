@@ -149,8 +149,9 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
                 return saturdayList;
             case "sunday":
                 return sundayList;
+            default:
+                return null;
         }
-        return null;
     }
 
     private List<Integer> indexOf(TimeTableSubject timeTableSubject) {

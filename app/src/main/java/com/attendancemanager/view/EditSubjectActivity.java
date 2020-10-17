@@ -1,5 +1,6 @@
 package com.attendancemanager.view;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -85,7 +86,7 @@ public class EditSubjectActivity extends AppCompatActivity {
         SharedPreferences sharedPrefs = getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, MODE_PRIVATE);
         editSubjectAdapter.setCriteria(sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75));
         /* Overriding interface click listener */
-        editSubjectAdapter.setItemClickListener(position -> buildDialog(
+        editSubjectAdapter.setItemClickListener(position -> buildUpdateSubjectDialog(
                 editSubjectAdapter.getSubjectAt(position)));
 
         recyclerView.setAdapter(editSubjectAdapter);
@@ -147,30 +148,19 @@ public class EditSubjectActivity extends AppCompatActivity {
     }
 
     private void setExtendedFabListener() {
-        /* Implement FAB click listener */
-        extendedFab.setOnClickListener(v -> buildDialog(null));
+        /* Build new dialog for the user to add a subject */
+        extendedFab.setOnClickListener(v -> buildNewSubjectDialog());
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void buildDialog(Subject subject) {
-        /* Build alert dialog based on parameters passed
-        Add Subject dialog - if parameter not passed
-        Edit Subject dialog - if parameter passed */
+    private AlertDialog.Builder getDialogBuilder(String title, String positiveText, DialogInterface.OnClickListener listener) {
 
-        String title;
-        String positiveText;
+        return new AlertDialog.Builder(this, R.style.AlertDialog_App_Theme)
+                .setTitle(title)
+                .setPositiveButton(positiveText, listener)
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+    }
 
-        if (subject != null) {
-            title = "Edit Subject";
-            positiveText = "OK";
-        } else {
-            title = "Add Subject";
-            positiveText = "Add";
-        }
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditSubjectActivity.this,
-                R.style.AlertDialog_App_Theme);
-        dialogBuilder.setTitle(title);
+    private void buildNewSubjectDialog() {
 
         View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text,
                 (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
@@ -178,156 +168,172 @@ public class EditSubjectActivity extends AppCompatActivity {
         TextInputEditText attendedClassesEditText = subjectInputView.findViewById(R.id.subject_attended_input);
         TextInputEditText totalClassesEditText = subjectInputView.findViewById(R.id.subject_total_input);
 
-        if (subject != null) {
-            subjectNameEditText.setText(subject.getSubjectName());
-            attendedClassesEditText.setText(String.valueOf(subject.getAttendedClasses()));
-            totalClassesEditText.setText(String.valueOf(subject.getTotalClasses()));
-        }
-        dialogBuilder.setView(subjectInputView);
-
-        dialogBuilder.setPositiveButton(positiveText, (dialog, which) -> {
-
+        DialogInterface.OnClickListener listener = (dialog, which) -> {
             String subjectName = subjectNameEditText.getText().toString().trim();
-            int attendClass;
-            int totalClass;
+            int[] result = getClasses(attendedClassesEditText, totalClassesEditText);
+            int attendClass = result[0];
+            int totalClass = result[1];
 
-            try {
-                attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
-                totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
-            } catch (NumberFormatException e) {
-                attendClass = totalClass = 0;
-            }
-
-            if (subject != null) {
-                /* Updating subject based on it's unique id */
-                Subject updatedSubject = new Subject(subjectName, attendClass, totalClass);
-                updatedSubject.setId(subject.getId());
-                updateSubject(updatedSubject);
-            } else {
-                insertSubject(subjectName, attendClass, totalClass);
-            }
+            insertSubject(subjectName, attendClass, totalClass);
             CHANGED = 1;
-
             dialog.dismiss();
-        });
-
-        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        };
+        AlertDialog.Builder dialogBuilder = getDialogBuilder("Add Subject", "OK", listener);
+        dialogBuilder.setView(subjectInputView);
 
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setEnabled(false);
 
-        /* Implementing TextChangedListeners for the 3 text fields */
-        attendedClassesEditText.addTextChangedListener(new TextWatcher() {
-            /* Set error based on certain conditions */
-
-            int totalClass;
-            int attendClass;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                /* Required */
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                try {
-                    /* Catching NumberFormatException if the text field is empty */
-                    totalClass = Integer.parseInt(totalClassesEditText.getText().toString());
-                    attendClass = Integer.parseInt(s.toString());
-                } catch (NumberFormatException e) {
-                    totalClass = attendClass = -1;
-                }
-
-                if (totalClass < attendClass || totalClass == -1 || attendClass == -1) {
-                    /* Throwing error if total classes less than attended classes */
-                    attendedClassesEditText.setError("Total classes less than attended classes");
-                    positiveButton.setEnabled(false);
-                } else {
-                    positiveButton.setEnabled(true);
-                    attendedClassesEditText.setError(null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                /* Required */
-            }
-        });
-
-        totalClassesEditText.addTextChangedListener(new TextWatcher() {
-
-            int totalClass;
-            int attendClass;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                /* Required */
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                try {
-                    /* Catching NumberFormatException if the text field is empty */
-                    totalClass = Integer.parseInt(s.toString());
-                    attendClass = Integer.parseInt(attendedClassesEditText.getText().toString());
-                } catch (NumberFormatException e) {
-                    totalClass = attendClass = -1;
-                }
-
-                if (totalClass < attendClass || totalClass == -1 || attendClass == -1) {
-                    /* Throwing error if total classes less than attended classes */
-                    attendedClassesEditText.setError("Total classes less than attended classes");
-                    positiveButton.setEnabled(false);
-                } else {
-                    attendedClassesEditText.setError(null);
-                    positiveButton.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                /* Required */
-            }
-        });
-
-        subjectNameEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                /* Required */
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                /* Required */
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (editSubjectAdapter.getCurrentList().contains(new Subject(s.toString().trim())) && subject == null) {
-                    /* Throwing this error only if the user is adding a new subject */
-                    positiveButton.setEnabled(false);
-                    subjectNameEditText.setError("Subject already exists");
-                } else if (s.toString().trim().isEmpty()) {
-                    /* Throwing error if subject name is empty */
-                    positiveButton.setEnabled(false);
-                    subjectNameEditText.setError("Subject name cannot be empty");
-                } else {
-                    positiveButton.setEnabled(true);
-                    subjectNameEditText.setError(null);
-                }
-            }
-        });
-        /* End of TextChangedListeners */
+        setTextChangeListener(attendedClassesEditText, totalClassesEditText, positiveButton);
+        setSubjectTextChangeListener(subjectNameEditText, positiveButton, 1);
     }
 
-    private void updateSubject(Subject subject) {
-        /* Update existing subject data on the database */
-        subjectViewModel.update(subject);
+    private void buildUpdateSubjectDialog(Subject subject) {
+
+        View subjectInputView = LayoutInflater.from(EditSubjectActivity.this).inflate(R.layout.add_subject_edit_text,
+                (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+        TextInputEditText subjectNameEditText = subjectInputView.findViewById(R.id.subject_name_input);
+        TextInputEditText attendedClassesEditText = subjectInputView.findViewById(R.id.subject_attended_input);
+        TextInputEditText totalClassesEditText = subjectInputView.findViewById(R.id.subject_total_input);
+
+        subjectNameEditText.setText(subject.getSubjectName());
+        attendedClassesEditText.setText(String.valueOf(subject.getAttendedClasses()));
+        totalClassesEditText.setText(String.valueOf(subject.getTotalClasses()));
+
+        DialogInterface.OnClickListener listener = (dialog, which) -> {
+            String subjectName = subjectNameEditText.getText().toString().trim();
+            int[] result = getClasses(attendedClassesEditText, totalClassesEditText);
+            int attendClass = result[0];
+            int totalClass = result[1];
+
+            Subject updatedSubject = new Subject(subjectName, attendClass, totalClass);
+            updatedSubject.setId(subject.getId());
+            subjectViewModel.update(updatedSubject);
+            CHANGED = 1;
+            dialog.dismiss();
+        };
+        AlertDialog.Builder dialogBuilder = getDialogBuilder("Edit Subject", "Update", listener);
+        dialogBuilder.setView(subjectInputView);
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setEnabled(false);
+
+        setTextChangeListener(attendedClassesEditText, totalClassesEditText, positiveButton);
+        setSubjectTextChangeListener(subjectNameEditText, positiveButton, 0);
+    }
+
+    private void setSubjectTextChangeListener(TextInputEditText subjectEditText, Button positiveButton,
+                                              int flag) {
+
+        subjectEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /* Required */
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkSubjectName(subjectEditText, positiveButton, flag);
+            }
+        });
+    }
+
+    private void setTextChangeListener(TextInputEditText attendedEditText,
+                                       TextInputEditText totalEditText, Button positiveButton) {
+
+        attendedEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkNumberOfClasses(attendedEditText, totalEditText, positiveButton);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                /* Required */
+            }
+        });
+
+        totalEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkNumberOfClasses(attendedEditText, totalEditText, positiveButton);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                /* Required */
+            }
+        });
+    }
+
+    private int[] getClasses(TextInputEditText attendedEditText, TextInputEditText totalEditText) {
+
+        try {
+            int attendClass, totalClass;
+            attendClass = Integer.parseInt(attendedEditText.getText().toString());
+            totalClass = Integer.parseInt(totalEditText.getText().toString());
+            return new int[]{attendClass, totalClass};
+        } catch (NumberFormatException e) {
+            return new int[]{0, 0};
+        }
+    }
+
+    private void checkSubjectName(TextInputEditText subjectEditText, Button positiveButton, int flag) {
+        String subjectName = subjectEditText.getText().toString().trim();
+        if (editSubjectAdapter.getCurrentList().contains(new Subject(subjectName)) && flag == 1) {
+            /* Throwing this error only if it is a new subject dialog */
+            positiveButton.setEnabled(false);
+            subjectEditText.setError("Subject already exists");
+        } else if (subjectName.isEmpty()) {
+            /* Throwing error if subject name is empty */
+            positiveButton.setEnabled(false);
+            subjectEditText.setError("Subject name cannot be empty");
+        } else {
+            positiveButton.setEnabled(true);
+            subjectEditText.setError(null);
+        }
+    }
+
+    private void checkNumberOfClasses(TextInputEditText attendedEditText,
+                                      TextInputEditText totalEditText, Button positiveButton) {
+
+        try {
+            /* Catching NumberFormatException if the text field is empty */
+            int attendedClass, totalClass;
+            attendedClass = Integer.parseInt(attendedEditText.getText().toString());
+            totalClass = Integer.parseInt(totalEditText.getText().toString());
+
+            if (totalClass < attendedClass) {
+                /* Setting error message if total classes less than attended classes */
+                attendedEditText.setError("Total classes less than attended classes");
+                positiveButton.setEnabled(false);
+            } else {
+                attendedEditText.setError(null);
+                positiveButton.setEnabled(true);
+            }
+        } catch (NumberFormatException e) {
+            attendedEditText.setError("Total classes less than attended classes");
+            positiveButton.setEnabled(false);
+        }
     }
 
     private void insertSubject(String newSubjectName, int attendClass, int totalClass) {

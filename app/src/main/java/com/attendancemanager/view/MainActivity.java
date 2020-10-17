@@ -90,22 +90,19 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         bottomBar.select(R.id.timeTableFragment);
-                        handler.removeCallbacks(hideBottomBar);
-                        bottomBar.show();
+                        removeAndShowBottomBar();
                         handler.postDelayed(() -> bottomBar.hide(), 1000);
                         break;
-
                     case 1:
                         bottomBar.select(R.id.homeFragment);
-                        handler.removeCallbacks(hideBottomBar);
-                        bottomBar.show();
+                        removeAndShowBottomBar();
                         handler.postDelayed(hideBottomBar, 3000);
                         break;
-
                     case 2:
                         bottomBar.select(R.id.settingsFragment);
-                        handler.removeCallbacks(hideBottomBar);
-                        bottomBar.show();
+                        removeAndShowBottomBar();
+                        break;
+                    default:
                         break;
                 }
             }
@@ -128,9 +125,16 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.settingsFragment:
                     viewPager.setCurrentItem(2);
                     break;
+                default:
+                    break;
             }
             return null;
         });
+    }
+
+    private void removeAndShowBottomBar() {
+        handler.removeCallbacks(hideBottomBar);
+        bottomBar.show();
     }
 
     @Override
@@ -141,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         if (viewPager.getCurrentItem() == 1) {
             handler.removeCallbacks(hideBottomBar);
             bottomBar.show();
-            handler.postDelayed(hideBottomBar, 3000);
+            handler.postDelayed(hideBottomBar, 2000);
         }
     }
 

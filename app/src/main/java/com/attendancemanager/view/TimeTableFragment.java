@@ -57,10 +57,6 @@ public class TimeTableFragment extends Fragment {
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
 
-    public TimeTableFragment() {
-        /* Required empty constructor */
-    }
-
     public static TimeTableFragment getInstance() {
         return new TimeTableFragment();
     }

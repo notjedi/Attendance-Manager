@@ -78,6 +78,7 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
             holder.mProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_red));
         else
             holder.mProgressBar.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar_green));
+        holder.mProgressBar.setProgress(0);
         holder.mProgressBar.setProgress(percentage);
     }
 
