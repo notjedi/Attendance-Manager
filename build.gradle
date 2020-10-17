@@ -24,5 +24,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    releaseVersionNameSuffix = "0.9.0-beta02"
+    appName = "attendance-manager"
+    releaseVersionSuffix = "0.9.0-beta02"
 }

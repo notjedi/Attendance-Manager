@@ -12,6 +12,7 @@
     <color name="green">#32F38F</color>
     <color name="red">#F62300</color>
     <color name="lightRed">#B2F44336</color>
+    <color name="darkGrey">#121212</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

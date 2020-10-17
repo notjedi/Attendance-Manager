@@ -61,6 +61,10 @@ public class TimeTableFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static TimeTableFragment getInstance() {
+        return new TimeTableFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
