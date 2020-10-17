@@ -154,11 +154,11 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new TimeTableFragment();
+                    return TimeTableFragment.getInstance();
                 case 1:
-                    return new HomeFragment();
+                    return HomeFragment.getInstance();
                 case 2:
-                    return new SettingsFragment();
+                    return SettingsFragment.getInstance();
             }
             throw new IllegalStateException("Unexpected Position" + position);
         }

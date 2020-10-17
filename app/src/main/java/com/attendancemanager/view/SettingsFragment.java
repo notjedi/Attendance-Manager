@@ -98,6 +98,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         DATA_CHANGED = 0;
     }
 
+    public static SettingsFragment getInstance() {
+        return new SettingsFragment();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

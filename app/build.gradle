@@ -18,17 +18,21 @@ android {
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        versionNameSuffix releaseVersionNameSuffix
+
+        applicationVariants.all { variants ->
+            variants.outputs.all { output ->
+                outputFileName = new File(appName + "-" + releaseVersionSuffix + ".apk");
+            }
+        }
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix releaseVersionNameSuffix
         }
         debug {
-            versionNameSuffix releaseVersionNameSuffix
+            minifyEnabled false
         }
     }
     compileOptions {
@@ -42,8 +46,6 @@ android {
 
 dependencies {
 
-    implementation 'androidx.wear:wear:1.0.0'
-    compileOnly 'com.google.android.wearable:wearable:2.6.0'
     def nav_version = "2.3.0"
     def room_version = "2.2.5"
     def lifecycle_version = "2.2.0"
