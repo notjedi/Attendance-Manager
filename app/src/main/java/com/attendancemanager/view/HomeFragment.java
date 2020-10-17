@@ -212,7 +212,7 @@ public class HomeFragment extends Fragment {
         /* Builds the recycler view */
 
         homeFragmentListAdapter = new HomeFragmentListAdapter(getContext());
-        homeFragmentListAdapter.setAttendanceCriteria(sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75));
+        homeFragmentListAdapter.setCriteria(sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75));
         homeFragmentListAdapter.setItemClickListener(new HomeFragmentListAdapter.OnItemClickListener() {
 
             @Override
@@ -464,7 +464,7 @@ public class HomeFragment extends Fragment {
             mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
             int criteria = sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
             if (homeFragmentListAdapter.getCriteria() != criteria) {
-                homeFragmentListAdapter.setAttendanceCriteria(criteria);
+                homeFragmentListAdapter.setCriteria(criteria);
                 homeFragmentListAdapter.notifyDataSetChanged();
             }
             SettingsFragment.resetDataChanged();
