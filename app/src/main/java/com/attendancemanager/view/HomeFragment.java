@@ -70,10 +70,6 @@ public class HomeFragment extends Fragment {
     @SuppressWarnings("rawtypes")
     private BottomSheetBehavior mBottomSheetBehavior;
 
-    public HomeFragment() {
-        /* Required empty constructor */
-    }
-
     public static HomeFragment getInstance() {
         return new HomeFragment();
     }
