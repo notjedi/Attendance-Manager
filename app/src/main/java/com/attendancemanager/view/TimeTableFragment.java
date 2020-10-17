@@ -58,7 +58,7 @@ public class TimeTableFragment extends Fragment {
     private BottomSheetBehavior mBottomSheetBehavior;
 
     public TimeTableFragment() {
-        // Required empty public constructor
+        /* Required empty constructor */
     }
 
     public static TimeTableFragment getInstance() {
@@ -163,6 +163,7 @@ public class TimeTableFragment extends Fragment {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                /* Required */
             }
         });
 

@@ -270,6 +270,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 else
                     Toast.makeText(getContext(), "Permission denied. Recovery failed", Toast.LENGTH_SHORT).show();
                 break;
+            default:
+                break;
         }
     }
 
