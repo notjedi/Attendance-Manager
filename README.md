@@ -1,4 +1,7 @@
 # Attendance-Manager
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/88131cb3d48f4109b68b79f8cada2cbc)](https://app.codacy.com/gh/jedi2610/Attendance-Manager?utm_source=github.com&utm_medium=referral&utm_content=jedi2610/Attendance-Manager&utm_campaign=Badge_Grade)
+
  Attendance Manager is radiacally simple and material designed attendance managing app. This app aims at improving students attendance percentage by logging their attendance data.
  Students who bunk classes or absent themselves frequently would be most benifited by this app. An attendance managing app is ubiquitous but this app is designed to be elegant 
  and more user-friendly with a better UI.
