@@ -131,6 +131,8 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             case DayViewModel.ATTENDED:
                 setAlpha(holder, VISIBLE_ALPHA, BUNKED_ALPHA, CANCELLED_ALPHA);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected status" + subject.getStatus());
         }
     }
 

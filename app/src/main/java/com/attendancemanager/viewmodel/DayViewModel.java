@@ -85,8 +85,9 @@ public class DayViewModel extends AndroidViewModel {
                 return saturdayList;
             case "sunday":
                 return sundayList;
+            default:
+                return null;
         }
-        return null;
     }
 
     public LiveData<List<TimeTableSubject>> getSubjectsOfDayWithoutTemp(String day) {

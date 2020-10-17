@@ -68,7 +68,9 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
 
     public static class PredictViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView mSubjectName, mProgressPercentage, mAttendedClasses;
+        private final TextView mSubjectName;
+        private final TextView mProgressPercentage;
+        private final TextView mAttendedClasses;
         private final ProgressBar mProgressBar;
 
         public PredictViewHolder(@NonNull View itemView) {

@@ -227,6 +227,7 @@ public class EditSubjectActivity extends AppCompatActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
             }
 
             @Override
@@ -252,6 +253,7 @@ public class EditSubjectActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                /* Required */
             }
         });
 
@@ -262,6 +264,7 @@ public class EditSubjectActivity extends AppCompatActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
             }
 
             @Override
@@ -287,6 +290,7 @@ public class EditSubjectActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                /* Required */
             }
         });
 
@@ -294,10 +298,12 @@ public class EditSubjectActivity extends AppCompatActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /* Required */
             }
 
             @Override

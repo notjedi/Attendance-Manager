@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                /* Required */
             }
 
             @Override
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                /* Required */
             }
         });
 
@@ -159,8 +161,9 @@ public class MainActivity extends AppCompatActivity {
                     return HomeFragment.getInstance();
                 case 2:
                     return SettingsFragment.getInstance();
+                default:
+                    throw new IllegalStateException("Unexpected Position" + position);
             }
-            throw new IllegalStateException("Unexpected Position" + position);
         }
 
         @Override
@@ -179,8 +182,9 @@ public class MainActivity extends AppCompatActivity {
                     return context.getString(R.string.home);
                 case 2:
                     return context.getString(R.string.settings);
+                default:
+                    return null;
             }
-            return null;
         }
     }
 }

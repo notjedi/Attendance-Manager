@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
     private BottomSheetBehavior mBottomSheetBehavior;
 
     public HomeFragment() {
-        // Required empty public constructor
+        /* Required empty constructor */
     }
 
     public static HomeFragment getInstance() {
@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment {
 
         setDayAndDate();
         checkPrefs();
-        getTodayTimeTable();
+        initLiveDataObserver();
         buildRecyclerView();
         buildBottomSheetRecyclerView();
 
@@ -174,7 +174,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void getTodayTimeTable() {
+    private void initLiveDataObserver() {
         /* Gets all the subjects for the current day for corresponding table */
 
         subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> {
@@ -221,70 +221,17 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onAttendButtonClick(int position) {
-                /* For some reason notifyItemChanged is not working as expected, it resets the button alpha on first click */
-                Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
-                if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
-                    subject.decrementTotalClasses();
-                    subject.decrementAttendedClasses();
-                    timeTableSubject.setStatus(DayViewModel.NONE);
-                } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
-                    subject.decrementTotalClasses();
-                    subject.incrementTotalClasses();
-                    subject.incrementAttendedClasses();
-                    timeTableSubject.setStatus(DayViewModel.ATTENDED);
-                } else {
-                    subject.incrementTotalClasses();
-                    subject.incrementAttendedClasses();
-                    timeTableSubject.setStatus(DayViewModel.ATTENDED);
-                }
-                subjectViewModel.update(subject);
-                dayViewModel.update(timeTableSubject);
-                vibrateOnTouch(vibrate);
-                setLastUpdated();
+                attendedAction(position);
             }
 
             @Override
             public void onBunkButtonClick(int position) {
-                Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
-                if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
-                    subject.decrementTotalClasses();
-                    timeTableSubject.setStatus(DayViewModel.NONE);
-                } else if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
-                    subject.decrementTotalClasses();
-                    subject.decrementAttendedClasses();
-                    subject.incrementTotalClasses();
-                    timeTableSubject.setStatus(DayViewModel.BUNKED);
-                } else {
-                    subject.incrementTotalClasses();
-                    timeTableSubject.setStatus(DayViewModel.BUNKED);
-                }
-                subjectViewModel.update(subject);
-                dayViewModel.update(timeTableSubject);
-                vibrateOnTouch(vibrate);
-                setLastUpdated();
+                bunkedAction(position);
             }
 
             @Override
             public void onCancelledButtonClick(int position) {
-                Subject subject = homeFragmentListAdapter.getSubjectAt(position);
-                TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
-                if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
-                    subject.decrementAttendedClasses();
-                    subject.decrementTotalClasses();
-                    timeTableSubject.setStatus(DayViewModel.CANCELLED);
-                } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
-                    subject.decrementTotalClasses();
-                    timeTableSubject.setStatus(DayViewModel.CANCELLED);
-                } else if (timeTableSubject.getStatus() == DayViewModel.NONE)
-                    timeTableSubject.setStatus(DayViewModel.CANCELLED);
-                else
-                    timeTableSubject.setStatus(DayViewModel.NONE);
-                subjectViewModel.update(subject);
-                dayViewModel.update(timeTableSubject);
-                vibrateOnTouch(vibrate);
-                setLastUpdated();
+                cancelledAction(position);
             }
         });
         mRecyclerView.setAdapter(homeFragmentListAdapter);
@@ -311,7 +258,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -346,6 +292,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                /* Required */
             }
         });
 
@@ -396,15 +343,17 @@ public class HomeFragment extends Fragment {
         nameTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /* Required */
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /* Required */
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                positiveButton.setEnabled(!s.toString().isEmpty());
+            public void afterTextChanged(Editable name) {
+                positiveButton.setEnabled(!name.toString().isEmpty());
             }
         });
     }
@@ -423,6 +372,68 @@ public class HomeFragment extends Fragment {
             attendancePercentage = 0;
         mProgressBar.setProgress(attendancePercentage);
         mProgressPercentage.setText(String.format(Locale.US, "%d%%", attendancePercentage));
+    }
+
+    private void attendedAction(int position) {
+        Subject subject = homeFragmentListAdapter.getSubjectAt(position);
+        TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
+        if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
+            subject.decrementTotalClasses();
+            subject.decrementAttendedClasses();
+            timeTableSubject.setStatus(DayViewModel.NONE);
+        } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
+            subject.decrementTotalClasses();
+            subject.incrementTotalClasses();
+            subject.incrementAttendedClasses();
+            timeTableSubject.setStatus(DayViewModel.ATTENDED);
+        } else {
+            subject.incrementTotalClasses();
+            subject.incrementAttendedClasses();
+            timeTableSubject.setStatus(DayViewModel.ATTENDED);
+        }
+        postAction(subject, timeTableSubject);
+    }
+
+    private void bunkedAction(int position) {
+        Subject subject = homeFragmentListAdapter.getSubjectAt(position);
+        TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
+        if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
+            subject.decrementTotalClasses();
+            timeTableSubject.setStatus(DayViewModel.NONE);
+        } else if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
+            subject.decrementTotalClasses();
+            subject.decrementAttendedClasses();
+            subject.incrementTotalClasses();
+            timeTableSubject.setStatus(DayViewModel.BUNKED);
+        } else {
+            subject.incrementTotalClasses();
+            timeTableSubject.setStatus(DayViewModel.BUNKED);
+        }
+        postAction(subject, timeTableSubject);
+    }
+
+    private void cancelledAction(int position) {
+        Subject subject = homeFragmentListAdapter.getSubjectAt(position);
+        TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
+        if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
+            subject.decrementAttendedClasses();
+            subject.decrementTotalClasses();
+            timeTableSubject.setStatus(DayViewModel.CANCELLED);
+        } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
+            subject.decrementTotalClasses();
+            timeTableSubject.setStatus(DayViewModel.CANCELLED);
+        } else if (timeTableSubject.getStatus() == DayViewModel.NONE)
+            timeTableSubject.setStatus(DayViewModel.CANCELLED);
+        else
+            timeTableSubject.setStatus(DayViewModel.NONE);
+        postAction(subject, timeTableSubject);
+    }
+
+    private void postAction(Subject subject, TimeTableSubject timeTableSubject) {
+        subjectViewModel.update(subject);
+        dayViewModel.update(timeTableSubject);
+        vibrateOnTouch(vibrate);
+        setLastUpdated();
     }
 
     private void vibrateOnTouch(boolean vibrate) {
