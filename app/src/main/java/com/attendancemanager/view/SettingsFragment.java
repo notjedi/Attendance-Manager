@@ -133,6 +133,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getContext().getTheme().applyStyle(R.style.SettingsStyle, true);
 
         EditTextPreference name = findPreference(NAME);
         Preference attendanceCriteriaSelector = findPreference(ATTENDANCE_CRITERIA_SELECTOR);

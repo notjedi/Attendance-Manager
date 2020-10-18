@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS_SETTINGS_FILE_KEY = "extra_settings";
     public static final String SHARED_PREFS_ATTENDANCE_CRITERIA = "attendance_criteria";
-    // to reset status of subjects
+    /* to reset status of subjects */
     public static final String SHARED_PREFS_LAST_UPDATED = "last_updated";
-    // last date of extra subjects added
+    /* last date of extra subjects added */
     public static final String SHARED_PREFS_EXTRA_LAST_ADDED = "extra_subject_last_added";
     public static final String SHARED_PREFS_FIRST_TIME = "isFirstTime";
     private ViewPager viewPager;
@@ -147,6 +147,12 @@ public class MainActivity extends AppCompatActivity {
             bottomBar.show();
             handler.postDelayed(hideBottomBar, 2000);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SplashScreenActivity.resetLaunched();
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
