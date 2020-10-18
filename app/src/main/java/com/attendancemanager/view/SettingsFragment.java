@@ -92,8 +92,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
 
-    /* TODO: change font for the settings page */
-
     public static void resetDataChanged() {
         DATA_CHANGED = 0;
     }
@@ -646,7 +644,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"krithickumar26@gmail.com"});
         mailIntent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
         mailIntent.putExtra(Intent.EXTRA_TEXT, mailInfoBuilder.toString());
-        startActivity(Intent.createChooser(mailIntent, "Choose an email client :"));
+        startActivity(Intent.createChooser(mailIntent, null));
     }
 
     private void shareApp() {
@@ -660,7 +658,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         shareText.append("\n\n").append(getString(R.string.play_store_url));
         shareAppIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         shareAppIntent.putExtra(Intent.EXTRA_TEXT, shareText.toString());
-        Intent.createChooser(shareAppIntent, "Share via");
+        Intent.createChooser(shareAppIntent, null);
         startActivity(shareAppIntent);
     }
 }
