@@ -116,25 +116,20 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     }
 
     private void calculateAttendance(String day, boolean isChecked) {
-        List<Integer> indexList = new ArrayList<>();
-        List<TimeTableSubject> timeTableSubjectList = new ArrayList<>(getDaySubject(day));
+        List<TimeTableSubject> timeTableSubjectList = new ArrayList<>(getDaySubjects(day));
 
         for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
-            indexList.addAll(indexOf(timeTableSubject));
-            for (Integer index : indexList) {
-                Subject subject = predictAdapter.getSubjectAt(index);
-                if (isChecked) {
-                    subject.incrementTotalClasses();
-                } else {
-                    subject.decrementTotalClasses();
-                }
-                predictAdapter.notifyItemChanged(index);
-            }
-            indexList.clear();
+            int index = indexOf(timeTableSubject);
+            Subject subject = predictAdapter.getSubjectAt(index);
+            if (isChecked)
+                subject.incrementTotalClasses();
+            else
+                subject.decrementTotalClasses();
+            predictAdapter.notifyItemChanged(index);
         }
     }
 
-    private List<TimeTableSubject> getDaySubject(String dayName) {
+    private List<TimeTableSubject> getDaySubjects(String dayName) {
         switch (dayName.toLowerCase()) {
             case "monday":
                 return mondayList;
@@ -155,15 +150,14 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         }
     }
 
-    private List<Integer> indexOf(TimeTableSubject timeTableSubject) {
-        List<Integer> indexList = new ArrayList<>();
+    private int indexOf(TimeTableSubject timeTableSubject) {
         for (int i = 0; i < predictAdapter.getItemCount(); i++) {
             if (predictAdapter.getSubjectAt(i).getSubjectName()
                     .equals(timeTableSubject.getSubjectName())) {
-                indexList.add(i);
+                return i;
             }
         }
-        return indexList;
+        return -1;
     }
 
     @Override

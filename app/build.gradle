@@ -21,7 +21,7 @@ android {
 
         applicationVariants.all { variants ->
             variants.outputs.all { output ->
-                outputFileName = new File(appName + "-" + releaseVersionSuffix + ".apk");
+                outputFileName = new File(appName + "-" + releaseVersionSuffix + ".apk")
             }
         }
     }
@@ -61,6 +61,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 
     // Navigation and lifecycle components
     implementation "androidx.navigation:navigation-fragment:$nav_version"
