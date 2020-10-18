@@ -34,12 +34,13 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".view.SplashScreen"
+            android:name=".view.SplashScreenActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashScreen.Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
