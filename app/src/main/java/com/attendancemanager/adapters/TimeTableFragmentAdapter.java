@@ -20,6 +20,8 @@ public class TimeTableFragmentAdapter extends RecyclerView.Adapter<TimeTableFrag
     private List<Subject> subjectList;
 
     public TimeTableFragmentAdapter() {
+        /* Using ListAdapter caused weird issues so i shifted to the old RecyclerView.Adapter,
+        but it has it's trade-offs cause i am forced to use notifyDatasetChanged() every time */
         this.subjectList = new ArrayList<>();
     }
 
@@ -45,10 +47,6 @@ public class TimeTableFragmentAdapter extends RecyclerView.Adapter<TimeTableFrag
     @Override
     public int getItemCount() {
         return subjectList.size();
-    }
-
-    public List<Subject> getSubjectList() {
-        return subjectList;
     }
 
     public void setSubjectList(List<Subject> subjectList) {

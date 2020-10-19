@@ -41,7 +41,7 @@ public class DayRepository {
     }
 
     public void resetStatus(String day) {
-        timeTableDao.resetStatus(day);
+        timeTableDao.resetStatus(day.toLowerCase());
     }
 
     public void deleteSubjectByName(String subjectName) {

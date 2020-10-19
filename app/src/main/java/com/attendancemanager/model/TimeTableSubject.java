@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
-@Entity(tableName = "time_table")
+@Entity(tableName = AppDatabase.TIME_TABLE_NAME)
 public class TimeTableSubject {
 
     @PrimaryKey(autoGenerate = true)

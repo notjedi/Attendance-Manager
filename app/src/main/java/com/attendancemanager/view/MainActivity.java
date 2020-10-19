@@ -23,11 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS_SETTINGS_FILE_KEY = "extra_settings";
     public static final String SHARED_PREFS_ATTENDANCE_CRITERIA = "attendance_criteria";
-    /* to reset status of subjects */
-    public static final String SHARED_PREFS_LAST_UPDATED = "last_updated";
-    /* last date of extra subjects added */
+    public static final String SHARED_PREFS_STATUS_LAST_UPDATED = "status_last_updated";
     public static final String SHARED_PREFS_EXTRA_LAST_ADDED = "extra_subject_last_added";
-    public static final String SHARED_PREFS_FIRST_TIME = "isFirstTime";
+    public static final String SHARED_PREFS_IS_FIRST_RUN = "is_first_run";
     private ViewPager viewPager;
     private ExpandableBottomBar bottomBar;
     private final Runnable hideBottomBar = new Runnable() {
@@ -152,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        /* Resetting the IS_ALREADY_LAUNCHED variable so that if the user
+        reopens the app  (while still in memory) it still launches */
         SplashScreenActivity.resetLaunched();
     }
 

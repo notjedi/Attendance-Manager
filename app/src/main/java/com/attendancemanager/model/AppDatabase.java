@@ -12,6 +12,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "com.attendancemanager.db";
+    public static final String SUBJECT_TABLE_NAME = "subject_table";
+    public static final String TIME_TABLE_NAME = "time_table";
     private static AppDatabase instance;
     private static final RoomDatabase.Callback prePopulateCallback = new RoomDatabase.Callback() {
 

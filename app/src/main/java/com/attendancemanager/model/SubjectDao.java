@@ -21,12 +21,12 @@ public interface SubjectDao {
     @Delete
     void delete(Subject subject);
 
-    @Query("DELETE FROM subject_details_table")
+    @Query("DELETE FROM subject_table")
     void deleteAllSubjects();
 
-    @Query("SELECT * FROM subject_details_table WHERE subjectName = :subjectName")
+    @Query("SELECT * FROM subject_table WHERE subjectName = :subjectName")
     Subject getSubject(String subjectName);
 
-    @Query("SELECT * FROM subject_details_table")
+    @Query("SELECT * FROM subject_table")
     LiveData<List<Subject>> getAllSubjects();
 }

@@ -16,7 +16,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             IS_ALREADY_LAUNCHED = true;
             Intent mainActivityIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(mainActivityIntent);
-            this.finish();
+            SplashScreenActivity.this.finish();
         }
     };
 
@@ -27,13 +27,18 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mHandler.postDelayed(newActivityRunnable, 1000);
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    protected void onResume() {
+        super.onResume();
+        mHandler.postDelayed(newActivityRunnable, 500);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        /* Makes sure that newActivityRunnable is not posted when the user presses the back or home button */
         mHandler.removeCallbacks(newActivityRunnable);
     }
 

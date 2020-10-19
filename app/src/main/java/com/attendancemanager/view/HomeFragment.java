@@ -88,7 +88,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -113,7 +112,7 @@ public class HomeFragment extends Fragment {
         buildRecyclerView();
         buildBottomSheetRecyclerView();
 
-        if (sharedPrefs.getBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, true))
+        if (sharedPrefs.getBoolean(MainActivity.SHARED_PREFS_IS_FIRST_RUN, true))
             buildFirstTimeDialog();
     }
 
@@ -159,7 +158,7 @@ public class HomeFragment extends Fragment {
 
     private void checkPrefs() {
 
-        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "notUpdated").equals(todayDate))
+        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_STATUS_LAST_UPDATED, "").equals(todayDate))
             dayViewModel.resetStatus(day);
 
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").equals(todayDate) &&
@@ -324,7 +323,7 @@ public class HomeFragment extends Fragment {
             SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
             defaultPrefs.edit().putString(SettingsFragment.NAME, name).apply();
             mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
-            sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_FIRST_TIME, false).apply();
+            sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_IS_FIRST_RUN, false).apply();
             dialog.dismiss();
         });
         dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -450,9 +449,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void setLastUpdated() {
-        SharedPreferences.Editor shEditor = sharedPrefs.edit();
-        shEditor.putString(MainActivity.SHARED_PREFS_LAST_UPDATED, todayDate);
-        shEditor.apply();
+        if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").equals(todayDate)) {
+            SharedPreferences.Editor shEditor = sharedPrefs.edit();
+            shEditor.putString(MainActivity.SHARED_PREFS_STATUS_LAST_UPDATED, todayDate);
+            shEditor.apply();
+        }
     }
 
     @Override

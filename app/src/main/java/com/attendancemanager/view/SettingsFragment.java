@@ -438,7 +438,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             }
             SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
             int attendanceCriteria = sharedPrefs.getInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, 75);
-            String lastUpdated = sharedPrefs.getString(MainActivity.SHARED_PREFS_LAST_UPDATED, "");
+            String lastUpdated = sharedPrefs.getString(MainActivity.SHARED_PREFS_STATUS_LAST_UPDATED, "");
             String lastAdded = sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "");
 
             jsonObject.put("attendanceCriteria", attendanceCriteria);
@@ -511,7 +511,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             SharedPreferences sharedPrefs = getContext().getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
             SharedPreferences.Editor sEditor = sharedPrefs.edit();
             sEditor.putInt(MainActivity.SHARED_PREFS_ATTENDANCE_CRITERIA, attendanceCriteria);
-            sEditor.putString(MainActivity.SHARED_PREFS_LAST_UPDATED, lastUpdated);
+            sEditor.putString(MainActivity.SHARED_PREFS_STATUS_LAST_UPDATED, lastUpdated);
             sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, lastAdded);
             sEditor.apply();
 
