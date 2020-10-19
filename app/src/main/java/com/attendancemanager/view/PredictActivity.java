@@ -157,6 +157,8 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
                 return i;
             }
         }
+        /* This return statement is not reachable because a subject name
+        from the time_table is always present in the subject_table too */
         return -1;
     }
 

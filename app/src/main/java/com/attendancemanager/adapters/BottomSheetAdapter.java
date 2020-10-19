@@ -30,7 +30,6 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
             return oldItem.getSubjectName().equals(newItem.getSubjectName());
         }
     };
-
     private OnAddButtonClickListener mListener;
 
     public BottomSheetAdapter() {

@@ -56,6 +56,7 @@ public class NotificationHelper extends ContextWrapper {
         PendingIntent activityPendingIntent = PendingIntent.getActivity(mContext, 1, activityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         Uri ringToneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        /* If Build.VERSION.SDK_INT < Build.VERSION_CODES.O the second parameter is omitted */
         return new NotificationCompat.Builder(getApplicationContext(), DAILY_REMAINDER_CHANNEL_ID)
                 .setContentTitle("Attendance Manager")
                 .setContentText("Don't forget to mark your attendance")

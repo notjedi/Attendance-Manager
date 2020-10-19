@@ -1,6 +1,5 @@
 package com.attendancemanager.receiver;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,11 +17,12 @@ import java.util.Calendar;
 
 public class BootReceiver extends BroadcastReceiver {
 
-    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsFragment.NOTIFICATION, true)) {
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsFragment.NOTIFICATION, true) &&
+                (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
+                        "android.intent.action.QUICKBOOT_POWERON".equals(intent.getAction()))) {
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, Context.MODE_PRIVATE);
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

@@ -8,18 +8,6 @@
     android:background="@color/white"
     tools:context=".view.AboutActivity">
 
-    <TextView
-        android:id="@+id/app_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/raleway_semibold"
-        android:text="@string/app_name_bold"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_icon" />
-
     <ImageButton
         android:id="@+id/app_icon"
         android:layout_width="wrap_content"
@@ -37,12 +25,12 @@
         android:id="@+id/about_project"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/raleway"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_name_text"
+        app:layout_constraintTop_toBottomOf="@+id/app_icon"
         tools:text="Attendance Manager is an open source project" />
 
     <TextView

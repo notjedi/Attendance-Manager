@@ -29,8 +29,8 @@ public class PredictAdapter extends ListAdapter<Subject, PredictAdapter.PredictV
 
         @Override
         public boolean areContentsTheSame(@NonNull Subject oldItem, @NonNull Subject newItem) {
-            return oldItem.getAttendedClasses() == newItem.getAttendedClasses() &&
-                    oldItem.getTotalClasses() == newItem.getTotalClasses();
+            /* no need to check if attended classes are same cause it's always the same */
+            return oldItem.getTotalClasses() == newItem.getTotalClasses();
         }
     };
 

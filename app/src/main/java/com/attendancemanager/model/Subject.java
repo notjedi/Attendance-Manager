@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
-@Entity(tableName = "subject_details_table")
+@Entity(tableName = AppDatabase.SUBJECT_TABLE_NAME)
 public class Subject {
 
     @Expose
