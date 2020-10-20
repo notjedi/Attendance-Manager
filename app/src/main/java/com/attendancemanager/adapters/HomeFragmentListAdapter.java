@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.attendancemanager.R;
 import com.attendancemanager.model.Subject;
-import com.attendancemanager.viewmodel.DayViewModel;
+import com.attendancemanager.model.TimeTableSubject;
 
 import java.util.Locale;
 
@@ -119,16 +119,16 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
         holder.mSubjectAttendanceProgressBar.setProgress(percentage);
 
         switch (subject.getStatus()) {
-            case DayViewModel.NONE:
+            case TimeTableSubject.NONE:
                 setAlpha(holder, VISIBLE_ALPHA, VISIBLE_ALPHA, VISIBLE_ALPHA);
                 break;
-            case DayViewModel.CANCELLED:
+            case TimeTableSubject.CANCELLED:
                 setAlpha(holder, ATTENDED_ALPHA, BUNKED_ALPHA, VISIBLE_ALPHA);
                 break;
-            case DayViewModel.BUNKED:
+            case TimeTableSubject.BUNKED:
                 setAlpha(holder, ATTENDED_ALPHA, VISIBLE_ALPHA, CANCELLED_ALPHA);
                 break;
-            case DayViewModel.ATTENDED:
+            case TimeTableSubject.ATTENDED:
                 setAlpha(holder, VISIBLE_ALPHA, BUNKED_ALPHA, CANCELLED_ALPHA);
                 break;
             default:
