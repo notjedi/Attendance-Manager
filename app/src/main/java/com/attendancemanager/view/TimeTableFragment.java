@@ -166,7 +166,7 @@ public class TimeTableFragment extends Fragment {
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             TimeTableSubject subject = new TimeTableSubject(
                     mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
-                    DayViewModel.NONE,
+                    TimeTableSubject.NONE,
                     pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
             dayViewModel.insert(subject);
         });
@@ -259,6 +259,14 @@ public class TimeTableFragment extends Fragment {
                 }
                 timeTableAdapter.setSubjectList(subjectList);
             });
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            /* timeTableAdapter is causing a memory leak so i assign it
+            null here, somehow it solves the problem i don't know how */
+            timeTableAdapter = null;
         }
     }
 

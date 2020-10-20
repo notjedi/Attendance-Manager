@@ -9,17 +9,22 @@ import com.google.gson.annotations.Expose;
 @Entity(tableName = AppDatabase.TIME_TABLE_NAME)
 public class TimeTableSubject {
 
+    public static final int NONE = -1;
+    public static final int CANCELLED = 0;
+    public static final int BUNKED = 1;
+    public static final int ATTENDED = 2;
+
     @PrimaryKey(autoGenerate = true)
     @Expose
-    protected int id;
+    private int id;
     @Expose
-    protected String subjectName;
+    private String subjectName;
     @Expose
-    protected int status;
+    private int status;
     @Expose
-    protected String day;
+    private String day;
     @Expose
-    protected boolean temp;
+    private boolean temp;
 
     public TimeTableSubject(String subjectName, int status, String day) {
         this.subjectName = subjectName;

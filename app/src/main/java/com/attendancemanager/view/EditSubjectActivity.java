@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.EditSubjectActivityAdapter;
 import com.attendancemanager.model.Subject;
+import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -340,7 +341,7 @@ public class EditSubjectActivity extends AppCompatActivity {
         /* Add new subject to the database */
 
         Subject subject = new Subject(newSubjectName, attendClass, totalClass);
-        subject.setStatus(DayViewModel.NONE);
+        subject.setStatus(TimeTableSubject.NONE);
 
         if (subjectViewModel.containsSubject(subject.getSubjectName())) {
             Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);

@@ -1,11 +1,14 @@
 package com.attendancemanager.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.lang.ref.WeakReference;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -14,9 +17,11 @@ public class SplashScreenActivity extends AppCompatActivity {
     private final Runnable newActivityRunnable = () -> {
         if (!IS_ALREADY_LAUNCHED) {
             IS_ALREADY_LAUNCHED = true;
-            Intent mainActivityIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
+            /* holding reference to SplashScreenActivity inside this runnable causes a memory leak */
+            WeakReference<Activity> activityWeakReference = new WeakReference<>(SplashScreenActivity.this);
+            Intent mainActivityIntent = new Intent(activityWeakReference.get(), MainActivity.class);
             startActivity(mainActivityIntent);
-            SplashScreenActivity.this.finish();
+            activityWeakReference.get().finish();
         }
     };
 

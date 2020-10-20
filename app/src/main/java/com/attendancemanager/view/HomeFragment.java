@@ -293,7 +293,7 @@ public class HomeFragment extends Fragment {
 
         mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
             Subject subject = mBottomSheetAdapter.getSubjectAt(position);
-            TimeTableSubject timeTableSubject = new TimeTableSubject(subject.getSubjectName(), DayViewModel.NONE, day);
+            TimeTableSubject timeTableSubject = new TimeTableSubject(subject.getSubjectName(), TimeTableSubject.NONE, day);
             timeTableSubject.setTemp(true);
             dayViewModel.insert(timeTableSubject);
             sharedPrefs.edit().putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, todayDate).apply();
@@ -311,22 +311,22 @@ public class HomeFragment extends Fragment {
     }
 
     private void buildFirstTimeDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme);
-        dialogBuilder.setTitle("Name");
 
         View nameView = LayoutInflater.from(getContext()).inflate(R.layout.name_edit_text, (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
         TextInputEditText nameTextView = nameView.findViewById(R.id.edit_name);
-        dialogBuilder.setView(nameView);
 
-        dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
-            String name = nameTextView.getText().toString().trim();
-            SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            defaultPrefs.edit().putString(SettingsFragment.NAME, name).apply();
-            mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
-            sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_IS_FIRST_RUN, false).apply();
-            dialog.dismiss();
-        });
-        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog_App_Theme)
+                .setTitle("Name")
+                .setView(nameView)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    String name = nameTextView.getText().toString().trim();
+                    SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    defaultPrefs.edit().putString(SettingsFragment.NAME, name).apply();
+                    mGreet.setText(String.format(Locale.getDefault(), "Hey there, %s", name));
+                    sharedPrefs.edit().putBoolean(MainActivity.SHARED_PREFS_IS_FIRST_RUN, false).apply();
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
@@ -372,19 +372,19 @@ public class HomeFragment extends Fragment {
     private void attendedAction(int position) {
         Subject subject = homeFragmentListAdapter.getSubjectAt(position);
         TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
-        if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
+        if (timeTableSubject.getStatus() == TimeTableSubject.ATTENDED) {
             subject.decrementTotalClasses();
             subject.decrementAttendedClasses();
-            timeTableSubject.setStatus(DayViewModel.NONE);
-        } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
+            timeTableSubject.setStatus(TimeTableSubject.NONE);
+        } else if (timeTableSubject.getStatus() == TimeTableSubject.BUNKED) {
             subject.decrementTotalClasses();
             subject.incrementTotalClasses();
             subject.incrementAttendedClasses();
-            timeTableSubject.setStatus(DayViewModel.ATTENDED);
+            timeTableSubject.setStatus(TimeTableSubject.ATTENDED);
         } else {
             subject.incrementTotalClasses();
             subject.incrementAttendedClasses();
-            timeTableSubject.setStatus(DayViewModel.ATTENDED);
+            timeTableSubject.setStatus(TimeTableSubject.ATTENDED);
         }
         postAction(subject, timeTableSubject);
     }
@@ -392,17 +392,17 @@ public class HomeFragment extends Fragment {
     private void bunkedAction(int position) {
         Subject subject = homeFragmentListAdapter.getSubjectAt(position);
         TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
-        if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
+        if (timeTableSubject.getStatus() == TimeTableSubject.BUNKED) {
             subject.decrementTotalClasses();
-            timeTableSubject.setStatus(DayViewModel.NONE);
-        } else if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
+            timeTableSubject.setStatus(TimeTableSubject.NONE);
+        } else if (timeTableSubject.getStatus() == TimeTableSubject.ATTENDED) {
             subject.decrementTotalClasses();
             subject.decrementAttendedClasses();
             subject.incrementTotalClasses();
-            timeTableSubject.setStatus(DayViewModel.BUNKED);
+            timeTableSubject.setStatus(TimeTableSubject.BUNKED);
         } else {
             subject.incrementTotalClasses();
-            timeTableSubject.setStatus(DayViewModel.BUNKED);
+            timeTableSubject.setStatus(TimeTableSubject.BUNKED);
         }
         postAction(subject, timeTableSubject);
     }
@@ -410,17 +410,17 @@ public class HomeFragment extends Fragment {
     private void cancelledAction(int position) {
         Subject subject = homeFragmentListAdapter.getSubjectAt(position);
         TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(day).get(position);
-        if (timeTableSubject.getStatus() == DayViewModel.ATTENDED) {
+        if (timeTableSubject.getStatus() == TimeTableSubject.ATTENDED) {
             subject.decrementAttendedClasses();
             subject.decrementTotalClasses();
-            timeTableSubject.setStatus(DayViewModel.CANCELLED);
-        } else if (timeTableSubject.getStatus() == DayViewModel.BUNKED) {
+            timeTableSubject.setStatus(TimeTableSubject.CANCELLED);
+        } else if (timeTableSubject.getStatus() == TimeTableSubject.BUNKED) {
             subject.decrementTotalClasses();
-            timeTableSubject.setStatus(DayViewModel.CANCELLED);
-        } else if (timeTableSubject.getStatus() == DayViewModel.NONE)
-            timeTableSubject.setStatus(DayViewModel.CANCELLED);
+            timeTableSubject.setStatus(TimeTableSubject.CANCELLED);
+        } else if (timeTableSubject.getStatus() == TimeTableSubject.NONE)
+            timeTableSubject.setStatus(TimeTableSubject.CANCELLED);
         else
-            timeTableSubject.setStatus(DayViewModel.NONE);
+            timeTableSubject.setStatus(TimeTableSubject.NONE);
         postAction(subject, timeTableSubject);
     }
 
@@ -442,7 +442,7 @@ public class HomeFragment extends Fragment {
                     vibrator.vibrate(VibrationEffect.createOneShot(70, VibrationEffect.DEFAULT_AMPLITUDE));
                 }
             } else {
-                //deprecated in API 26
+                /* deprecated in API 26 */
                 vibrator.vibrate(70);
             }
         }
