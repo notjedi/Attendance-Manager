@@ -44,18 +44,19 @@ public class TimeTableFragment extends Fragment {
     public static final String[] DAY_NAMES = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday",
             "Friday", "Saturday", "Sunday"};
     public static MutableLiveData<Boolean> isEditable = new MutableLiveData<>(false);
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private ExtendedFloatingActionButton addButtonFab;
-    private FloatingActionButton floatingActionButton;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private ExtendedFloatingActionButton mAddFab;
+    private FloatingActionButton mEditFab;
     private RecyclerView mBottomSheetRecyclerView;
     private LinearLayout mBottomSheetLayout;
+
     private SubjectViewModel subjectViewModel;
     private DayViewModel dayViewModel;
     private TimeTableViewPagerAdapter pagerAdapter;
-    private BottomSheetAdapter mBottomSheetAdapter;
+    private BottomSheetAdapter bottomSheetAdapter;
     @SuppressWarnings("rawtypes")
-    private BottomSheetBehavior mBottomSheetBehavior;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     public static TimeTableFragment getInstance() {
         return new TimeTableFragment();
@@ -65,7 +66,7 @@ public class TimeTableFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBottomSheetAdapter = new BottomSheetAdapter();
+        bottomSheetAdapter = new BottomSheetAdapter();
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
     }
@@ -82,40 +83,40 @@ public class TimeTableFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Toolbar toolbar = view.findViewById(R.id.time_table_toolbar);
-        tabLayout = view.findViewById(R.id.tab_layout);
-        viewPager = view.findViewById(R.id.day_view_pager);
-        floatingActionButton = view.findViewById(R.id.floatingActionButton);
-        addButtonFab = view.findViewById(R.id.add_extended_fab);
+        mTabLayout = view.findViewById(R.id.tab_layout);
+        mViewPager = view.findViewById(R.id.day_view_pager);
+        mEditFab = view.findViewById(R.id.floatingActionButton);
+        mAddFab = view.findViewById(R.id.add_extended_fab);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
 
-        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> mBottomSheetAdapter.submitList(subjects));
+        subjectViewModel.getAllSubjects().observe(getViewLifecycleOwner(), subjects -> bottomSheetAdapter.submitList(subjects));
 
         toolbar.setTitleTextAppearance(getContext(), R.style.RubixFontStyle);
 
-        floatingActionButton.setOnClickListener(v -> {
-            if (addButtonFab.getVisibility() == View.VISIBLE) {
+        mEditFab.setOnClickListener(v -> {
+            if (mAddFab.getVisibility() == View.VISIBLE) {
                 /* not Editable */
-                addButtonFab.setVisibility(View.GONE);
-                floatingActionButton.setImageResource(R.drawable.ic_edit);
+                mAddFab.setVisibility(View.GONE);
+                mEditFab.setImageResource(R.drawable.ic_edit);
                 isEditable.setValue(false);
             } else {
                 /* Editable */
-                addButtonFab.setVisibility(View.VISIBLE);
-                floatingActionButton.setImageResource(R.drawable.ic_check);
+                mAddFab.setVisibility(View.VISIBLE);
+                mEditFab.setImageResource(R.drawable.ic_check);
                 isEditable.setValue(true);
             }
         });
 
-        addButtonFab.setOnClickListener(v -> {
-            if (mBottomSheetAdapter.getItemCount() == 0) {
+        mAddFab.setOnClickListener(v -> {
+            if (bottomSheetAdapter.getItemCount() == 0) {
                 Toast.makeText(getContext(), "Add a few subjects", Toast.LENGTH_SHORT).show();
                 return;
             }
             mBottomSheetLayout.setVisibility(View.VISIBLE);
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            addButtonFab.setVisibility(View.GONE);
-            floatingActionButton.setVisibility(View.GONE);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            mAddFab.setVisibility(View.GONE);
+            mEditFab.setVisibility(View.GONE);
             getActivity().findViewById(R.id.bottom_bar).setVisibility(View.INVISIBLE);
         });
 
@@ -127,30 +128,30 @@ public class TimeTableFragment extends Fragment {
 
         pagerAdapter = new TimeTableViewPagerAdapter(getChildFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        mViewPager.setAdapter(pagerAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         Calendar calendar = Calendar.getInstance();
         Date date = new Date();
         calendar.setTime(date);
         /* 0 represents SUNDAY in the Calender class so doing some calculations to make 0 as MONDAY */
-        viewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
-        viewPager.setOffscreenPageLimit(1);
+        mViewPager.setCurrentItem((calendar.get(Calendar.DAY_OF_WEEK) + 12) % 7);
+        mViewPager.setOffscreenPageLimit(1);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void buildBottomSheet() {
 
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
-        mBottomSheetBehavior.setDraggable(true);
-        mBottomSheetBehavior.setPeekHeight(0);
-        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
+        bottomSheetBehavior.setDraggable(true);
+        bottomSheetBehavior.setPeekHeight(0);
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    addButtonFab.setVisibility(View.VISIBLE);
-                    floatingActionButton.setVisibility(View.VISIBLE);
+                    mAddFab.setVisibility(View.VISIBLE);
+                    mEditFab.setVisibility(View.VISIBLE);
                     ExpandableBottomBar bottomBar = getActivity().findViewById(R.id.bottom_bar);
                     bottomBar.setVisibility(View.VISIBLE);
                     bottomBar.hide();
@@ -163,15 +164,15 @@ public class TimeTableFragment extends Fragment {
             }
         });
 
-        mBottomSheetAdapter.setOnAddButtonClickListener(position -> {
+        bottomSheetAdapter.setOnAddButtonClickListener(position -> {
             TimeTableSubject subject = new TimeTableSubject(
-                    mBottomSheetAdapter.getSubjectAt(position).getSubjectName(),
+                    bottomSheetAdapter.getSubjectAt(position).getSubjectName(),
                     TimeTableSubject.NONE,
-                    pagerAdapter.getPageTitle(viewPager.getCurrentItem()).toString());
+                    pagerAdapter.getPageTitle(mViewPager.getCurrentItem()).toString());
             dayViewModel.insert(subject);
         });
 
-        mBottomSheetRecyclerView.setAdapter(mBottomSheetAdapter);
+        mBottomSheetRecyclerView.setAdapter(bottomSheetAdapter);
         mBottomSheetRecyclerView.setHasFixedSize(true);
         mBottomSheetRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mBottomSheetRecyclerView.setOnTouchListener((v, event) -> {

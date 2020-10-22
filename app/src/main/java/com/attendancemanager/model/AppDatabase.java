@@ -51,9 +51,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
         @Override
         public void run() {
-            subjectDao.insert(new Subject("Math", 0, 0));
+            subjectDao.insert(new Subject("Math", 20, 24));
             subjectDao.insert(new Subject("English", 10, 50));
-            subjectDao.insert(new Subject("Physics", 34, 49));
         }
     }
 }

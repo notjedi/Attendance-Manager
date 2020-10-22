@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     private ImageButton mExtraClassButton;
     private ProgressBar mProgressBar;
     private LinearLayout mBottomSheetLayout;
-    private ExpandableBottomBar bottomNavBar;
+    private ExpandableBottomBar mBottomBar;
 
     private String day;
     private String todayDate;
@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment {
         mExtraClassButton = view.findViewById(R.id.extra_class_button);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_constraint_layout);
         mBottomSheetRecyclerView = view.findViewById(R.id.bottom_sheet_recycler_view);
-        bottomNavBar = getActivity().findViewById(R.id.bottom_bar);
+        mBottomBar = getActivity().findViewById(R.id.bottom_bar);
 
         setDayAndDate();
         checkPrefs();
@@ -158,9 +158,11 @@ public class HomeFragment extends Fragment {
 
     private void checkPrefs() {
 
+        /* Reset status for the current day if the dates don't match */
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_STATUS_LAST_UPDATED, "").equals(todayDate))
             dayViewModel.resetStatus(day);
 
+        /* Check if extra subjects are added and delete them if they are not added today */
         if (!sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").equals(todayDate) &&
                 !sharedPrefs.getString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, "").isEmpty()) {
 
@@ -178,6 +180,8 @@ public class HomeFragment extends Fragment {
             if (EditSubjectActivity.CHANGED != 1 && SettingsFragment.DATA_CHANGED != 1)
                 return;
 
+            /* The below code is executed only if EditSubjectActivity.CHANGED
+             or SettingsFragment .DATA_CHANGED is equal to 1 */
             List<Subject> subjectList = new ArrayList<>();
             for (TimeTableSubject timeTableSubject : dayViewModel.getSubjectsOfDay(day)) {
                 for (Subject subject : subjects) {
@@ -246,10 +250,10 @@ public class HomeFragment extends Fragment {
 
                 if (dy > 0) {
                     /* Scrolled down */
-                    bottomNavBar.hide();
+                    mBottomBar.hide();
                 } else {
                     /* Scrolled up */
-                    bottomNavBar.show();
+                    mBottomBar.show();
                 }
             }
         });
@@ -271,7 +275,7 @@ public class HomeFragment extends Fragment {
             }
             mBottomSheetLayout.setVisibility(View.VISIBLE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            bottomNavBar.setVisibility(View.GONE);
+            mBottomBar.setVisibility(View.GONE);
         });
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
@@ -282,7 +286,7 @@ public class HomeFragment extends Fragment {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED)
-                    bottomNavBar.setVisibility(View.VISIBLE);
+                    mBottomBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -311,6 +315,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void buildFirstTimeDialog() {
+        /* Builds a dialog for the user to enter his/her name */
 
         View nameView = LayoutInflater.from(getContext()).inflate(R.layout.name_edit_text, (ViewGroup) getActivity().findViewById(android.R.id.content).getRootView(), false);
         TextInputEditText nameTextView = nameView.findViewById(R.id.edit_name);
@@ -354,6 +359,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateMainProgressBar(List<Subject> subjectList) {
+        /* Updates the main progress bar for the overall attendance */
         int totalClasses = 0;
         int attendedClasses = 0;
         int attendancePercentage;

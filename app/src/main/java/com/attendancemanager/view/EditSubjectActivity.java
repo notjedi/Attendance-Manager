@@ -32,9 +32,10 @@ import com.google.android.material.textfield.TextInputEditText;
 public class EditSubjectActivity extends AppCompatActivity {
 
     public static int CHANGED = 0;
-    private Toolbar toolbar;
-    private RecyclerView recyclerView;
-    private ExtendedFloatingActionButton extendedFab;
+    private Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
+    private ExtendedFloatingActionButton mExtendedFab;
+
     private SubjectViewModel subjectViewModel;
     private EditSubjectActivityAdapter editSubjectAdapter;
     private Subject deletedSubject;
@@ -61,9 +62,9 @@ public class EditSubjectActivity extends AppCompatActivity {
     private void initialSetup() {
         /* Finding views */
 
-        toolbar = findViewById(R.id.edit_subject_toolbar);
-        recyclerView = findViewById(R.id.edit_subject_recycler_view);
-        extendedFab = findViewById(R.id.extended_fab);
+        mToolbar = findViewById(R.id.edit_subject_toolbar);
+        mRecyclerView = findViewById(R.id.edit_subject_recycler_view);
+        mExtendedFab = findViewById(R.id.extended_fab);
 
         deletedSubject = null;
 
@@ -72,10 +73,10 @@ public class EditSubjectActivity extends AppCompatActivity {
     private void setupToolbar() {
         /* Toolbar stuff */
 
-        toolbar.setTitle("Subjects");
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.lightBlack));
+        mToolbar.setTitle("Subjects");
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        mToolbar.setNavigationOnClickListener(v -> onBackPressed());
+        mToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.lightBlack));
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPinkPrimaryDark));
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
@@ -90,10 +91,10 @@ public class EditSubjectActivity extends AppCompatActivity {
         editSubjectAdapter.setItemClickListener(position -> buildUpdateSubjectDialog(
                 editSubjectAdapter.getSubjectAt(position)));
 
-        recyclerView.setAdapter(editSubjectAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.setAdapter(editSubjectAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 /* Shrink FAB on scroll */
@@ -101,10 +102,10 @@ public class EditSubjectActivity extends AppCompatActivity {
 
                 if (dy > 0) {
                     /* Scrolled down */
-                    extendedFab.shrink();
+                    mExtendedFab.shrink();
                 } else {
                     /* Scrolled up */
-                    extendedFab.extend();
+                    mExtendedFab.extend();
                 }
             }
         });
@@ -126,7 +127,7 @@ public class EditSubjectActivity extends AppCompatActivity {
                 deletedSubject = editSubjectAdapter.getSubjectAt(position);
                 subjectViewModel.delete(editSubjectAdapter.getSubjectAt(position));
 
-                Snackbar snackbar = Snackbar.make(recyclerView, "Deleted " +
+                Snackbar snackbar = Snackbar.make(mRecyclerView, "Deleted " +
                         deletedSubject.getSubjectName(), Snackbar.LENGTH_LONG);
                 snackbar.setAction("Undo", v -> subjectViewModel.insert(deletedSubject));
                 snackbar.addCallback(new Snackbar.Callback() {
@@ -145,12 +146,12 @@ public class EditSubjectActivity extends AppCompatActivity {
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     private void setExtendedFabListener() {
         /* Build new dialog for the user to add a subject */
-        extendedFab.setOnClickListener(v -> buildNewSubjectDialog());
+        mExtendedFab.setOnClickListener(v -> buildNewSubjectDialog());
     }
 
     private AlertDialog.Builder getDialogBuilder(String title, String positiveText, DialogInterface.OnClickListener listener) {
@@ -344,12 +345,12 @@ public class EditSubjectActivity extends AppCompatActivity {
         subject.setStatus(TimeTableSubject.NONE);
 
         if (subjectViewModel.containsSubject(subject.getSubjectName())) {
-            Snackbar snackbar = Snackbar.make(recyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(mRecyclerView, "Subject already exists", Snackbar.LENGTH_SHORT);
             snackbar.show();
             return;
         } else if (newSubjectName.isEmpty()) {
             /* TextChange listeners are trickable so implementing safety checks */
-            Snackbar.make(recyclerView, "Subject name cannot be empty", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mRecyclerView, "Subject name cannot be empty", Snackbar.LENGTH_SHORT).show();
             return;
         } else if (attendClass > totalClass) {
             /* TextChange listeners are trickable so implementing safety checks */
