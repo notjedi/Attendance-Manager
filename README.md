@@ -23,14 +23,19 @@
 - Time Table view to edit you time table
 
 ## Screenshots
-[<img src="images/HomeFragment.png" width=160>](images/HomeFragment.png)
-[<img src="images/TimeTableFragment.png" width=160>](images/TimeTableFragment.png)
-[<img src="images/SettingFragment1.png" width=160>](images/SettingFragment1.png)
-[<img src="images/SettingFragment2.png" width=160>](images/SettingFragment2.png)
+<p align="center">
+<img src="images/HomeFragment.png" width=160>
+<img src="images/TimeTableFragment.png" width=160>
+<img src="images/SettingFragment1.png" width=160>
+<img src="images/SettingFragment2.png" width=160>
+</p>
 <br>
-[<img src="images/EditSubjectActivity.png" width=160>](images/EditSubjectActivity.png)
-[<img src="images/PredictActivity.png" width=160>](images/PredictActivity.png)
-[<img src="images/AboutActivity.png" width=160>](images/AboutActivity.png)
+<p align="center">
+<img src="images/EditSubjectActivity.png" width=160>
+<img src="images/PredictActivity.png" width=160>
+<img src="images/AboutActivity.png" width=160>
+<img src="images/AddingSubjects.png" width=160>
+</p>
 
 ## Roadmap
 - [ ] Migrate to ViewPager2
