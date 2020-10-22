@@ -29,7 +29,7 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
     private Chip chip5;
     private Chip chip6;
     private Chip chip7;
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
 
     private PredictAdapter predictAdapter;
     private List<TimeTableSubject> mondayList;
@@ -52,7 +52,7 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
         chip5 = findViewById(R.id.chip_5);
         chip6 = findViewById(R.id.chip_6);
         chip7 = findViewById(R.id.chip_7);
-        recyclerView = findViewById(R.id.predict_recycler_view);
+        mRecyclerView = findViewById(R.id.predict_recycler_view);
 
         predictAdapter = new PredictAdapter(this);
         predictAdapter.setCriteria(getSharedPreferences(MainActivity.SHARED_PREFS_SETTINGS_FILE_KEY, MODE_PRIVATE)
@@ -111,8 +111,8 @@ public class PredictActivity extends AppCompatActivity implements CompoundButton
 
     private void buildRecyclerView() {
 
-        recyclerView.setAdapter(predictAdapter);
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(predictAdapter);
+        mRecyclerView.setHasFixedSize(true);
     }
 
     private void calculateAttendance(String day, boolean isChecked) {

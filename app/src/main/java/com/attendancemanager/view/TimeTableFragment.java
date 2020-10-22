@@ -16,14 +16,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.attendancemanager.R;
 import com.attendancemanager.adapters.BottomSheetAdapter;
-import com.attendancemanager.adapters.TimeTableFragmentAdapter;
-import com.attendancemanager.model.Subject;
 import com.attendancemanager.model.TimeTableSubject;
 import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
@@ -32,10 +29,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 
@@ -181,94 +176,6 @@ public class TimeTableFragment extends Fragment {
             v.onTouchEvent(event);
             return true;
         });
-    }
-
-    public static class DayFragment extends Fragment {
-
-        private static final String ARG_DAY_NAME = "argDayName";
-        private TimeTableFragmentAdapter timeTableAdapter;
-        private DayViewModel dayViewModel;
-        private SubjectViewModel subjectViewModel;
-        private String argDay;
-
-        public static DayFragment newInstance(String day) {
-            /* Create new instance with the ARG_DAY_NAME */
-
-            DayFragment dayFragment = new DayFragment();
-            final Bundle args = new Bundle();
-            args.putString(ARG_DAY_NAME, day);
-            dayFragment.setArguments(args);
-            return dayFragment;
-        }
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            argDay = getArguments().getString(ARG_DAY_NAME);
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_day, container, false);
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-            RecyclerView timeTableRecyclerView = view.findViewById(R.id.time_table_recycler_view);
-            dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
-            subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
-
-            timeTableAdapter = new TimeTableFragmentAdapter();
-            timeTableRecyclerView.setAdapter(timeTableAdapter);
-            timeTableRecyclerView.setHasFixedSize(true);
-
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.LEFT) {
-
-                @Override
-                public boolean onMove(@NonNull RecyclerView recyclerView,
-                                      @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-
-                    return false;
-                }
-
-                @Override
-                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    int position = viewHolder.getAdapterPosition();
-                    TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(argDay).get(position);
-                    dayViewModel.delete(timeTableSubject);
-                }
-            });
-
-            TimeTableFragment.isEditable.observe(getViewLifecycleOwner(), isEditable -> {
-                if (isEditable)
-                    itemTouchHelper.attachToRecyclerView(timeTableRecyclerView);
-                else
-                    itemTouchHelper.attachToRecyclerView(null);
-            });
-
-            dayViewModel.getSubjectsOfDayWithoutTemp(argDay).observe(getViewLifecycleOwner(), timeTableSubjectList -> {
-                List<Subject> subjectList = new ArrayList<>();
-                for (TimeTableSubject timeTableSubject : timeTableSubjectList) {
-                    Subject subject = subjectViewModel.getSubject(timeTableSubject.getSubjectName());
-                    if (subject != null) {
-                        subjectList.add(subject);
-                    }
-                }
-                timeTableAdapter.setSubjectList(subjectList);
-            });
-        }
-
-        @Override
-        public void onStop() {
-            super.onStop();
-            /* timeTableAdapter is causing a memory leak so i assign it
-            null here, somehow it solves the problem i don't know how */
-            timeTableAdapter = null;
-        }
     }
 
     private static class TimeTableViewPagerAdapter extends FragmentPagerAdapter {
