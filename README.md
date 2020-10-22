@@ -16,25 +16,24 @@
  and more user-friendly with a better UI.
 
 ## Features
-- Predict attendance
-- Daily notifications to mark attendance
-- Backup and Restore support
 - Clean UI
+- Predict attendance
+- Backup and Restore support
+- Daily notifications to mark attendance
 - Time Table view to edit you time table
 
 ## Screenshots
 <p align="center">
 <img src="images/HomeFragment.png" width=160>
 <img src="images/TimeTableFragment.png" width=160>
+<img src="images/AddingSubjects.png" width=160>
+<img src="images/EditSubjectActivity.png" width=160>
+</p>
+<p align="center">
 <img src="images/SettingFragment1.png" width=160>
 <img src="images/SettingFragment2.png" width=160>
-</p>
-<br>
-<p align="center">
-<img src="images/EditSubjectActivity.png" width=160>
 <img src="images/PredictActivity.png" width=160>
 <img src="images/AboutActivity.png" width=160>
-<img src="images/AddingSubjects.png" width=160>
 </p>
 
 ## Roadmap
@@ -74,6 +73,10 @@ See [CONTRIBUTIONS.md](CONTRIBUTIONS.md)
 - [Kodalog](https://play.google.com/store/apps/details?id=com.devsebastian.attendancemanager)
 
 ## LICENSE
+
+<p align="center">
+<a href="http://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://www.gnu.org/graphics/gplv3-127x51.png"></a>
+</p>
 
 ```
 Copyright 2020 Krithic Kumar
