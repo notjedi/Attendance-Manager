@@ -27,8 +27,10 @@
 [<img src="images/TimeTableFragment.png" width=160>](images/TimeTableFragment.png)
 [<img src="images/SettingFragment1.png" width=160>](images/SettingFragment1.png)
 [<img src="images/SettingFragment2.png" width=160>](images/SettingFragment2.png)
+<br>
 [<img src="images/EditSubjectActivity.png" width=160>](images/EditSubjectActivity.png)
 [<img src="images/PredictActivity.png" width=160>](images/PredictActivity.png)
+[<img src="images/AboutActivity.png" width=160>](images/AboutActivity.png)
 
 ## Roadmap
 - [ ] Migrate to ViewPager2
