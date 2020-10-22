@@ -3,10 +3,10 @@
 <p align="center"><a href="https://play.google.com/store/apps/details?id=com.attendancemanager"><img src=images/play_store.png width=250></a></p>
 
 <p align="center">
-<a alt="License"><img src="https://img.shields.io/github/license/jedi2610/Attendance-Manager?color=He&label=License&style=flat-square"></a>
+<a alt="License" href="LICENSE"><img src="https://img.shields.io/github/license/jedi2610/Attendance-Manager?color=He&label=License&style=flat-square"></a>
 <a alt="Codacy badge" href="https://app.codacy.com/gh/jedi2610/Attendance-Manager?utm_source=github.com&utm_medium=referral&utm_content=jedi2610/Attendance-Manager&utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/88131cb3d48f4109b68b79f8cada2cbc"></a>
-<a alt="Issues"><img src="https://img.shields.io/github/issues/jedi2610/Attendance-Manager?label=Issues&style=flat-square"></a>
-<a alt="Release version"> <img src="https://img.shields.io/github/v/release/jedi2610/Attendance-Manager?color=blue&include_prereleases&label=Release&style=flat-square"></a>
+<a alt="Issues" href="https://github.com/jedi2610/Attendance-Manager/issues"><img src="https://img.shields.io/github/issues/jedi2610/Attendance-Manager?label=Issues&style=flat-square"></a>
+<a alt="Release version" href="https://github.com/jedi2610/Attendance-Manager/releases"><img src="https://img.shields.io/github/v/release/jedi2610/Attendance-Manager?color=blue&include_prereleases&label=Release&style=flat-square"></a>
 <a alt="Downloads"><img src="https://img.shields.io/badge/downloads-1.52K-brightgreen?label=Downloads&style=flat-square"></a>
 <a alt="Rating"><img src="https://img.shields.io/badge/rating-4.4%2F5-blue?label=Rating&style=flat-square"></a>
 </p>
@@ -21,6 +21,14 @@
 - Backup and Restore support
 - Clean UI
 - Time Table view to edit you time table
+
+## Screenshots
+[<img src="images/HomeFragment.png" width=160>](images/HomeFragment.png)
+[<img src="images/TimeTableFragment.png" width=160>](images/TimeTableFragment.png)
+[<img src="images/SettingFragment1.png" width=160>](images/SettingFragment1.png)
+[<img src="images/SettingFragment2.png" width=160>](images/SettingFragment2.png)
+[<img src="images/EditSubjectActivity.png" width=160>](images/EditSubjectActivity.png)
+[<img src="images/PredictActivity.png" width=160>](images/PredictActivity.png)
 
 ## Roadmap
 - [ ] Migrate to ViewPager2
