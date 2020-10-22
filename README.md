@@ -10,6 +10,10 @@
 <a alt="Downloads"><img src="https://img.shields.io/badge/downloads-1.52K-brightgreen?label=Downloads&style=flat-square"></a>
 <a alt="Rating"><img src="https://img.shields.io/badge/rating-4.4%2F5-blue?label=Rating&style=flat-square"></a>
 </p>
+<hr>
+<p align="center"><a href="#features">Features</a> &bull; <a href="#screenshots">Screenshots</a> &bull; <a href="#roadmap">Roadmap</a> &bull; <a href="#developer-insight">Developer Insight</a> &bull; <a href="#project-structure">Project Structure</a> &bull; <a href="#external-libraries-used">Libraries used</a> &bull; <a href="#credits">Credits</a></p>
+<p align="center"><a href="#changelog">Changelog</a> &bull; <a href="#contributions">Contribution</a> &bull; <a href="#similar-apps-to-checkout">Similar apps</a> &bull; <a href="#license">License</a></p>
+<hr>
 
  Attendance Manager is radiacally simple and material designed attendance managing app. This app aims at improving students attendance percentage by logging their attendance data.
  Students who bunk classes or absent themselves frequently would be most benifited by this app. An attendance managing app is ubiquitous but this app is designed to be elegant 
