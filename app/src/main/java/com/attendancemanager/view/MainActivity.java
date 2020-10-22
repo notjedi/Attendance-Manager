@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,15 +27,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS_STATUS_LAST_UPDATED = "status_last_updated";
     public static final String SHARED_PREFS_EXTRA_LAST_ADDED = "extra_subject_last_added";
     public static final String SHARED_PREFS_IS_FIRST_RUN = "is_first_run";
-    private ViewPager viewPager;
-    private ExpandableBottomBar bottomBar;
+    private ViewPager mViewPager;
+    private ExpandableBottomBar mBottomBar;
     private final Runnable hideBottomBar = new Runnable() {
         @Override
         public void run() {
-            bottomBar.hide();
+            mBottomBar.hide();
         }
     };
-    private Handler handler;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* Find views */
-        bottomBar = findViewById(R.id.bottom_bar);
-        viewPager = findViewById(R.id.view_pager);
+        mBottomBar = findViewById(R.id.bottom_bar);
+        mViewPager = findViewById(R.id.view_pager);
 
         initialSetup();
         setupViewPager();
@@ -52,13 +53,16 @@ public class MainActivity extends AppCompatActivity {
     private void initialSetup() {
         /* All initializing stuff */
 
-        handler = new Handler();
-        handler.postDelayed(hideBottomBar, 3000);
+        mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(hideBottomBar, 2000);
 
-//        Window window = getWindow();
-//        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        /* Prevents the bottom bar from coming up along with the keyboard */
-//        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        /*
+        *  Window window = getWindow();
+        * window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        // Prevents the bottom bar from coming up along with the keyboard
+        * window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        */
+
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPinkPrimaryDark));
         /* Set to light mode by preventing the app to follow system wide default */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -72,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
         3rd point */
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setAdapter(viewPagerAdapter);
-        bottomBar.select(R.id.homeFragment);
-        viewPager.setCurrentItem(1);
+        mViewPager.setAdapter(viewPagerAdapter);
+        mBottomBar.select(R.id.homeFragment);
+        mViewPager.setCurrentItem(1);
 
         /* Listen for page changes and select change the bottom bar accordingly */
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 /* Required */
@@ -87,17 +91,17 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        bottomBar.select(R.id.timeTableFragment);
+                        mBottomBar.select(R.id.timeTableFragment);
                         removeAndShowBottomBar();
-                        handler.postDelayed(() -> bottomBar.hide(), 1000);
+                        mHandler.postDelayed(() -> mBottomBar.hide(), 1000);
                         break;
                     case 1:
-                        bottomBar.select(R.id.homeFragment);
+                        mBottomBar.select(R.id.homeFragment);
                         removeAndShowBottomBar();
-                        handler.postDelayed(hideBottomBar, 3000);
+                        mHandler.postDelayed(hideBottomBar, 3000);
                         break;
                     case 2:
-                        bottomBar.select(R.id.settingsFragment);
+                        mBottomBar.select(R.id.settingsFragment);
                         removeAndShowBottomBar();
                         break;
                     default:
@@ -112,16 +116,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* Listen for item selections and change the view pager accordingly */
-        bottomBar.setOnItemSelectedListener((view, item) -> {
+        mBottomBar.setOnItemSelectedListener((view, item) -> {
             switch (item.getItemId()) {
                 case R.id.timeTableFragment:
-                    viewPager.setCurrentItem(0);
+                    mViewPager.setCurrentItem(0);
                     break;
                 case R.id.homeFragment:
-                    viewPager.setCurrentItem(1);
+                    mViewPager.setCurrentItem(1);
                     break;
                 case R.id.settingsFragment:
-                    viewPager.setCurrentItem(2);
+                    mViewPager.setCurrentItem(2);
                     break;
                 default:
                     break;
@@ -131,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeAndShowBottomBar() {
-        handler.removeCallbacks(hideBottomBar);
-        bottomBar.show();
+        mHandler.removeCallbacks(hideBottomBar);
+        mBottomBar.show();
     }
 
     @Override
@@ -140,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
         /* Hide the bottom bar after 3 seconds of inactivity only when currentTab = HomeFragment */
 
         super.onUserInteraction();
-        if (viewPager.getCurrentItem() == 1) {
-            handler.removeCallbacks(hideBottomBar);
-            bottomBar.show();
-            handler.postDelayed(hideBottomBar, 2000);
+        if (mViewPager.getCurrentItem() == 1) {
+            mHandler.removeCallbacks(hideBottomBar);
+            mBottomBar.show();
+            mHandler.postDelayed(hideBottomBar, 2000);
         }
     }
 
