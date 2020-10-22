@@ -1,6 +1,16 @@
-# Attendance-Manager
+<h2 align="center"><b>Attendance Manager</b></h2>
+<h4 align="center">An Android app to manage your college attendance.</h4>
+<p align="center"><a href="https://play.google.com/store/apps/details?id=com.attendancemanager"><img src=images/play_store.png width=200></a></p>
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/88131cb3d48f4109b68b79f8cada2cbc)](https://app.codacy.com/gh/jedi2610/Attendance-Manager?utm_source=github.com&utm_medium=referral&utm_content=jedi2610/Attendance-Manager&utm_campaign=Badge_Grade)
+<p align="center">
+<a alt="License"><img src="https://img.shields.io/github/license/jedi2610/Attendance-Manager?color=He&label=License&style=flat-square"></a>
+<a alt="Codacy badge" href="https://app.codacy.com/gh/jedi2610/Attendance-Manager?utm_source=github.com&utm_medium=referral&utm_content=jedi2610/Attendance-Manager&utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/88131cb3d48f4109b68b79f8cada2cbc"></a>
+<a alt="Issues"><img src="https://img.shields.io/github/issues/jedi2610/Attendance-Manager?style=flat-square"></a>
+<a alt="Release version"> <img src="https://img.shields.io/github/v/release/jedi2610/Attendance-Manager?color=blue&include_prereleases&style=flat-square"></a>
+<a alt="Commit Activity"><img src="https://img.shields.io/github/commit-activity/m/jedi2610/Attendance-Manager?color=red&style=flat-square"></a>
+<a alt="Downloads"><img src="https://img.shields.io/badge/downloads-1.52M-brightgreen?style=flat-square"></a>
+<a alt="Rating"><img src="https://img.shields.io/badge/rating-4.4%2F5-blue?style=flat-square"></a>
+</p>
 
  Attendance Manager is radiacally simple and material designed attendance managing app. This app aims at improving students attendance percentage by logging their attendance data.
  Students who bunk classes or absent themselves frequently would be most benifited by this app. An attendance managing app is ubiquitous but this app is designed to be elegant 
