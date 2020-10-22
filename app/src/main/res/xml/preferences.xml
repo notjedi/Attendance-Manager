@@ -113,7 +113,7 @@
         <Preference
             app:icon="@drawable/ic_info"
             app:key="@string/key_about"
-            app:summary="@string/app_version_number"
+            app:summary="@string/app_version_name"
             app:title="About Attendance Manager" />
 
         <Preference

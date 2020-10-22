@@ -44,6 +44,7 @@ import com.attendancemanager.viewmodel.DayViewModel;
 import com.attendancemanager.viewmodel.SubjectViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.gson.Gson;
@@ -66,6 +67,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+@SuppressWarnings("ConstantConditions")
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
     public static final String NAME = "key_name";
@@ -261,13 +263,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     backupDatabase();
                 else
-                    Toast.makeText(getContext(), "Permission denied. Backup failed", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "Permission denied. Backup failed", Snackbar.LENGTH_SHORT).show();
                 break;
             case READ_PERMISSION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     showRestoreAlertDialog();
                 else
-                    Toast.makeText(getContext(), "Permission denied. Recovery failed", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "Permission denied. Recovery failed", Snackbar.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -282,9 +284,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 if (data != null)
                     restoreDatabase(data.getData());
                 else
-                    Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "Recovery failed", Snackbar.LENGTH_SHORT).show();
             else
-                Toast.makeText(getContext(), "Recovery failed", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(), "Recovery failed", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -450,10 +452,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             fileWriter.write(Base64.encodeToString(jsonObject.toString().getBytes(), Base64.DEFAULT));
             fileWriter.flush();
             fileWriter.close();
-            Toast.makeText(getContext(), "Backup successfully created in Android/data/com.attendancemanager/files", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Backup successfully created in Android/data/com.attendancemanager/files", Snackbar.LENGTH_LONG).show();
 
         } catch (JSONException | IOException e) {
-            Toast.makeText(getContext(), "Backup failed", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Backup failed", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -515,10 +517,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             sEditor.putString(MainActivity.SHARED_PREFS_EXTRA_LAST_ADDED, lastAdded);
             sEditor.apply();
 
-            Toast.makeText(getContext(), "Restored successfully", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Restored successfully", Snackbar.LENGTH_LONG).show();
 
         } catch (JSONException e) {
-            Toast.makeText(getContext(), "Recovery failed. Choose a valid file", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Recovery failed. Choose a valid file", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -529,7 +531,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         try {
             fileReader = new BufferedReader(new InputStreamReader(getContext().getContentResolver().openInputStream(uri)));
         } catch (FileNotFoundException e) {
-            Toast.makeText(getContext(), "File not found", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "File not found", Snackbar.LENGTH_LONG).show();
             return null;
         }
         try {
@@ -541,15 +543,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             }
             fileReader.close();
         } catch (IOException e) {
-            Toast.makeText(getContext(), "Unable to read file", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Unable to read file", Snackbar.LENGTH_LONG).show();
             return null;
         } catch (OutOfMemoryError e) {
-            Toast.makeText(getContext(), "File size is too big. Choose a valid file", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "File size is too big. Choose a valid file", Snackbar.LENGTH_LONG).show();
         }
         try {
             return new String(Base64.decode(jsonString.toString(), Base64.DEFAULT));
         } catch (IllegalArgumentException | OutOfMemoryError e) {
-            Toast.makeText(getContext(), "Choose a valid file", Toast.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Choose a valid file", Snackbar.LENGTH_LONG).show();
             return null;
         }
     }
@@ -621,7 +623,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         try {
             appVersion = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            appVersion = getString(R.string.app_version_number) + " (from version number)";
+            appVersion = getString(R.string.app_version_name);
             Toast.makeText(getContext(), "Not able to get app version", Toast.LENGTH_SHORT).show();
         }
         StringBuilder mailInfoBuilder;
