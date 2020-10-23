@@ -59,7 +59,8 @@ captures/
 .externalNativeBuild
 .cxx/
 
-# Google Services (e.g. APIs or Firebase)
+# Google Services - AdMob (hide admob id)
+app/src/main/AndroidManifest.xml
 
 # Freeline
 freeline.py

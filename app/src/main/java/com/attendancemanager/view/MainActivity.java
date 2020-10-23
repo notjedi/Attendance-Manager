@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.attendancemanager.R;
+import com.google.android.gms.ads.MobileAds;
 
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar;
 
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         initialSetup();
         setupViewPager();
+
+        MobileAds.initialize(this);
     }
 
     private void initialSetup() {
