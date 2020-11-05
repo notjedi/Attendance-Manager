@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_main);
 
         /* Find views */
@@ -154,13 +155,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        /* Resetting the IS_ALREADY_LAUNCHED variable so that if the user
-        reopens the app  (while still in memory) it still launches */
-        SplashScreenActivity.resetLaunched();
-    }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
