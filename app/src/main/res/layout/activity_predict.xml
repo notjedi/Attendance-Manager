@@ -94,6 +94,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView" />
+        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+        tools:listitem="@layout/item_predict_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.attendancemanager"
@@ -46,32 +46,31 @@ android {
 
 dependencies {
 
-    def nav_version = "2.3.1"
-    def room_version = "2.2.5"
-    def lifecycle_version = "2.2.0"
+    def nav_version = "2.3.5"
+    def room_version = "2.3.0"
+    def lifecycle_version = "2.3.1"
 
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 
     // Navigation and lifecycle components
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     // Bottom bar library, MDC and GSON
-    implementation 'com.github.st235:expandablebottombar:1.2.4'
-    implementation 'com.google.android.material:material:1.3.0-alpha03'
+    implementation 'com.github.st235:expandablebottombar:1.3.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 
     // ViewModel and LiveData
@@ -81,7 +80,4 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-
-    // Admob
-    implementation 'com.google.android.gms:play-services-ads:19.5.0'
 }
