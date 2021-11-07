@@ -16,6 +16,7 @@
     <style name="SplashScreen.Theme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:statusBarColor">@color/darkGrey</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="AlertDialog.App.Theme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
