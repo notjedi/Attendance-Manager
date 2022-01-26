@@ -88,7 +88,7 @@
             android:contentDescription="@string/class_cancelled"
             android:drawablePadding="16dp"
             android:src="@drawable/ic_minus"
-            android:tint="@color/white"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/bunked_button"
             app:layout_constraintTop_toBottomOf="@id/subject_attendance_progressbar" />
@@ -102,7 +102,7 @@
             android:backgroundTint="@color/red"
             android:contentDescription="@string/bunked_class"
             android:src="@drawable/ic_cancel"
-            android:tint="@color/white"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/attended_button"
             app:layout_constraintTop_toBottomOf="@id/subject_attendance_progressbar" />
@@ -116,7 +116,7 @@
             android:backgroundTint="@color/green"
             android:contentDescription="@string/attended_class"
             android:src="@drawable/ic_check"
-            android:tint="@color/white"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/subject_attendance_progressbar" />
