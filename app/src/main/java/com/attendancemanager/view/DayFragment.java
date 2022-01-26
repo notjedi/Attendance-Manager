@@ -76,7 +76,7 @@ public class DayFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+                int position = viewHolder.getBindingAdapterPosition();
                 TimeTableSubject timeTableSubject = dayViewModel.getSubjectsOfDay(argDay).get(position);
                 dayViewModel.delete(timeTableSubject);
             }

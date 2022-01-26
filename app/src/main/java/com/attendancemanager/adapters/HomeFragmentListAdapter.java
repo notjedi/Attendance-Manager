@@ -179,9 +179,9 @@ public class HomeFragmentListAdapter extends ListAdapter<Subject, HomeFragmentLi
             mBunked = itemView.findViewById(R.id.bunked_button);
             mCancelled = itemView.findViewById(R.id.cancelled_button);
 
-            mAttended.setOnClickListener(view -> itemClickListener.onAttendButtonClick(getAdapterPosition()));
-            mBunked.setOnClickListener(view -> itemClickListener.onBunkButtonClick(getAdapterPosition()));
-            mCancelled.setOnClickListener(view -> itemClickListener.onCancelledButtonClick(getAdapterPosition()));
+            mAttended.setOnClickListener(view -> itemClickListener.onAttendButtonClick(getBindingAdapterPosition()));
+            mBunked.setOnClickListener(view -> itemClickListener.onBunkButtonClick(getBindingAdapterPosition()));
+            mCancelled.setOnClickListener(view -> itemClickListener.onCancelledButtonClick(getBindingAdapterPosition()));
         }
 
     }

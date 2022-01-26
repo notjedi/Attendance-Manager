@@ -72,7 +72,7 @@ public class BottomSheetAdapter extends ListAdapter<Subject, BottomSheetAdapter.
             mSubjectName = itemView.findViewById(R.id.bottom_sheet_subject_name);
             ImageButton mAddButton = itemView.findViewById(R.id.bottom_sheet_add_button);
 
-            mAddButton.setOnClickListener(v -> listener.addButton(getAdapterPosition()));
+            mAddButton.setOnClickListener(v -> listener.addButton(getBindingAdapterPosition()));
         }
     }
 }

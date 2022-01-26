@@ -123,7 +123,7 @@ public class EditSubjectActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-                int position = viewHolder.getAdapterPosition();
+                int position = viewHolder.getBindingAdapterPosition();
                 deletedSubject = editSubjectAdapter.getSubjectAt(position);
                 subjectViewModel.delete(editSubjectAdapter.getSubjectAt(position));
 

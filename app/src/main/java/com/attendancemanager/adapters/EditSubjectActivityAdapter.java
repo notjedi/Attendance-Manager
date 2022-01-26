@@ -106,8 +106,8 @@ public class EditSubjectActivityAdapter extends ListAdapter<Subject, EditSubject
             mProgressBar = itemView.findViewById(R.id.edit_subject_attendance_progressbar);
 
             itemView.setOnClickListener(v -> {
-                if (getAdapterPosition() != RecyclerView.NO_POSITION)
-                    mListener.OnItemClickListener(getAdapterPosition());
+                if (getBindingAdapterPosition() != RecyclerView.NO_POSITION)
+                    mListener.OnItemClickListener(getBindingAdapterPosition());
             });
         }
     }
