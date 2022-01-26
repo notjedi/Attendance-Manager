@@ -26,13 +26,13 @@ public class DayFragment extends Fragment {
 
     private static final String ARG_DAY_NAME = "argDayName";
     private TimeTableFragmentAdapter timeTableAdapter;
-    private DayViewModel dayViewModel;
+    private RecyclerView timeTableRecyclerView;
     private SubjectViewModel subjectViewModel;
+    private DayViewModel dayViewModel;
     private String argDay;
 
     public static DayFragment newInstance(String day) {
         /* Create new instance with the ARG_DAY_NAME */
-
         DayFragment dayFragment = new DayFragment();
         final Bundle args = new Bundle();
         args.putString(ARG_DAY_NAME, day);
@@ -57,7 +57,7 @@ public class DayFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView timeTableRecyclerView = view.findViewById(R.id.time_table_recycler_view);
+        timeTableRecyclerView = view.findViewById(R.id.time_table_recycler_view);
         dayViewModel = new ViewModelProvider(this).get(DayViewModel.class);
         subjectViewModel = new ViewModelProvider(this).get(SubjectViewModel.class);
 
@@ -99,5 +99,13 @@ public class DayFragment extends Fragment {
             }
             timeTableAdapter.setSubjectList(subjectList);
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        // Avoid memory leak
+        timeTableRecyclerView.setAdapter(null);
+        timeTableRecyclerView = null;
+        super.onDestroyView();
     }
 }

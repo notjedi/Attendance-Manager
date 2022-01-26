@@ -178,6 +178,15 @@ public class TimeTableFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        // Avoid memory leak
+        mAddFab = null;
+        bottomSheetAdapter = null;
+        mBottomSheetRecyclerView.setAdapter(null);
+        super.onDestroy();
+    }
+
     private static class TimeTableViewPagerAdapter extends FragmentPagerAdapter {
 
         public TimeTableViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
