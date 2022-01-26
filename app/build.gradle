@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.attendancemanager"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "0.9.0-beta03"
 
@@ -47,17 +47,17 @@ android {
 dependencies {
 
     def nav_version = "2.3.5"
-    def room_version = "2.3.0"
-    def lifecycle_version = "2.3.1"
+    def room_version = "2.4.1"
+    def lifecycle_version = "2.4.0"
 
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.32'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.30'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -73,11 +73,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 
-    // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    // LiveData and Room
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-
-    // Room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 }
