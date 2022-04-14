@@ -44,7 +44,7 @@
     <string name="key_developed_by">key_developed_by</string>
     <string name="play_store_url">https://play.google.com/store/apps/details?id=com.attendancemanager</string>
     <string name="market_uri">market://details?id=com.attendancemanager</string>
-    <string name="github_developer_url">https://github.com/jedi2610</string>
+    <string name="github_developer_url">https://github.com/notjedi</string>
 
     <!-- Edit Subject Activity -->
     <string name="add_subject">Add subject</string>
@@ -57,7 +57,7 @@
     <string name="app_name_bold"><b>Attendance Manager</b></string>
     <string name="icon_credits"><![CDATA[Icon by <a href="https://www.instagram.com/wess.ley/">Abner Wesley</a>]]></string>
     <string name="developer_text">Developed by Krithic Kumar</string>
-    <string name="open_source_project">"<![CDATA[<a href="https://github.com/jedi2610/Attendance-Manager"><b>Attendance Manager</b></a> is an open source project]]></string>
+    <string name="open_source_project">"<![CDATA[<a href="https://github.com/notjedi/Attendance-Manager"><b>Attendance Manager</b></a> is an open source project]]></string>
 
     <!-- Android Manifest -->
     <string name="title_activity_about">AboutActivity</string>
