@@ -60,7 +60,6 @@ captures/
 .cxx/
 
 # Google Services - AdMob (hide admob id)
-app/src/main/AndroidManifest.xml
 
 # Freeline
 freeline.py
